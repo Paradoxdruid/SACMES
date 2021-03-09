@@ -11,7 +11,7 @@ import os
 import matplotlib
 
 matplotlib.use("TkAgg")
-os.system("clear")
+# os.system("clear")
 
 # ---Import Modules---#
 import time
@@ -33,7 +33,7 @@ except ImportError:  # Python 3
 from matplotlib import style
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 import csv
 from pylab import *  # noqa
@@ -503,8 +503,8 @@ class MainWindow(tk.Tk):
         container.grid(row=row_value, column=0, columnspan=2, padx=5, pady=5, ipadx=3)
 
         container_value = 0
-        l = tk.Label(container, text="Current is in Column:")
-        l.grid(row=container_value, column=0)
+        lc = tk.Label(container, text="Current is in Column:")
+        lc.grid(row=container_value, column=0)
 
         container_value += 1
         self.list_val_entry = tk.Entry(container, width=5)
@@ -512,8 +512,8 @@ class MainWindow(tk.Tk):
         self.list_val_entry.grid(row=container_value, column=0, pady=5)
 
         container_value = 0
-        l = tk.Label(container, text="Voltage is in Column:")
-        l.grid(row=container_value, column=1)
+        lv = tk.Label(container, text="Voltage is in Column:")
+        lv.grid(row=container_value, column=1)
 
         container_value += 1
         self.voltage_column = tk.Entry(container, width=5)
@@ -521,10 +521,10 @@ class MainWindow(tk.Tk):
         self.voltage_column.grid(row=container_value, column=1, pady=5)
 
         container_value += 1
-        l = tk.Label(
+        lm = tk.Label(
             container, text="Multipotentiostat Settings\nSpace Between Current Columns:"
         )
-        l.grid(row=container_value, column=0, columnspan=2)
+        lm.grid(row=container_value, column=0, columnspan=2)
 
         # -- frameception --#
         container_value += 1
@@ -545,8 +545,8 @@ class MainWindow(tk.Tk):
         box.grid(row=row_value, column=0, columnspan=2, pady=7)
 
         box_value = 0
-        l = tk.Label(box, text="Delimiter between\ndata columns:")
-        l.grid(row=box_value, column=0)
+        ld = tk.Label(box, text="Delimiter between\ndata columns:")
+        ld.grid(row=box_value, column=0)
 
         box_value += 1
         self.space_delimiter = tk.Radiobutton(
@@ -567,8 +567,8 @@ class MainWindow(tk.Tk):
         self.tab_delimiter.grid(row=box_value, column=0, pady=3)
 
         box_value = 0
-        l = tk.Label(box, text="File Extension")
-        l.grid(row=box_value, column=1)
+        lf = tk.Label(box, text="File Extension")
+        lf.grid(row=box_value, column=1)
 
         box_value += 1
         self.txt_value = tk.Radiobutton(
@@ -678,7 +678,6 @@ class InputFrame(
         HandleLabel.grid(row=row_value, column=2, columnspan=2)
         self.filehandle = ttk.Entry(self)
         now = datetime.datetime.now()
-        hour = str(now.hour)
         day = str(now.day)
         month = str(now.month)
         year = str(now.year)
@@ -1216,7 +1215,7 @@ class InputFrame(
             # exported .txt file will be placed  ###
             ExportPath = FilePath.split("/")
 
-            # -- change the text of the find file button to the folder the user chose --#
+            # -- change the text of the find file button to the folder the user chose -#
             DataFolder = "%s/%s" % (ExportPath[-3], ExportPath[-2])
 
             self.SelectFilePath["style"] = "On.TButton"
@@ -1272,11 +1271,11 @@ class InputFrame(
             electrode_dict[electrode] = index
             index += 1
 
-        if electrode_count is 0:
+        if electrode_count == 0:
             self.ElectrodeListExists = False
             self.ElectrodeLabel["fg"] = "red"
 
-        elif electrode_count is not 0:
+        elif electrode_count != 0:
             self.ElectrodeListExists = True
             self.ElectrodeLabel["fg"] = "black"
 
@@ -1288,7 +1287,7 @@ class InputFrame(
             self.FrequencyList.get(idx) for idx in self.FrequencyList.curselection()
         ]
 
-        if len(frequency_list) is not 0:
+        if len(frequency_list) != 0:
 
             self.FrequencyListExists = True
             self.FrequencyLabel["fg"] = "black"
@@ -1314,7 +1313,7 @@ class InputFrame(
                 frequency_dict[frequency] = count
                 count += 1
 
-        elif len(frequency_list) is 0:
+        elif len(frequency_list) == 0:
             self.FrequencyListExists = False
             self.FrequencyLabel["fg"] = "red"
 
@@ -1876,7 +1875,8 @@ class ContinuousScanManipulationFrame(tk.Frame):
         FileLabel = ttk.Label(self, text="1", font=LARGE_FONT, style="Fun.TButton")
         FileLabel.grid(row=1, column=0, padx=5, pady=5)
 
-        # --- Display the experiment duration as a function of the user-inputted Sample Rate ---#
+        # --- Display the experiment duration as a function of the user-inputted
+        # Sample Rate ---#
         SampleTitle = tk.Label(self, text="Experiment Time (h)", font=MEDIUM_FONT)
         SampleTitle.grid(row=0, column=1, padx=5, pady=5)
         RealTimeSampleLabel = ttk.Label(self, text="0", style="Fun.TButton")
@@ -2297,7 +2297,8 @@ class ContinuousScanManipulationFrame(tk.Frame):
             if ExistVar:
                 WrongFrequencyLabel.grid_forget()
 
-            # --- Tells RawVoltammogramVisualization to revisualize data for new High and Low frequencies ---#
+            # --- Tells RawVoltammogramVisualization to revisualize data for new
+            # High and Low frequencies ---#
             if not RatioMetricCheck:
                 RatioMetricCheck = True
 
@@ -2306,7 +2307,8 @@ class ContinuousScanManipulationFrame(tk.Frame):
 
     # --- Function for Real-time Normalization ---#
     def RealTimeNormalization(self):
-        global NormWarningExists, InitializedNormalization, NormalizationPoint, analysis_complete
+        global NormWarningExists, InitializedNormalization
+        global NormalizationPoint, analysis_complete
 
         NormalizationPoint = int(self.SetPointNorm.get())
         file = int(FileLabel["text"])
@@ -2328,7 +2330,8 @@ class ContinuousScanManipulationFrame(tk.Frame):
     # Function to Reset and raise the user input frame ###
     ########################################################
     def Reset(self):
-        global key, PoisonPill, analysis_complete, AlreadyInitiated, LowAlreadyReset, HighAlreadyReset
+        global key, PoisonPill, analysis_complete, AlreadyInitiated
+        global LowAlreadyReset, HighAlreadyReset
 
         key = 0
         PoisonPill = True
@@ -2881,9 +2884,8 @@ class InitializeContinuousCanvas:
         ############################################
         # Create global lists for data storage ###
         ############################################
-        data_list = [
-            0
-        ] * electrode_count  # Peak Height/AUC data (after smoothing and polynomial regression)
+        data_list = [0] * electrode_count  # Peak Height/AUC data (after smoothing
+        # and polynomial regression)
         avg_data_list = (
             []
         )  # Average Peak Height/AUC across all electrodes for each frequency
@@ -2954,7 +2956,8 @@ class InitializeContinuousCanvas:
             electrode_frame
         ) in frame_list:  # Iterate through the frame of each electrode
 
-            # --- create an instance of the frame and append it to the global frame dictionary ---#
+            # --- create an instance of the frame and append it to the global
+            # frame dictionary ---#
             FrameReference = ContinuousScanVisualizationFrame(
                 electrode_frame, frame_count, PlotContainer, self
             )  # PlotContainer is the 'parent' frame
@@ -3052,15 +3055,15 @@ class InitializeContinuousCanvas:
                     ax[2, subplot_count].set_xlim(-0.05, xlim_factor + 0.1)
                     ax[2, subplot_count].set_xlabel("File Number")
 
-                #################################################################################
-                #################################################################################
-                #       Analyze the first file and create the Y limits of the subplots      ###
-                #               depending on the data range of the first file               ###
-                #################################################################################
+                #######################################################################
+                #######################################################################
+                #       Analyze the first file and create the Y limits of the subplots
+                #               depending on the data range of the first file
+                ######################################################################
                 self.InitializeSubplots(ax, frequency, electrode, subplot_count)
 
-                #################################################################################
-                #################################################################################
+                ######################################################################
+                ######################################################################
 
                 # ---Set Subplot Title---#
                 frequency = str(frequency)
@@ -3094,7 +3097,8 @@ class InitializeContinuousCanvas:
                 # to ElectrochemicalAnimation to be visualized  ###
                 #####################################################
 
-                # this is the list that will be returned as _drawn_artists to the Funcanimation class
+                # this is the list that will be returned as _drawn_artists
+                # to the Funcanimation class
                 plots = [
                     smooth,
                     regress,
@@ -3123,7 +3127,7 @@ class InitializeContinuousCanvas:
                 electrode_plot
             )  # 'plot_list' is a list of lists containing 'plots' for each electrode
 
-            # -- Return both the figure and the axes to be stored as global variables --#
+            # -- Return both the figure and the axes to be stored as global variables -#
             return fig, ax
 
         except:
@@ -3144,11 +3148,11 @@ class InitializeContinuousCanvas:
                 bottom=0.3, hspace=0.6, wspace=0.3
             )  # adjust the spacing between subplots
 
-            ###############################################################################
-            # If the number of files is less than the resize interval, make           ###
-            # the x-axis the length of numFiles. Elif the resize_interval is          ###
-            # smaller than numFiles, make the x-axis the length of the first interval ###
-            ###############################################################################
+            ##########################################################################
+            # If the number of files is less than the resize interval, make         ###
+            # the x-axis the length of numFiles. Elif the resize_interval is       ###
+            # smaller than numFiles, make the x-axis the length of the first interval #
+            ##########################################################################
             if resize_interval > numFiles:
                 xlim_factor = numFiles
             elif resize_interval <= numFiles:
@@ -3214,9 +3218,9 @@ class InitializeContinuousCanvas:
         except:
             print("\n ERROR IN MAKE RATIOMETRIC FIGURES \n")
 
-    #####################################################################################
+    ##################################################################################
     # Initalize Y Limits of each figure depending on the y values of the first file ###
-    #####################################################################################
+    ##################################################################################
     def InitializeSubplots(self, ax, frequency, electrode, subplot_count):
 
         print("Initialize Subplots: Continuous Scan")
@@ -3439,9 +3443,8 @@ class InitializeFrequencyMapCanvas:
         ############################################
         # Create global lists for data storage ###
         ############################################
-        data_list = [
-            0
-        ] * electrode_count  # Peak Height/AUC data (after smoothing and polynomial regression)
+        data_list = [0] * electrode_count  # Peak Height/AUC data (after smoothing
+        # and polynomial regression)
 
         for num in range(electrode_count):
             data_list[num] = [0] * self.length  # a data list for each eletrode
@@ -3482,7 +3485,8 @@ class InitializeFrequencyMapCanvas:
             electrode_frame
         ) in frame_list:  # Iterate through the frame of each electrode
 
-            # --- create an instance of the frame and append it to the global frame dictionary ---#
+            # --- create an instance of the frame and append it to
+            # the global frame dictionary ---#
             FrameReference = FrequencyMapVisualizationFrame(
                 electrode_frame, frame_count, PlotContainer, self
             )  # PlotContainer is the 'parent' frame
@@ -3548,16 +3552,16 @@ class InitializeFrequencyMapCanvas:
 
             max_frequency = frequency_list[-1]
             ax[1, 0].set_xscale("log")
-            #################################################################################
-            #################################################################################
-            #       Analyze the first file and create the Y limits of the subplots      ###
-            #               depending on the data range of the first file               ###
-            #################################################################################
+            ##########################################################################
+            ##########################################################################
+            #       Analyze the first file and create the Y limits of the subplots   ###
+            #               depending on the data range of the first file            ###
+            ##########################################################################
 
             self.InitializeSubplots(ax, electrode)
 
-            #################################################################################
-            #################################################################################
+            #########################################################################
+            #########################################################################
 
             # ---Initiate the subplots---#
             # this assigns a Line2D artist object to the artist object (Axes)
@@ -3576,7 +3580,8 @@ class InitializeFrequencyMapCanvas:
             # to ElectrochemicalAnimation to be visualized  ###
             #####################################################
 
-            # this is the list that will be returned as _drawn_artists to the Funcanimation class
+            # this is the list that will be returned as _drawn_artists
+            # to the Funcanimation class
             plots = [smooth, regress, charge, poly]
 
             # --- And append that list to keep a global reference ---#
@@ -3594,15 +3599,15 @@ class InitializeFrequencyMapCanvas:
                 plots
             )  # 'plot_list' is a list of lists containing 'plots' for each electrode
 
-            # -- Return both the figure and the axes to be stored as global variables --#
+            # -- Return both the figure and the axes to be stored as global variables -#
             return fig, ax
 
         except:
             print("Error in MakeFigure")
 
-    #####################################################################################
+    ##################################################################################
     # Initalize Y Limits of each figure depending on the y values of the first file ###
-    #####################################################################################
+    ##################################################################################
     def InitializeSubplots(self, ax, electrode):
 
         self.list_val = _get_listval(electrode)
@@ -4344,12 +4349,14 @@ class ElectrochemicalAnimation:
         ########################################
         # Polynomical Regression Range (V) ###
         ########################################
-        # --- if the frequency is equal or below cutoff_frequency, use the low freq parameters ---#
+        # --- if the frequency is equal or below cutoff_frequency,
+        # use the low freq parameters ---#
         if frequency <= cutoff_frequency:
             xstart = low_xstart
             xend = low_xend
 
-        # --- if the frequency is above cutoff_frequency, use the high freq parameters ---#
+        # --- if the frequency is above cutoff_frequency,
+        # use the high freq parameters ---#
         else:
             xstart = high_xstart
             xend = high_xend
@@ -4429,7 +4436,8 @@ class ElectrochemicalAnimation:
         ###############################################
         # Absolute Max/Min Peak Height Extraction ###
         ###############################################
-        # -- If the user selects 'Absolute Max/Min' in the 'Peak Height Extraction Settings'
+        # -- If the user selects 'Absolute Max/Min' in the 'Peak Height
+        # Extraction Settings'
         # -- within the Settings toolbar this analysis method will be used for PHE
         fit_half = round(len(eval_regress) / 2)
 
@@ -4820,7 +4828,8 @@ class DataNormalization:
 
         NormalizationIndex = int(NormalizationPoint) - 1
 
-        # --- If the file being used as the standard has been analyzed, normalize the data to that point ---#
+        # --- If the file being used as the standard has been analyzed,
+        # normalize the data to that point ---#
         if file >= NormalizationPoint:
 
             if NormalizationPoint not in NormalizationVault:
@@ -4994,7 +5003,8 @@ class DataNormalization:
             if len(frequency_list) > 1:
                 self.ResetRatiometricData()
 
-            # --- Indicate that the data has been normalized to the new NormalizationPoint ---#
+            # --- Indicate that the data has been normalized to the
+            # new NormalizationPoint ---#
             NormWarning["fg"] = "green"
             NormWarning["text"] = "Normalized to file %s" % str(NormalizationPoint)
             wait_time.NormalizationProceed()
@@ -5501,7 +5511,8 @@ class PostAnalysis(tk.Frame):
             if ExistVar:
                 WrongFrequencyLabel.grid_forget()
 
-            # --- Tells RawVoltammogramVisualization to revisualize data for new High and Low frequencies ---#
+            # --- Tells RawVoltammogramVisualization to revisualize data for
+            # new High and Low frequencies ---#
             if not RatioMetricCheck:
                 RatioMetricCheck = True
 
@@ -5509,7 +5520,8 @@ class PostAnalysis(tk.Frame):
 
     # --- Function for Real-time Normalization ---#
     def PostAnalysisNormalization(self):
-        global NormWarningExists, InitializedNormalization, NormalizationPoint, analysis_complete
+        global NormWarningExists, InitializedNormalization
+        global NormalizationPoint, analysis_complete
 
         NormalizationPoint = int(self.SetPointNorm.get())
         file = int(FileLabel["text"])
@@ -5582,7 +5594,7 @@ class PostAnalysis(tk.Frame):
         for electrode in electrode_list:
             self.ElectrodeCount.insert(END, electrode)
 
-        # --- ListBox containing the frequencies given on line 46 (InputFrequencies) ---#
+        # --- ListBox containing the frequencies given on line 46 (InputFrequencies)-#
 
         self.FrequencyLabel = tk.Label(
             self.win, text="Select Frequencies", font=LARGE_FONT
@@ -5626,11 +5638,11 @@ class PostAnalysis(tk.Frame):
         ]
         self.electrode_list = [int(electrode) for electrode in self.electrode_list]
 
-        if electrode_count is 0:
+        if electrode_count == 0:
             self.ElectrodeListExists = False
             self.ElectrodeLabel["fg"] = "red"
 
-        elif electrode_count is not 0:
+        elif electrode_count != 0:
             self.ElectrodeListExists = True
             self.ElectrodeLabel["fg"] = "black"
 
@@ -5642,7 +5654,7 @@ class PostAnalysis(tk.Frame):
             self.FrequencyList.get(idx) for idx in self.FrequencyList.curselection()
         ]
 
-        if len(frequency_list) is not 0:
+        if len(frequency_list) != 0:
 
             self.FrequencyListExists = True
             self.FrequencyLabel["fg"] = "black"
@@ -5650,7 +5662,7 @@ class PostAnalysis(tk.Frame):
             for var in frequency_list:
                 var = int(var)
 
-        elif len(frequency_list) is 0:
+        elif len(frequency_list) == 0:
             self.FrequencyListExists = False
             self.FrequencyLabel["fg"] = "red"
 
@@ -5668,7 +5680,7 @@ class PostAnalysis(tk.Frame):
             # exported .txt file will be placed  ###
             ExportPath = FilePath.split("/")
 
-            # -- change the text of the find file button to the folder the user chose --#
+            # -- change the text of the find file button to the folder the user chose -#
             DataFolder = "%s/%s" % (ExportPath[-3], ExportPath[-2])
 
             self.SelectFilePath["style"] = "On.TButton"
@@ -5823,12 +5835,14 @@ class Track:
                 if SaveVar:
                     text_file_export.ContinuousScanExport(file)
 
-                # --- if the high and low frequencies have been changed, adjust the data ---#
+                # --- if the high and low frequencies have been changed,
+                # adjust the data ---#
                 if RatioMetricCheck:
 
                     data_normalization.ResetRatiometricData()
 
-                    # -- if the data is being exported, reset the exported data file --#
+                    # -- if the data is being exported,
+                    # reset the exported data file --#
                     if SaveVar:
                         text_file_export.TxtFileNormalization()
 
