@@ -2,7 +2,7 @@
 # ---------------------------------------------------------------------------------------------------#
 
 ########################
-### Import Libraries ###
+# Import Libraries ###
 ########################
 
 
@@ -11,47 +11,37 @@ import os
 import matplotlib
 
 matplotlib.use("TkAgg")
-os.system("clear && printf '\e[3J'")
+os.system("clear")
 
 # ---Import Modules---#
-import sys
 import time
 import datetime
 
 try:
     import Tkinter as tk
-    from Tkinter.ttk import *
-    from Tkinter import *
+    from Tkinter.ttk import *  # noqa
+    from Tkinter import *  # noqa
     from Tknter import filedialog, Menu
 
 except ImportError:  # Python 3
     import tkinter as tk
-    from tkinter.ttk import *
-    from tkinter import *
+    from tkinter.ttk import *  # noqa
+    from tkinter import *  # noqa
     from tkinter import filedialog, Menu
-    from tkinter.messagebox import showinfo
 
 
 from matplotlib import style
-import scipy.integrate as integrate
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
-import matplotlib.animation as animation
-from matplotlib.animation import FuncAnimation
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 import numpy as np
 import csv
-from pylab import *
-from numpy import *
-from scipy.interpolate import *
-from scipy.integrate import simps
-from scipy.signal import *
-from itertools import *
-from math import log10, floor
-from decimal import Decimal
-from operator import truediv
+from pylab import *  # noqa
+from numpy import *  # noqa
+from scipy.interpolate import *  # noqa
+from scipy.signal import *  # noqa
+from itertools import *  # noqa
 import threading
-from threading import Thread
 from queue import Queue
 
 style.use("ggplot")
@@ -70,7 +60,8 @@ warnings.filterwarnings(
 
 # -- file handle variable --#
 handle_variable = ""  # default handle variable is nothing
-e_var = "single"  # default input file is 'Multichannel', or a single file containing all electrodes
+e_var = "single"  # default input file is 'Multichannel', or a single file
+# containing all electrodes
 PHE_method = "Abs"  # default PHE Extraction is difference between absolute max/min
 
 # ------------------------------------------------------------#
@@ -82,39 +73,41 @@ electrodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 # ---------------------------------------------------------------------------------------------------#
 
 ########################
-### Global Variables ###
+# Global Variables ###
 ########################
 
 ########################################
-### Polynomial Regression Parameters ###
+# Polynomial Regression Parameters ###
 ########################################
-sg_window = 5  ### Savitzky-Golay window (in mV range), must be odd number (increase signal:noise)
-sg_degree = 1  ### Savitzky-Golay polynomial degree
-polyfit_deg = 15  ### degree of polynomial fit
+sg_window = (
+    5  # Savitzky-Golay window (in mV range), must be odd number (increase signal:noise)
+)
+sg_degree = 1  # Savitzky-Golay polynomial degree
+polyfit_deg = 15  # degree of polynomial fit
 
-cutoff_frequency = 50  ### frequency that separates 'low' and 'high'
-### frequencies for regression analysis and
-### smoothing manipulation
+cutoff_frequency = 50  # frequency that separates 'low' and 'high'
+# frequencies for regression analysis and
+# smoothing manipulation
 
 #############################
-### Checkpoint Parameters ###
+# Checkpoint Parameters ###
 #############################
-key = 0  ### SkeletonKey
-search_lim = 15  ### Search limit (sec)
-PoisonPill = False  ### Stop Animation variable
-FoundFilePath = False  ### If the user-inputted file is found
-ExistVar = False  ### If Checkpoints are not met ExistVar = True
-AlreadyInitiated = False  ### indicates if the user has already initiated analysis
-HighAlreadyReset = False  ### If data for high frequencies has been reset
-LowAlreadyReset = False  ### If data for low frequencies has been reset
-analysis_complete = False  ### If analysis has completed, begin PostAnalysis
+key = 0  # SkeletonKey
+search_lim = 15  # Search limit (sec)
+PoisonPill = False  # Stop Animation variable
+FoundFilePath = False  # If the user-inputted file is found
+ExistVar = False  # If Checkpoints are not met ExistVar = True
+AlreadyInitiated = False  # indicates if the user has already initiated analysis
+HighAlreadyReset = False  # If data for high frequencies has been reset
+LowAlreadyReset = False  # If data for low frequencies has been reset
+analysis_complete = False  # If analysis has completed, begin PostAnalysis
 
 ##################################
-### Data Extraction Parameters ###
+# Data Extraction Parameters ###
 ##################################
-delimiter = 1  ### default delimiter is a space; 2 = tab
+delimiter = 1  # default delimiter is a space; 2 = tab
 extension = 1
-current_column = 4  ### column index for list_val.
+current_column = 4  # column index for list_val.
 current_column_index = 3
 # list_val = column_index + 3
 # defauly column is the second (so index = 1)
@@ -129,16 +122,16 @@ byte_limit = 3000
 byte_index = 2
 
 ######################################################
-### Low frequency baseline manipulation Parameters ###
+# Low frequency baseline manipulation Parameters ###
 ######################################################
-LowFrequencyOffset = 0  ### Vertical offset of normalized data for
-### user specified 'Low Frequency'
-LowFrequencySlope = 0  ### Slope manipulation of norm data for user
-### specified 'Low Frequency'
+LowFrequencyOffset = 0  # Vertical offset of normalized data for
+# user specified 'Low Frequency'
+LowFrequencySlope = 0  # Slope manipulation of norm data for user
+# specified 'Low Frequency'
 
 
 ###############
-### Styling ###
+# Styling ###
 ###############
 HUGE_FONT = ("Verdana", 18)
 LARGE_FONT = ("Verdana", 11)
@@ -147,12 +140,12 @@ SMALL_FONT = ("Verdana", 8)
 
 
 ########################
-### Global Functions ###
+# Global Functions ###
 ########################
 
 
 ##############################
-### Retrieve the file name ###
+# Retrieve the file name ###
 ##############################
 def _retrieve_file(file, electrode, frequency):
     try:
@@ -293,8 +286,8 @@ def ReadData(myfile, electrode):
 
     try:
         ###############################################################
-        ### Get the index value of the data depending on if the     ###
-        ### electrodes are in the same .txt file or separate files  ###
+        # Get the index value of the data depending on if the     ###
+        # electrodes are in the same .txt file or separate files  ###
         ###############################################################
         if e_var == "single":
             list_val = current_column_index + (electrode - 1) * spacing_index
@@ -302,7 +295,7 @@ def ReadData(myfile, electrode):
             list_val = current_column_index
 
         #####################
-        ### Read the data ###
+        # Read the data ###
         #####################
         try:
             # ---Preallocate Potential and Current lists---#
@@ -311,7 +304,7 @@ def ReadData(myfile, electrode):
 
                 variables = len(mydata.readlines())
                 potentials = ["hold"] * variables
-                ### key: potential; value: current ##
+                # key: potential; value: current ##
                 data_dict = {}
 
                 currents = [0] * variables
@@ -323,7 +316,7 @@ def ReadData(myfile, electrode):
 
                 variables = len(mydata.readlines())
                 potentials = ["hold"] * variables
-                ### key: potential; value: current ##
+                # key: potential; value: current ##
                 data_dict = {}
 
                 currents = [0] * variables
@@ -371,8 +364,8 @@ def ReadData(myfile, electrode):
                     data_dict.setdefault(potential_value, []).append(current_value)
                     list_num = list_num + 1
 
-        ### if there are 0's in the list (if the preallocation added to many)
-        ### then remove them
+        # if there are 0's in the list (if the preallocation added to many)
+        # then remove them
         cut_value = 0
         for value in potentials:
             if value == "hold":
@@ -383,7 +376,7 @@ def ReadData(myfile, electrode):
             currents = currents[:-cut_value]
 
         #######################
-        ### Return the data ###
+        # Return the data ###
         #######################
         return potentials, currents, data_dict
     except:
@@ -391,7 +384,7 @@ def ReadData(myfile, electrode):
 
 
 #######################################
-### Retrieve the column index value ###
+# Retrieve the column index value ###
 #######################################
 def _get_listval(electrode):
     try:
@@ -411,12 +404,12 @@ def _get_listval(electrode):
 
 
 ###############################################
-########   Graphical User Interface     #######
+#   Graphical User Interface     #######
 ###############################################
 
 
 #############################################
-### Class that contains all of the frames ###
+# Class that contains all of the frames ###
 #############################################
 class MainWindow(tk.Tk):
 
@@ -435,10 +428,10 @@ class MainWindow(tk.Tk):
         container = tk.Frame(self.master, relief="flat", bd=5)
         container.grid(
             row=0, rowspan=11, padx=10, sticky="nsew"
-        )  ## container object has UI frame in column 0
+        )  # container object has UI frame in column 0
         container.rowconfigure(
             0, weight=1
-        )  ## and PlotContainer (visualization) in column 1
+        )  # and PlotContainer (visualization) in column 1
         container.columnconfigure(0, weight=1)
 
         # --- Raise the frame for initial UI ---#
@@ -460,7 +453,7 @@ class MainWindow(tk.Tk):
         self.master.config(menu=menubar)
 
         #################
-        ### Edit Menu ###
+        # Edit Menu ###
         #################
         editmenu = Menu(menubar, tearoff=0)
         editmenu.add_separator()
@@ -605,7 +598,8 @@ class MainWindow(tk.Tk):
         exit.grid(row=row_value, column=1, pady=3)
 
     def get_list_val(self):
-        global current_column, current_column_index, voltage_column, voltage_column_index, spacing_index, delimiter, extension, total_columns
+        global current_column, current_column_index, voltage_column
+        global voltage_column_index, spacing_index, delimiter, extension, total_columns
 
         current_column = int(self.list_val_entry.get())
         current_column_index = current_column - 1
@@ -615,7 +609,7 @@ class MainWindow(tk.Tk):
         voltage_column = int(self.voltage_column.get())
         voltage_column_index = voltage_column - 1
 
-        ### Set the delimiter and extension ###
+        # Set the delimiter and extension ###
         delimiter = self.delimiter_value.get()
         extension = self.extension_value.get()
 
@@ -655,7 +649,7 @@ class InputFrame(
         row_value = 0
 
         ##############################################
-        ### Pack all of the widgets into the frame ###
+        # Pack all of the widgets into the frame ###
         ##############################################
 
         self.SelectFilePath = ttk.Button(
@@ -730,7 +724,7 @@ class InputFrame(
         row_value += 2
 
         ##################################
-        ### Select and Edit Electrodes ###
+        # Select and Edit Electrodes ###
         ##################################
 
         self.ElectrodeListboxFrame = tk.Frame(
@@ -806,7 +800,7 @@ class InputFrame(
         self.ElectrodeSettingsFrame.rowconfigure(2, weight=1)
 
         #####################################################
-        ### Select and Edit Frequencies for Data Analysis ###
+        # Select and Edit Frequencies for Data Analysis ###
         #####################################################
 
         self.ListboxFrame = tk.Frame(
@@ -827,7 +821,8 @@ class InputFrame(
         )
         self.FrequencyLabel.grid(row=0, padx=10)
 
-        # --- If more than 5 frequencies are in the listbox, add a scrollbar as to not take up too much space ---#
+        # --- If more than 5 frequencies are in the listbox,
+        # add a scrollbar as to not take up too much space ---#
         if len(InputFrequencies) > 5:
             self.ScrollBarVal = True
         else:
@@ -836,7 +831,7 @@ class InputFrame(
         # --- Variable to check if the frequency_list contains frequencies ---#
         self.FrequencyListExists = False
 
-        # --- ListBox containing the frequencies given on line 46 (InputFrequencies) ---#
+        # --- ListBox containing the frequencies given on line 46 (InputFrequencies) -#
         self.FrequencyList = Listbox(
             self.ListboxFrame,
             relief="groove",
@@ -867,7 +862,7 @@ class InputFrame(
         ).grid(row=2, column=0, columnspan=4)
 
         ###########################################################
-        ### Frame for adding/deleting frequencies from the list ###
+        # Frame for adding/deleting frequencies from the list ###
         ###########################################################
 
         ManipulateFrequenciesFrame = tk.Frame(self, width=10, bd=3, relief="groove")
@@ -984,7 +979,7 @@ class InputFrame(
 
         row_value += 2
         ############################################################
-        ### Adjustment of Visualization Parameters: xstart, xend ###
+        # Adjustment of Visualization Parameters: xstart, xend ###
         ############################################################
 
         # --- Create a frame that will contain all of the widgets ---#
@@ -1136,12 +1131,12 @@ class InputFrame(
         self.columnconfigure(2, weight=1)
         self.columnconfigure(3, weight=1)
 
-        ### Raise the initial frame for Electrode and Frequency Selection ###
+        # Raise the initial frame for Electrode and Frequency Selection ###
         self.ListboxFrame.tkraise()
         self.ElectrodeListboxFrame.tkraise()
 
     #################################################
-    ### Functions to track Selections and Entries ###
+    # Functions to track Selections and Entries ###
     #################################################
 
     def AddFrequency(self):
@@ -1212,13 +1207,13 @@ class InputFrame(
 
         try:
 
-            ### prompt the user to select a  ###
-            ### directory for  data analysis ###
+            # prompt the user to select a  ###
+            # directory for  data analysis ###
             FilePath = filedialog.askdirectory(parent=parent)
             FilePath = "".join(FilePath + "/")
 
-            ### Path for directory in which the    ###
-            ### exported .txt file will be placed  ###
+            # Path for directory in which the    ###
+            # exported .txt file will be placed  ###
             ExportPath = FilePath.split("/")
 
             # -- change the text of the find file button to the folder the user chose --#
@@ -1232,7 +1227,7 @@ class InputFrame(
             ExportPath = "/".join(ExportPath)
             ExportPath = "".join(ExportPath + "/")
 
-            ## Indicates that the user has selected a File Path ###
+            # Indicates that the user has selected a File Path ###
             FoundFilePath = True
 
             if self.PathWarningExists:
@@ -1259,9 +1254,9 @@ class InputFrame(
     # --- Electrode Selection ---#
     def ElectrodeCurSelect(self, evt):
         ###################################################
-        ## electrode_list: list; ints                    ##
-        ## electrode_dict: dict; {electrode: index}      ##
-        ## electrode_count: int                          ##
+        # electrode_list: list; ints                    ##
+        # electrode_dict: dict; {electrode: index}      ##
+        # electrode_count: int                          ##
         ###################################################
         global electrode_count, electrode_list, electrode_dict, frame_list, PlotValues
 
@@ -1334,28 +1329,32 @@ class InputFrame(
         frame.tkraise()
 
     #####################################################################
-    ### Check to see if the user has filled out all  required fields: ###
-    ### Electrodes, Frequencies, Analysis Method, and File Path. If   ###
-    ### they have, initialize the program                             ###
+    # Check to see if the user has filled out all  required fields: ###
+    # Electrodes, Frequencies, Analysis Method, and File Path. If   ###
+    # they have, initialize the program                             ###
     #####################################################################
     def CheckPoint(self):
-        global mypath, Option, FileHandle, SelectedOptions, ExportFilePath, AlreadyInitiated, delimeter
+        global mypath, Option, FileHandle, SelectedOptions, ExportFilePath
+        global AlreadyInitiated, delimeter
 
         try:
-            # --- check to see if the data analysis method has been selected by the user ---#
+            # --- check to see if the data analysis method has been
+            # selected by the user ---#
             Option = SelectedOptions
 
-            # --- If a data analysis method was selected and a warning label was already created, forget it ---#
+            # --- If a data analysis method was selected and a warning label was
+            # already created, forget it ---#
             if self.NoSelection:
                 self.NoSelection = False
                 self.NoOptionsSelected.grid_forget()
         except:
-            # --- if no selection was made, create a warning label telling the user to select an analysis method ---#
+            # --- if no selection was made, create a warning label telling the user
+            # to select an analysis method ---#
             self.NoSelection = True
             self.NoOptionsSelected.grid(row=14, column=0, columnspan=2)
 
         #########################################################
-        ### Initialize Canvases and begin tracking animation  ###
+        # Initialize Canvases and begin tracking animation  ###
         #########################################################
         try:
             mypath = FilePath  # file path
@@ -1367,7 +1366,8 @@ class InputFrame(
                 self.PathWarningExists = False
 
         except:
-            # -- if the user did not select a file path for data analysis, raise a warning label ---#
+            # -- if the user did not select a file path for data analysis,
+            # raise a warning label ---#
             if not FoundFilePath:
                 self.NoSelectedPath.grid(row=1, column=0, columnspan=4)
                 self.PathWarningExists = True
@@ -1391,11 +1391,19 @@ class InputFrame(
                     print("Could Not Start Program")
 
     ########################################################################
-    ### Function To Initialize Data Acquisition, Analysis, and Animation ###
+    # Function To Initialize Data Acquisition, Analysis, and Animation ###
     ########################################################################
 
     def StartProgram(self):
-        global FileHandle, starting_file, extension, post_analysis, handle_variable, track, Interval, PlotContainer, e_var, data_normalization, resize_interval, InjectionPoint, InjectionVar, ratio_min, ratio_max, min_norm, max_norm, min_raw, max_raw, min_data, max_data, HighLowList, HighFrequency, LowFrequency, InitializedNormalization, RatioMetricCheck, NormWarningExists, NormalizationVault, mypath, electrode_count, wait_time, SaveVar, track, numFiles, SampleRate, ratiometricanalysis, frames, generate, figures, Plot, frame_list, PlotValues, anim, NormalizationPoint, q, delimiter
+        global FileHandle, starting_file, extension, post_analysis, handle_variable
+        global track, Interval, PlotContainer, e_var, data_normalization
+        global resize_interval, InjectionPoint, InjectionVar, ratio_min, ratio_max
+        global min_norm, max_norm, min_raw, max_raw, min_data, max_data, HighLowList
+        global HighFrequency, LowFrequency, InitializedNormalization, RatioMetricCheck
+        global NormWarningExists, NormalizationVault, mypath, electrode_count
+        global wait_time, SaveVar, track, numFiles, SampleRate, ratiometricanalysis
+        global frames, generate, figures, Plot, frame_list, PlotValues, anim
+        global NormalizationPoint, q, delimiter
 
         # ---Get the User Input and make it globally accessible---#
 
@@ -1427,7 +1435,8 @@ class InputFrame(
         InjectionPoint = (
             None  # None variable if user has not selected an injection point
         )
-        InitializedNormalization = False  # tracks if the data has been normalized to the starting normalization point
+        InitializedNormalization = False  # tracks if the data has been normalized
+        # to the starting normalization point
         RatioMetricCheck = False  # tracks changes to high and low frequencies
         NormWarningExists = (
             False  # tracks if a warning label for the normalization has been created
@@ -1458,12 +1467,12 @@ class InputFrame(
         ratio_max = float(self.KDM_max.get())
 
         #############################################################
-        ### Interval at which the program searches for files (ms) ###
+        # Interval at which the program searches for files (ms) ###
         #############################################################
         Interval = self.Interval.get()
 
-        ## set the resizeability of the container ##
-        ## frame to handle PlotContainer resize   ##
+        # set the resizeability of the container ##
+        # frame to handle PlotContainer resize   ##
         container.columnconfigure(1, weight=1)
 
         # --- High and Low Frequency Selection for Drift Correction (KDM) ---#
@@ -1472,14 +1481,15 @@ class InputFrame(
         HighLowList["High"] = HighFrequency
         HighLowList["Low"] = LowFrequency
 
-        # --- Create a timevault for normalization variables if the chosen normalization point has not yet been analyzed ---#
+        # --- Create a timevault for normalization variables if the chosen
+        # normalization point has not yet been analyzed ---#
         NormalizationVault = []  # timevault for Normalization Points
         NormalizationVault.append(
             NormalizationPoint
         )  # append the starting normalization point
 
         ################################################################
-        ### If all checkpoints have been met, initialize the program ###
+        # If all checkpoints have been met, initialize the program ###
         ################################################################
         if not self.NoSelection:
             if FoundFilePath:
@@ -1491,7 +1501,7 @@ class InputFrame(
 # ---------------------------------------------------------------------------------------------------------------------------#
 
 ####################################
-### Checkpoint TopLevel Instance ###
+# Checkpoint TopLevel Instance ###
 ####################################
 class CheckPoint:
     def __init__(self, parent, controller):
@@ -1577,13 +1587,13 @@ class CheckPoint:
                         1, self.electrode, frequency
                     )
 
-                    myfile = mypath + filename  ### path of your file
+                    myfile = mypath + filename  # path of your file
                     myfile2 = mypath + filename2
                     myfile3 = mypath + filename3
                     myfile4 = mypath + filename4
 
                     try:
-                        ### retrieves the size of the file in bytes
+                        # retrieves the size of the file in bytes
                         mydata_bytes = os.path.getsize(myfile)
                     except:
                         try:
@@ -1646,7 +1656,7 @@ class CheckPoint:
                     filename6,
                 ) = _retrieve_file(1, self.electrode, frequency)
 
-                myfile = mypath + filename  ### path of your file
+                myfile = mypath + filename  # path of your file
                 myfile2 = mypath + filename2
                 myfile3 = mypath + filename3
                 myfile4 = mypath + filename4
@@ -1654,7 +1664,7 @@ class CheckPoint:
                 myfile6 = mypath + filename6
 
                 try:
-                    ### retrieves the size of the file in bytes
+                    # retrieves the size of the file in bytes
                     mydata_bytes = os.path.getsize(myfile)
                 except:
                     try:
@@ -1778,31 +1788,31 @@ class CheckPoint:
         self.win.destroy()
 
         ##############################
-        ### Syncronization Classes ###
+        # Syncronization Classes ###
         ##############################
         wait_time = WaitTime()
         track = Track()
 
         ######################################################
-        ### Matplotlib Canvas, Figure, and Artist Creation ###
+        # Matplotlib Canvas, Figure, and Artist Creation ###
         ######################################################
         if method == "Continuous Scan":
             initialize = InitializeContinuousCanvas()
 
             #################################
-            ### Data Normalization Module ###
+            # Data Normalization Module ###
             #################################
             data_normalization = DataNormalization()
 
             ############################
-            ### Post Analysis Module ###
+            # Post Analysis Module ###
             ############################
             post_analysis = PostAnalysis(self.parent, self.controller)
             ShowFrames[PostAnalysis] = post_analysis
             post_analysis.grid(row=0, column=0, sticky="nsew")
 
             ################################################
-            ### Initialize the RealTimeManipulationFrame ###
+            # Initialize the RealTimeManipulationFrame ###
             ################################################
             frame = ContinuousScanManipulationFrame(container, self)
             ShowFrames[method] = frame
@@ -1813,7 +1823,7 @@ class CheckPoint:
             initialize = InitializeFrequencyMapCanvas()
 
             ################################################
-            ### Initialize the RealTimeManipulationFrame ###
+            # Initialize the RealTimeManipulationFrame ###
             ################################################
             frame = FrequencyMapManipulationFrame(container, self)
             ShowFrames[method] = frame
@@ -1842,18 +1852,21 @@ class CheckPoint:
 
 
 ############################################################
-### Frame displayed during experiment with widgets and   ###
-### functions for Real-time Data Manipulation            ###
+# Frame displayed during experiment with widgets and   ###
+# functions for Real-time Data Manipulation            ###
 ############################################################
 class ContinuousScanManipulationFrame(tk.Frame):
     def __init__(self, parent, controller):
-        global PlotValues, container, LowFrequencyEntry, high_xstart_entry, low_xstart_entry, high_xend_entry, low_xend_entry, HighFrequencyEntry, NormWarning, ShowFrames, FileLabel, RealTimeSampleLabel, SetPointNorm, NormalizationPoint, NormalizationVar
+        global PlotValues, container, LowFrequencyEntry, high_xstart_entry
+        global low_xstart_entry, high_xend_entry, low_xend_entry, HighFrequencyEntry
+        global NormWarning, ShowFrames, FileLabel, RealTimeSampleLabel
+        global SetPointNorm, NormalizationPoint, NormalizationVar
 
         tk.Frame.__init__(self, parent)  # Initialize the frame
 
         #######################################
         #######################################
-        ### Pack the widgets into the frame ###
+        # Pack the widgets into the frame ###
         #######################################
         #######################################
 
@@ -1911,7 +1924,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
         )
         self.SetInjectionPoint = ttk.Entry(self, width=8)
 
-        ## If this is an injection experiment, grid the widgets ##
+        # If this is an injection experiment, grid the widgets ##
         if InjectionVar:
             self.SetInjectionPoint.grid(row=3, column=1, pady=2, padx=5)
             InjectionButton.grid(row=4, column=1, pady=2, padx=2)
@@ -1977,8 +1990,8 @@ class ContinuousScanManipulationFrame(tk.Frame):
             row_value += 1
 
         #################################################
-        ### Nested Frame for Real-Time adjustment     ###
-        ### of voltammogram and polynomial regression ###
+        # Nested Frame for Real-Time adjustment     ###
+        # of voltammogram and polynomial regression ###
         #################################################
 
         RegressionFrame = tk.Frame(self, relief="groove", bd=5)
@@ -1999,7 +2012,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
         self.RegressionLabel.grid(row=0, column=0, columnspan=4, pady=5, padx=5)
 
         ###################################################################
-        ### Real Time Manipulation of Savitzky-Golay Smoothing Function ###
+        # Real Time Manipulation of Savitzky-Golay Smoothing Function ###
         ###################################################################
         self.SmoothingLabel = tk.Label(
             RegressionFrame, text="Savitzky-Golay Window (mV)", font=LARGE_FONT
@@ -2021,8 +2034,8 @@ class ContinuousScanManipulationFrame(tk.Frame):
             self.Low = False
 
         ##########################################################
-        ### If a frequency <= cutoff_frequency exists, grid    ###
-        ### a frame for low frequency data manipulation        ###
+        # If a frequency <= cutoff_frequency exists, grid    ###
+        # a frame for low frequency data manipulation        ###
         ##########################################################
         if self.Low is True:
             LowParameterFrame = tk.Frame(RegressionFrame)
@@ -2053,8 +2066,8 @@ class ContinuousScanManipulationFrame(tk.Frame):
             low_xend_entry = self.low_xend_entry
 
         #########################################################
-        ### If a frequency > cutoff_frequency exists, grid    ###
-        ### a frame for high frequency data manipulation      ###
+        # If a frequency > cutoff_frequency exists, grid    ###
+        # a frame for high frequency data manipulation      ###
         #########################################################
         if self.High is True:
             HighParameterFrame = tk.Frame(RegressionFrame)
@@ -2085,8 +2098,8 @@ class ContinuousScanManipulationFrame(tk.Frame):
             high_xend_entry = self.high_xend_entry
 
         ############################################################
-        ### If both high and low frequencies are being analyzed, ###
-        ### create buttons to switch between the two             ###
+        # If both high and low frequencies are being analyzed, ###
+        # create buttons to switch between the two             ###
         ############################################################
         if self.High is True:
             if self.Low is True:
@@ -2128,14 +2141,14 @@ class ContinuousScanManipulationFrame(tk.Frame):
             )
             Button.grid(row=row_value, column=column_value, pady=2, padx=5)
 
-            ## allows .grid() to alternate between
-            ## packing into column 1 and column 2
+            # allows .grid() to alternate between
+            # packing into column 1 and column 2
             if column_value == 1:
                 column_value = 0
                 row_value += 1
 
-            ## if gridding into the 1st column,
-            ## grid the next into the 2nd column
+            # if gridding into the 1st column,
+            # grid the next into the 2nd column
             else:
                 column_value += 1
             frame_value += 1
@@ -2167,13 +2180,13 @@ class ContinuousScanManipulationFrame(tk.Frame):
 
         ###################################################
         ###################################################
-        ###### Real Time Data Manipulation Functions ######
+        # Real Time Data Manipulation Functions ######
         ###################################################
         ###################################################
 
     #####################################
-    ### Manipulation of the Injection ###
-    ### Point for visualization       ###
+    # Manipulation of the Injection ###
+    # Point for visualization       ###
     #####################################
     def RealTimeInjection(self):
         global InjectionPoint
@@ -2183,14 +2196,14 @@ class ContinuousScanManipulationFrame(tk.Frame):
         print("\nNew Injection Point: %s\n" % str(InjectionPoint))
 
     #################################################
-    ### Adjustment of points discarded at the     ###
-    ### beginning and end of Regression Analysis  ###
+    # Adjustment of points discarded at the     ###
+    # beginning and end of Regression Analysis  ###
     #################################################
     def AdjustParameters(self):
         global low_xstart, high_xstart, low_xend, high_xend, sg_window
 
         ###############################################
-        ### Polynomical Regression Range Parameters ###
+        # Polynomical Regression Range Parameters ###
         ###############################################
 
         if self.Low:
@@ -2198,7 +2211,8 @@ class ContinuousScanManipulationFrame(tk.Frame):
             # --- parameters for frequencies equal or below cutoff_frequency ---#
             low_xstart = float(
                 self.low_xstart_entry.get()
-            )  # xstart/xend adjust the points at the start and end of the voltammogram/smoothed currents, respectively
+            )  # xstart/xend adjust the points at the start and end of the
+            # voltammogram/smoothed currents, respectively
             low_xend = float(self.low_xend_entry.get())
 
         if self.High:
@@ -2208,17 +2222,19 @@ class ContinuousScanManipulationFrame(tk.Frame):
             high_xend = float(self.high_xend_entry.get())
 
         #######################################
-        ### Savitzky-Golay Smoothing Window ###
+        # Savitzky-Golay Smoothing Window ###
         #######################################
         sg_window = float(self.SmoothingEntry.get())
         print("\n\n\nAdjustParamaters: SG_Window (mV) %d\n\n\n" % sg_window)
 
     #########################################################
-    ### Real-time adjustment of High and Low frequencies  ###
-    ### used for KDM and ratiometric analysis             ###
+    # Real-time adjustment of High and Low frequencies  ###
+    # used for KDM and ratiometric analysis             ###
     #########################################################
     def RealTimeKDM(self):
-        global HighFrequency, LowFrequencyOffset, LowFrequencySlope, LowFrequency, HighLowList, LowFrequencyEntry, HighFrequencyEntry, ExistVar, WrongFrequencyLabel, RatioMetricCheck
+        global HighFrequency, LowFrequencyOffset, LowFrequencySlope, LowFrequency
+        global HighLowList, LowFrequencyEntry, HighFrequencyEntry, ExistVar
+        global WrongFrequencyLabel, RatioMetricCheck
 
         TempHighFrequency = int(HighFrequencyEntry.get())
         TempLowFrequency = int(LowFrequencyEntry.get())
@@ -2309,7 +2325,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
             post_analysis._adjust_data()
 
     ########################################################
-    ### Function to Reset and raise the user input frame ###
+    # Function to Reset and raise the user input frame ###
     ########################################################
     def Reset(self):
         global key, PoisonPill, analysis_complete, AlreadyInitiated, LowAlreadyReset, HighAlreadyReset
@@ -2330,13 +2346,13 @@ class ContinuousScanManipulationFrame(tk.Frame):
 
         post_analysis._reset()
 
-        ## Take resize weight away from the Visualization Canvas
+        # Take resize weight away from the Visualization Canvas
         container.columnconfigure(1, weight=0)
 
         analysis_complete = False
 
     ##########################################################
-    ### Function to raise frame to the front of the canvas ###
+    # Function to raise frame to the front of the canvas ###
     ##########################################################
     def show_frame(self, cont):
 
@@ -2352,7 +2368,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
             self.SelectHighParameters["style"] = "On.TButton"
 
     ###################################################
-    ### Function to start returning visualized data ###
+    # Function to start returning visualized data ###
     ###################################################
     def SkeletonKey(self):
         global key, PoisonPill, data_analysis, extrapolate, AlreadyInitiated
@@ -2360,7 +2376,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
         if not AlreadyInitiated:
 
             ######################################################################
-            ### Initialize Animation (Visualization) for each electrode figure ###
+            # Initialize Animation (Visualization) for each electrode figure ###
             ######################################################################
             fig_count = 0  # index value for the frame
             for figure in figures:
@@ -2384,13 +2400,13 @@ class ContinuousScanManipulationFrame(tk.Frame):
             print("\n\nProgram has already been initiaed\n\n")
 
     ######################################################
-    ### Function to raise frame for specific electrode ###
+    # Function to raise frame for specific electrode ###
     ######################################################
     def show_plot(self, frame):
         frame.tkraise()
 
     #####################################
-    ### Destory the frames on Reset() ###
+    # Destory the frames on Reset() ###
     #####################################
     def close_frame(self, cont):
         frame = ShowFrames[cont]
@@ -2408,25 +2424,26 @@ class ContinuousScanManipulationFrame(tk.Frame):
 
 
 ############################################################
-### Frame displayed during experiment with widgets and   ###
-### functions for Real-time Data Manipulation            ###
+# Frame displayed during experiment with widgets and   ###
+# functions for Real-time Data Manipulation            ###
 ############################################################
 class FrequencyMapManipulationFrame(tk.Frame):
     def __init__(self, parent, controller):
-        global PlotValues, container, high_xstart_entry, low_xstart_entry, high_xend_entry, low_xend_entry, ShowFrames
+        global PlotValues, container, high_xstart_entry, low_xstart_entry
+        global high_xend_entry, low_xend_entry, ShowFrames
 
         tk.Frame.__init__(self, parent)  # Initialize the frame
 
         #######################################
         #######################################
-        ### Pack the widgets into the frame ###
+        # Pack the widgets into the frame ###
         #######################################
         #######################################
 
         #################################################
-        ### Nested Frame for Real-Time adjustment     ###
-        ### of voltammogram, polynomial regression,   ###
-        ### and savitzky-golay Smoothing              ###
+        # Nested Frame for Real-Time adjustment     ###
+        # of voltammogram, polynomial regression,   ###
+        # and savitzky-golay Smoothing              ###
         #################################################
 
         RegressionFrame = tk.Frame(self, relief="groove", bd=5)
@@ -2446,7 +2463,7 @@ class FrequencyMapManipulationFrame(tk.Frame):
         self.RegressionLabel.grid(row=0, column=0, columnspan=4, pady=5, padx=5)
 
         ###################################################################
-        ### Real Time Manipulation of Savitzky-Golay Smoothing Function ###
+        # Real Time Manipulation of Savitzky-Golay Smoothing Function ###
         ###################################################################
         self.SmoothingLabel = tk.Label(
             RegressionFrame, text="Savitzky-Golay Window (mV)", font=LARGE_FONT
@@ -2466,8 +2483,8 @@ class FrequencyMapManipulationFrame(tk.Frame):
         else:
             self.Low = False
         ###################################################
-        ### If a frequency <= 50Hz exists, grid a frame ###
-        ### for low frequency data manipulation         ###
+        # If a frequency <= 50Hz exists, grid a frame ###
+        # for low frequency data manipulation         ###
         ###################################################
         if self.Low is True:
             LowParameterFrame = tk.Frame(RegressionFrame)
@@ -2498,8 +2515,8 @@ class FrequencyMapManipulationFrame(tk.Frame):
             low_xend_entry = self.low_xend_entry
 
         ##################################################
-        ### If a frequency > 50Hz exists, grid a frame ###
-        ### for high frequency data manipulation       ###
+        # If a frequency > 50Hz exists, grid a frame ###
+        # for high frequency data manipulation       ###
         ##################################################
         if self.High is True:
             HighParameterFrame = tk.Frame(RegressionFrame)
@@ -2530,8 +2547,8 @@ class FrequencyMapManipulationFrame(tk.Frame):
             high_xend_entry = self.high_xend_entry
 
         ############################################################
-        ### If both high and low frequencies are being analyzed, ###
-        ### create buttons to switch between the two             ###
+        # If both high and low frequencies are being analyzed, ###
+        # create buttons to switch between the two             ###
         ############################################################
         if self.High is True:
             if self.Low is True:
@@ -2574,14 +2591,14 @@ class FrequencyMapManipulationFrame(tk.Frame):
             )
             Button.grid(row=row_value, column=column_value, pady=2, padx=5)
 
-            ## allows .grid() to alternate between
-            ## packing into column 1 and column 2
+            # allows .grid() to alternate between
+            # packing into column 1 and column 2
             if column_value == 1:
                 column_value = 0
                 row_value += 1
 
-            ## if gridding into the 1st column,
-            ## grid the next into the 2nd column
+            # if gridding into the 1st column,
+            # grid the next into the 2nd column
             else:
                 column_value += 1
             frame_value += 1
@@ -2613,27 +2630,29 @@ class FrequencyMapManipulationFrame(tk.Frame):
 
         ###################################################
         ###################################################
-        ###### Real Time Data Manipulation Functions ######
+        # Real Time Data Manipulation Functions ######
         ###################################################
         ###################################################
 
     #################################################
-    ### Adjustment of points discarded at the     ###
-    ### beginning and end of Regression Analysis  ###
+    # Adjustment of points discarded at the     ###
+    # beginning and end of Regression Analysis  ###
     #################################################
     def AdjustParameters(self):
-        # --- Adjusts the parameters used to visualize the raw voltammogram, smoothed currents, and polynomial fit
+        # --- Adjusts the parameters used to visualize the raw voltammogram,
+        # smoothed currents, and polynomial fit
         global low_xstart, high_xstart, low_xend, high_xend, sg_window
 
         ###############################################
-        ### Polynomical Regression Range Parameters ###
+        # Polynomical Regression Range Parameters ###
         ###############################################
 
         if self.Low:
             # --- parameters for frequencies equal or below 50Hz ---#
             low_xstart = float(
                 self.low_xstart_entry.get()
-            )  # xstart/xend adjust the points at the start and end of the voltammogram/smoothed currents, respectively
+            )  # xstart/xend adjust the points at the start and end of the
+            # voltammogram/smoothed currents, respectively
             low_xend = float(self.low_xend_entry.get())
         if self.High:
             # --- parameters for frequencies above 50Hz ---#
@@ -2641,13 +2660,13 @@ class FrequencyMapManipulationFrame(tk.Frame):
             high_xend = float(self.high_xend_entry.get())
 
         #######################################
-        ### Savitzky-Golay Smoothing Window ###
+        # Savitzky-Golay Smoothing Window ###
         #######################################
         sg_window = float(self.SmoothingEntry.get())
         print("\n\n\nAdjustParamaters: SG_Window (mV) %d\n\n\n" % sg_window)
 
     ########################################################
-    ### Function to Reset and raise the user input frame ###
+    # Function to Reset and raise the user input frame ###
     ########################################################
     def Reset(self):
         global key, PoisonPill, AlreadyInitiated, AlreadyReset
@@ -2662,7 +2681,7 @@ class FrequencyMapManipulationFrame(tk.Frame):
         self.close_frame(method)
 
     ##########################################################
-    ### Function to raise frame to the front of the canvas ###
+    # Function to raise frame to the front of the canvas ###
     ##########################################################
     def show_frame(self, cont):
 
@@ -2678,7 +2697,7 @@ class FrequencyMapManipulationFrame(tk.Frame):
             self.SelectHighParameters["style"] = "On.TButton"
 
     ###################################################
-    ### Function to start returning visualized data ###
+    # Function to start returning visualized data ###
     ###################################################
     def SkeletonKey(self):
         global key, PoisonPill, AlreadyInitiated
@@ -2686,7 +2705,7 @@ class FrequencyMapManipulationFrame(tk.Frame):
         if not AlreadyInitiated:
 
             ######################################################################
-            ### Initialize Animation (Visualization) for each electrode figure ###
+            # Initialize Animation (Visualization) for each electrode figure ###
             ######################################################################
             fig_count = 0  # index value for the frame
             for figure in figures:
@@ -2710,13 +2729,13 @@ class FrequencyMapManipulationFrame(tk.Frame):
             print("\n\nProgram has already been initiaed\n\n")
 
     ######################################################
-    ### Function to raise frame for specific electrode ###
+    # Function to raise frame for specific electrode ###
     ######################################################
     def show_plot(self, frame):
         frame.tkraise()
 
     #####################################
-    ### Destory the frames on Reset() ###
+    # Destory the frames on Reset() ###
     #####################################
     def close_frame(self, cont):
         frame = ShowFrames[cont]
@@ -2733,12 +2752,12 @@ class FrequencyMapManipulationFrame(tk.Frame):
 
 
 #########################################################
-### Electrode Frame Class for data visualization      ###
-### displayed next to the RealTimeManipulationFrame   ###
-###                                                   ###
-###    Embeds a canvas within the tkinter             ###
-###    MainWindow containing figures that             ###
-###    visualize the data for that electrode          ###
+# Electrode Frame Class for data visualization      ###
+# displayed next to the RealTimeManipulationFrame   ###
+#                                                   ###
+#    Embeds a canvas within the tkinter             ###
+#    MainWindow containing figures that             ###
+#    visualize the data for that electrode          ###
 #########################################################
 
 
@@ -2811,7 +2830,7 @@ class FrequencyMapVisualizationFrame(tk.Frame):
 
         #############################################################
         #############################################################
-        ###                   End of GUI Classes                  ###
+        #                   End of GUI Classes                  ###
         #############################################################
         #############################################################
 
@@ -2830,18 +2849,23 @@ class FrequencyMapVisualizationFrame(tk.Frame):
 
 #############################################################
 #############################################################
-### Creation of Matplotlib Canvas, Figures, Axes, Artists ###
-### and all other decorators (e.g. axis labels, titles)   ###
+# Creation of Matplotlib Canvas, Figures, Axes, Artists ###
+# and all other decorators (e.g. axis labels, titles)   ###
 #############################################################
 #############################################################
 
 
 class InitializeContinuousCanvas:
     def __init__(self):
-        global text_file_export, electrode_count, offset_normalized_data_list, anim, Frame, FrameReference, FileHandle, PlotContainer, KDM_list, empty_ratiometric_plots, ratiometric_plots, ratiometric_figures, normalized_ratiometric_data_list, normalized_data_list, frequency_list, data_list, plot_list, EmptyPlots, file_list, figures, frame_list, sample_list, Plot, PlotFrames, PlotValues
+        global text_file_export, electrode_count, offset_normalized_data_list, anim
+        global Frame, FrameReference, FileHandle, PlotContainer, KDM_list
+        global empty_ratiometric_plots, ratiometric_plots, ratiometric_figures
+        global normalized_ratiometric_data_list, normalized_data_list, frequency_list
+        global data_list, plot_list, EmptyPlots, file_list, figures, frame_list
+        global sample_list, Plot, PlotFrames, PlotValues
 
         ##############################################
-        ### Generate global lists for data storage ###
+        # Generate global lists for data storage ###
         ##############################################
 
         self.length = len(frequency_list)
@@ -2855,7 +2879,7 @@ class InitializeContinuousCanvas:
         ratiometric_figures = []
 
         ############################################
-        ### Create global lists for data storage ###
+        # Create global lists for data storage ###
         ############################################
         data_list = [
             0
@@ -2898,7 +2922,7 @@ class InitializeContinuousCanvas:
         sample_list = []  # For plotting Peak Height vs. sample rate
 
         ######################################################
-        ### Create a figure and artists for each electrode ###
+        # Create a figure and artists for each electrode ###
         ######################################################
         for num in range(electrode_count):
             electrode = electrode_list[num]
@@ -2910,14 +2934,15 @@ class InitializeContinuousCanvas:
                 ratiometric_figures.append(ratio_figure)
 
         #####################################################
-        ### Create a frame for each electrode and embed   ###
-        ### within it the figure containing its artists   ###
+        # Create a frame for each electrode and embed   ###
+        # within it the figure containing its artists   ###
         #####################################################
 
         PlotFrames = {}  # Dictionary of frames for each electrode
         PlotValues = []  # create a list of frames
 
-        # --- Create a container that can be created and destroyed when Start() or Reset() is called, respectively ---#
+        # --- Create a container that can be created and destroyed when Start()
+        # or Reset() is called, respectively ---#
         PlotContainer = tk.Frame(container, relief="groove", bd=3)
         PlotContainer.grid(row=0, column=1, sticky="nsew")
         PlotContainer.rowconfigure(0, weight=1)
@@ -2945,7 +2970,7 @@ class InitializeContinuousCanvas:
             PlotValues.append(frame)
 
         #################################
-        ### Initiate .txt File Export ###
+        # Initiate .txt File Export ###
         #################################
 
         # --- If the user has indicated that text file export should be activated ---#
@@ -2958,7 +2983,7 @@ class InitializeContinuousCanvas:
             print("Text File Export Deactivated")
 
     ############################################
-    ### Create the figure and artist objects ###
+    # Create the figure and artist objects ###
     ############################################
     def MakeFigure(self, electrode):
         global list_val, EmptyPlots, plot_list, SampleRate, frame_list, numFiles
@@ -2966,26 +2991,26 @@ class InitializeContinuousCanvas:
         print("Make Figure: Continuous Scan")
         try:
             ########################
-            ### Setup the Figure ###
+            # Setup the Figure ###
             ########################
             length = self.length
             fig, ax = plt.subplots(
                 nrows=3, ncols=length, squeeze=False, figsize=(9, 4.5)
-            )  ## figsize=(width, height)
+            )  # figsize=(width, height)
             plt.subplots_adjust(
                 bottom=0.1, hspace=0.6, wspace=0.3
-            )  ### adjust the spacing between subplots
+            )  # adjust the spacing between subplots
 
             # changing the column index
             # ---Set the electrode index value---#
             if e_var == "single":
                 list_val = current_column_index + (electrode - 1) * spacing_index
-                ## changing
+                # changing
             elif e_var == "multiple":
                 list_val = current_column_index
 
             #######################
-            ### Set axis labels ###
+            # Set axis labels ###
             #######################
 
             ax[0, 0].set_ylabel("Current\n(µA)", fontweight="bold")
@@ -2996,7 +3021,7 @@ class InitializeContinuousCanvas:
             ax[2, 0].set_ylabel("Normalized", fontweight="bold")
 
             ##########################################
-            ### Set suplot axes for each frequency ###
+            # Set suplot axes for each frequency ###
             ##########################################
             electrode_plot = []
             subplot_count = 0
@@ -3029,8 +3054,8 @@ class InitializeContinuousCanvas:
 
                 #################################################################################
                 #################################################################################
-                ###       Analyze the first file and create the Y limits of the subplots      ###
-                ###               depending on the data range of the first file               ###
+                #       Analyze the first file and create the Y limits of the subplots      ###
+                #               depending on the data range of the first file               ###
                 #################################################################################
                 self.InitializeSubplots(ax, frequency, electrode, subplot_count)
 
@@ -3064,9 +3089,9 @@ class InitializeContinuousCanvas:
                 ax[0, subplot_count].add_patch(poly)
 
                 #####################################################
-                ### Create a list of the primitive artists        ###
-                ### (Line2D objects) that will be returned        ###
-                ### to ElectrochemicalAnimation to be visualized  ###
+                # Create a list of the primitive artists        ###
+                # (Line2D objects) that will be returned        ###
+                # to ElectrochemicalAnimation to be visualized  ###
                 #####################################################
 
                 # this is the list that will be returned as _drawn_artists to the Funcanimation class
@@ -3105,8 +3130,8 @@ class InitializeContinuousCanvas:
             print("Error in MakeFigure")
 
     #################################################################
-    ### Make Figures for Ratiometric Data                         ###
-    ### (e.g. Kinetic Differential Measurement, Normalized Ratio) ###
+    # Make Figures for Ratiometric Data                         ###
+    # (e.g. Kinetic Differential Measurement, Normalized Ratio) ###
     #################################################################
     def MakeRatiometricFigure(self, electrode):
         global EmptyRatioPlots, ratiometric_plots
@@ -3117,12 +3142,12 @@ class InitializeContinuousCanvas:
             )
             plt.subplots_adjust(
                 bottom=0.3, hspace=0.6, wspace=0.3
-            )  ### adjust the spacing between subplots
+            )  # adjust the spacing between subplots
 
             ###############################################################################
-            ### If the number of files is less than the resize interval, make           ###
-            ### the x-axis the length of numFiles. Elif the resize_interval is          ###
-            ### smaller than numFiles, make the x-axis the length of the first interval ###
+            # If the number of files is less than the resize interval, make           ###
+            # the x-axis the length of numFiles. Elif the resize_interval is          ###
+            # smaller than numFiles, make the x-axis the length of the first interval ###
             ###############################################################################
             if resize_interval > numFiles:
                 xlim_factor = numFiles
@@ -3130,8 +3155,8 @@ class InitializeContinuousCanvas:
                 xlim_factor = resize_interval
 
             ################################################
-            ## Set the X and Y axes for the Ratriometric  ##
-            ## Plots (KDM and Norm Ratio)                 ##
+            # Set the X and Y axes for the Ratriometric  ##
+            # Plots (KDM and Norm Ratio)                 ##
             ################################################
             axes[0, 0].set_ylabel("% Signal", fontweight="bold")
             axes[0, 1].set_ylabel("% Signal", fontweight="bold")
@@ -3158,9 +3183,9 @@ class InitializeContinuousCanvas:
             axes[0, 1].set_title("KDM")
 
             #####################################################
-            ### Create the primitive artists (Line2D objects) ###
-            ### that will contain the data that will be       ###
-            #### visualized by ElectrochemicalAnimation       ###
+            # Create the primitive artists (Line2D objects) ###
+            # that will contain the data that will be       ###
+            # visualized by ElectrochemicalAnimation       ###
             #####################################################
             (norm_ratiometric_plot,) = axes[0, 0].plot(
                 [], [], "ro", markersize=1
@@ -3190,7 +3215,7 @@ class InitializeContinuousCanvas:
             print("\n ERROR IN MAKE RATIOMETRIC FIGURES \n")
 
     #####################################################################################
-    ### Initalize Y Limits of each figure depending on the y values of the first file ###
+    # Initalize Y Limits of each figure depending on the y values of the first file ###
     #####################################################################################
     def InitializeSubplots(self, ax, frequency, electrode, subplot_count):
 
@@ -3206,13 +3231,13 @@ class InitializeContinuousCanvas:
                 1, electrode, frequency
             )
 
-            myfile = mypath + filename  ### path of your file
+            myfile = mypath + filename  # path of your file
             myfile2 = mypath + filename2
             myfile3 = mypath + filename3
             myfile4 = mypath + filename4
 
             try:
-                ### retrieves the size of the file in bytes
+                # retrieves the size of the file in bytes
                 mydata_bytes = os.path.getsize(myfile)
             except:
                 try:
@@ -3248,13 +3273,13 @@ class InitializeContinuousCanvas:
 
         try:
             #########################
-            ### Retrieve the data ###
+            # Retrieve the data ###
             #########################
 
             potentials, currents, data_dict = ReadData(myfile, electrode)
 
             ##########################################
-            ### Set the x axes of the voltammogram ###
+            # Set the x axes of the voltammogram ###
             ##########################################
             MIN_POTENTIAL = min(potentials)
             MAX_POTENTIAL = max(potentials)
@@ -3262,7 +3287,7 @@ class InitializeContinuousCanvas:
             ax[0, subplot_count].set_xlim(MAX_POTENTIAL, MIN_POTENTIAL)
 
             #######################################
-            ### Get the high and low potentials ###
+            # Get the high and low potentials ###
             #######################################
 
             if int(frequency) > cutoff_frequency:
@@ -3299,21 +3324,21 @@ class InitializeContinuousCanvas:
             ]
 
             #########################################
-            ### Savitzky-Golay smoothing          ###
+            # Savitzky-Golay smoothing          ###
             #########################################
             smooth_currents = savgol_filter(currents, 15, sg_degree)
             data_dict = dict(zip(potentials, smooth_currents))
 
             #######################################
-            ### adjust the smooth currents to   ###
-            ### match the adjusted potentials   ###
+            # adjust the smooth currents to   ###
+            # match the adjusted potentials   ###
             #######################################
             adjusted_currents = []
             for potential in adjusted_potentials:
                 adjusted_currents.append(data_dict[potential])
 
             ######################
-            ### Polynomial fit ###
+            # Polynomial fit ###
             ######################
             polynomial_coeffs = np.polyfit(
                 adjusted_potentials, adjusted_currents, polyfit_deg
@@ -3387,14 +3412,16 @@ class InitializeContinuousCanvas:
 
 
 ##################################################################
-### Real Time Data Animation Canvas for Frequency Map Analysis ###
+# Real Time Data Animation Canvas for Frequency Map Analysis ###
 ##################################################################
 class InitializeFrequencyMapCanvas:
     def __init__(self):
-        global text_file_export, SaveVar, file_list, electrode_count, anim, Frame, FrameReference, FileHandle, PlotContainer, frequency_list, data_list, plot_list, EmptyPlots, figures, frame_list, Plot, PlotFrames, PlotValues
+        global text_file_export, SaveVar, file_list, electrode_count, anim, Frame
+        global FrameReference, FileHandle, PlotContainer, frequency_list, data_list
+        global plot_list, EmptyPlots, figures, frame_list, Plot, PlotFrames, PlotValues
 
         ##############################################
-        ### Generate global lists for data storage ###
+        # Generate global lists for data storage ###
         ##############################################
 
         self.length = len(frequency_list)
@@ -3410,7 +3437,7 @@ class InitializeFrequencyMapCanvas:
         figures = []
 
         ############################################
-        ### Create global lists for data storage ###
+        # Create global lists for data storage ###
         ############################################
         data_list = [
             0
@@ -3428,7 +3455,7 @@ class InitializeFrequencyMapCanvas:
         frame_list = []
 
         ######################################################
-        ### Create a figure and artists for each electrode ###
+        # Create a figure and artists for each electrode ###
         ######################################################
         for num in range(electrode_count):
             electrode = electrode_list[num]
@@ -3436,14 +3463,15 @@ class InitializeFrequencyMapCanvas:
             figures.append(figure)
 
         #####################################################
-        ### Create a frame for each electrode and embed   ###
-        ### within it the figure containing its artists   ###
+        # Create a frame for each electrode and embed   ###
+        # within it the figure containing its artists   ###
         #####################################################
 
         PlotFrames = {}  # Dictionary of frames for each electrode
         PlotValues = []  # create a list of frames
 
-        # --- Create a container that can be created and destroyed when Start() or Reset() is called, respectively ---#
+        # --- Create a container that can be created and destroyed when Start()
+        # or Reset() is called, respectively ---#
         PlotContainer = tk.Frame(container, relief="groove", bd=3)
         PlotContainer.grid(row=0, column=1, sticky="nsew")
         PlotContainer.rowconfigure(0, weight=1)
@@ -3470,7 +3498,7 @@ class InitializeFrequencyMapCanvas:
             PlotValues.append(frame)
 
         #################################
-        ### Initiate .txt File Export ###
+        # Initiate .txt File Export ###
         #################################
 
         # --- If the user has indicated that text file export should be activated ---#
@@ -3483,21 +3511,21 @@ class InitializeFrequencyMapCanvas:
             print("Text File Export Deactivated")
 
     ############################################
-    ### Create the figure and artist objects ###
+    # Create the figure and artist objects ###
     ############################################
     def MakeFigure(self, electrode):
         global EmptyPlots, plot_list, frame_list
 
         try:
             ##########################################
-            ### Setup the Figure for voltammograms ###
+            # Setup the Figure for voltammograms ###
             ##########################################
             fig, ax = plt.subplots(
                 nrows=2, ncols=1, squeeze=False, figsize=(9, 4.5)
-            )  ## figsize=(width, height)
+            )  # figsize=(width, height)
             plt.subplots_adjust(
                 bottom=0.2, hspace=0.6, wspace=0.3
-            )  ### adjust the spacing between subplots
+            )  # adjust the spacing between subplots
 
             # ---Set the electrode index value---#
             if e_var == "single":
@@ -3506,7 +3534,7 @@ class InitializeFrequencyMapCanvas:
                 list_val = current_column_index
 
             #######################
-            ### Set axis labels ###
+            # Set axis labels ###
             #######################
             ax[0, 0].set_ylabel("Current (µA)", fontweight="bold")
             ax[0, 0].set_xlabel("Voltage (V)", fontweight="bold")
@@ -3514,7 +3542,7 @@ class InitializeFrequencyMapCanvas:
             ax[1, 0].set_ylabel("Charge (uC)", fontweight="bold")
             ax[1, 0].set_xlabel("Frequency (Hz)", fontweight="bold")
             ##########################################
-            ### Set suplot axes for each frequency ###
+            # Set suplot axes for each frequency ###
             ##########################################
             electrode_plot = []
 
@@ -3522,8 +3550,8 @@ class InitializeFrequencyMapCanvas:
             ax[1, 0].set_xscale("log")
             #################################################################################
             #################################################################################
-            ###       Analyze the first file and create the Y limits of the subplots      ###
-            ###               depending on the data range of the first file               ###
+            #       Analyze the first file and create the Y limits of the subplots      ###
+            #               depending on the data range of the first file               ###
             #################################################################################
 
             self.InitializeSubplots(ax, electrode)
@@ -3543,9 +3571,9 @@ class InitializeFrequencyMapCanvas:
             ax[0, 0].add_patch(poly)
 
             #####################################################
-            ### Create a list of the primitive artists        ###
-            ### (Line2D objects) that will be returned        ###
-            ### to ElectrochemicalAnimation to be visualized  ###
+            # Create a list of the primitive artists        ###
+            # (Line2D objects) that will be returned        ###
+            # to ElectrochemicalAnimation to be visualized  ###
             #####################################################
 
             # this is the list that will be returned as _drawn_artists to the Funcanimation class
@@ -3573,7 +3601,7 @@ class InitializeFrequencyMapCanvas:
             print("Error in MakeFigure")
 
     #####################################################################################
-    ### Initalize Y Limits of each figure depending on the y values of the first file ###
+    # Initalize Y Limits of each figure depending on the y values of the first file ###
     #####################################################################################
     def InitializeSubplots(self, ax, electrode):
 
@@ -3590,14 +3618,14 @@ class InitializeFrequencyMapCanvas:
                 filename6,
             ) = _retrieve_file(1, electrode, frequency)
 
-            myfile = mypath + filename  ### path of your file
+            myfile = mypath + filename  # path of your file
             myfile2 = mypath + filename2
             myfile3 = mypath + filename3
             myfile4 = mypath + filename4
             myfile5 = mypath + filename5
             myfile6 = mypath + filename6
             try:
-                ### retrieves the size of the file in bytes
+                # retrieves the size of the file in bytes
                 mydata_bytes = os.path.getsize(myfile)
             except:
                 try:
@@ -3639,11 +3667,11 @@ class InitializeFrequencyMapCanvas:
 
         try:
             #########################
-            ### Retrieve the data ###
+            # Retrieve the data ###
             #########################
             potentials, currents, data_dict = ReadData(myfile, electrode)
             ##########################################
-            ### Set the x axes of the voltammogram ###
+            # Set the x axes of the voltammogram ###
             ##########################################
             MIN_POTENTIAL = min(potentials)
             MAX_POTENTIAL = max(potentials)
@@ -3652,7 +3680,7 @@ class InitializeFrequencyMapCanvas:
             ax[0, 0].set_xlim(MAX_POTENTIAL, MIN_POTENTIAL)
 
             #######################################
-            ### Get the high and low potentials ###
+            # Get the high and low potentials ###
             #######################################
 
             # -- set the local variables to the global ---#
@@ -3678,21 +3706,21 @@ class InitializeFrequencyMapCanvas:
             ]
 
             #########################################
-            ### Savitzky-Golay smoothing          ###
+            # Savitzky-Golay smoothing          ###
             #########################################
             smooth_currents = savgol_filter(currents, 15, sg_degree)
             data_dict = dict(zip(potentials, smooth_currents))
 
             #######################################
-            ### adjust the smooth currents to   ###
-            ### match the adjusted potentials   ###
+            # adjust the smooth currents to   ###
+            # match the adjusted potentials   ###
             #######################################
             adjusted_currents = []
             for potential in adjusted_potentials:
                 adjusted_currents.append(data_dict[potential])
 
             ######################
-            ### Polynomial fit ###
+            # Polynomial fit ###
             ######################
             polynomial_coeffs = np.polyfit(
                 adjusted_potentials, adjusted_currents, polyfit_deg
@@ -3741,14 +3769,14 @@ class InitializeFrequencyMapCanvas:
             peak_current = maximum_current - minimum_current
             charge = peak_current / (frequency_list[0])
 
-            ## Reverse voltammogram to match the 'Texas' convention ##
+            # Reverse voltammogram to match the 'Texas' convention ##
             ax[0, 0].set_xlim(MAX_POTENTIAL, MIN_POTENTIAL)
             ax[0, 0].set_ylim(
                 minimum_current - abs(min_raw * minimum_current),
                 maximum_current + abs(max_raw * maximum_current),
             )  # voltammogram
 
-            ## set the limits of the lovric plot ##
+            # set the limits of the lovric plot ##
             ax[1, 0].set_ylim(
                 charge - abs(min_data * charge), charge + abs(max_data * charge)
             )
@@ -3761,7 +3789,7 @@ class InitializeFrequencyMapCanvas:
 
             #############################################################
             #############################################################
-            ###              END OF INITIATION FUNCTIONS              ###
+            #              END OF INITIATION FUNCTIONS              ###
             #############################################################
             #############################################################
 
@@ -3780,7 +3808,7 @@ class InitializeFrequencyMapCanvas:
 
 ##########################################################################
 ##########################################################################
-###   ANIMATION FUNCTION TO HANDLE ALL DATA ANALYSIS AND VISUALIZATION ###
+#   ANIMATION FUNCTION TO HANDLE ALL DATA ANALYSIS AND VISUALIZATION ###
 ##########################################################################
 ##########################################################################
 
@@ -3808,8 +3836,8 @@ class ElectrochemicalAnimation:
             len(frequency_list) - 1
         )  # ' -1 ' so it matches the index value
 
-        ### Lists for sample rate (time passed)  ###
-        ### and file count for each electrode    ###
+        # Lists for sample rate (time passed)  ###
+        # and file count for each electrode    ###
         self.sample_list = []
         self.file_list = []
 
@@ -3817,7 +3845,7 @@ class ElectrochemicalAnimation:
         self.charge_axis = []
 
         ##############################
-        ## Set the generator object ##
+        # Set the generator object ##
         ##############################
         if generator is not None:
             self.generator = generator
@@ -3825,7 +3853,7 @@ class ElectrochemicalAnimation:
             self.generator = self._raw_generator
 
         ################################
-        ## Set the animation function ##
+        # Set the animation function ##
         ################################
         if func is not None:
             self._func = func
@@ -3875,8 +3903,8 @@ class ElectrochemicalAnimation:
         # Now do any initial draw
         self._init_draw()
 
-        ### Create a thread to analyze obtain the file from a Queue
-        ### and analyze the data.
+        # Create a thread to analyze obtain the file from a Queue
+        # and analyze the data.
 
         class _threaded_animation(threading.Thread):
             def __init__(self, Queue):
@@ -3939,7 +3967,7 @@ class ElectrochemicalAnimation:
                 a.figure.canvas.restore_region(bg_cache[a])
 
     #######################################################################
-    ### Initialize the drawing by returning a sequence of blank artists ###
+    # Initialize the drawing by returning a sequence of blank artists ###
     #######################################################################
     def _init_draw(self):
 
@@ -3952,7 +3980,7 @@ class ElectrochemicalAnimation:
         print("\nREDRAWING FIGURES\nRESIZE LIMIT = %d" % self.resize_limit)
 
         ############################################
-        ### Resize raw and normalized data plots ###
+        # Resize raw and normalized data plots ###
         ############################################
         fig, ax = figures[self.num]
         for count in range(len(frequency_list)):
@@ -3970,7 +3998,7 @@ class ElectrochemicalAnimation:
                 ax[2, count].set_xlim(0, self.resize_limit + 0.1)
 
         ##################################
-        ### Readjust Ratiometric Plots ###
+        # Readjust Ratiometric Plots ###
         ##################################
         if len(frequency_list) > 1:
             fig, ax = ratiometric_figures[self.num]
@@ -3988,7 +4016,7 @@ class ElectrochemicalAnimation:
                 )
 
         #####################################################
-        ### Set up the new canvas with an idle draw event ###
+        # Set up the new canvas with an idle draw event ###
         #####################################################
         self._post_draw(True)
 
@@ -3999,7 +4027,7 @@ class ElectrochemicalAnimation:
         # to catch once the draw has actually taken place.
 
         #################################################
-        ### Stop the event source and clear the cache ###
+        # Stop the event source and clear the cache ###
         #################################################
         self._fig.canvas.mpl_disconnect(self._resize_id)
         self._blit_cache.clear()
@@ -4028,7 +4056,7 @@ class ElectrochemicalAnimation:
         self._blit_clear(self._drawn_artists, self._blit_cache)
 
     ###########################################################################
-    ### Retrieve the data from _animation and blit the data onto the canvas ###
+    # Retrieve the data from _animation and blit the data onto the canvas ###
     ###########################################################################
     def _draw_frame(self, framedata, fargs):
 
@@ -4098,14 +4126,14 @@ class ElectrochemicalAnimation:
         for ax in set(updated_ax):
             ax.figure.canvas.blit(ax.bbox)
 
-    ## callback that is called every 'interval' ms ##
+    # callback that is called every 'interval' ms ##
     def _step(self):
         global RatioMetricCheck, file_list, sample_list, analysis_complete
         if self.file not in self.file_list:
             self.file_list.append(self.file)
             self.sample_list.append((len(self.file_list) * SampleRate) / 3600)
 
-        ### look for the file here ###
+        # look for the file here ###
         frequency = int(frequency_list[self.count])
 
         if method == "Continuous Scan":
@@ -4115,14 +4143,14 @@ class ElectrochemicalAnimation:
                 self.file, self.electrode, frequency
             )
 
-            ### path of your file
+            # path of your file
             myfile = mypath + filename
             myfile2 = mypath + filename2
             myfile3 = mypath + filename3
             myfile4 = mypath + filename4
 
             try:
-                ### retrieves the size of the file in bytes
+                # retrieves the size of the file in bytes
                 mydata_bytes = os.path.getsize(myfile)
             except:
                 try:
@@ -4150,7 +4178,7 @@ class ElectrochemicalAnimation:
                 filename6,
             ) = _retrieve_file(self.file, self.electrode, frequency)
 
-            myfile = mypath + filename  ### path of your file
+            myfile = mypath + filename  # path of your file
             myfile2 = mypath + filename2
             myfile3 = mypath + filename3
             myfile4 = mypath + filename4
@@ -4158,7 +4186,7 @@ class ElectrochemicalAnimation:
             myfile6 = mypath + filename6
 
             try:
-                ### retrieves the size of the file in bytes
+                # retrieves the size of the file in bytes
                 mydata_bytes = os.path.getsize(myfile)
             except:
                 try:
@@ -4216,7 +4244,7 @@ class ElectrochemicalAnimation:
     def _run_analysis(self, myfile, frequency):
 
         #######################################################
-        ### Perform the next iteration of the data analysis ###
+        # Perform the next iteration of the data analysis ###
         #######################################################
         try:
             framedata = self.generator(myfile, frequency)
@@ -4229,7 +4257,7 @@ class ElectrochemicalAnimation:
             return False
 
         ##########################################################################
-        ### if the resize limit has been reached, resize and redraw the figure ###
+        # if the resize limit has been reached, resize and redraw the figure ###
         ##########################################################################
         if self.file == self.resize_limit:
 
@@ -4237,20 +4265,20 @@ class ElectrochemicalAnimation:
             if self.resize_limit < numFiles:
 
                 ###############################################################
-                ### If this is the last frequency, move onto the next limit ###
+                # If this is the last frequency, move onto the next limit ###
                 ###############################################################
                 if self.count == self.frequency_limit:
                     self.resize_limit = self.resize_limit + self.resize_interval
 
-                    ### If the resize limit is above the number of files (e.g.
-                    ### going out of bounds for the last resize event) then
-                    ### readjust the final interval to the number of files
+                    # If the resize limit is above the number of files (e.g.
+                    # going out of bounds for the last resize event) then
+                    # readjust the final interval to the number of files
                     if self.resize_limit >= numFiles:
                         self.resize_limit = numFiles
 
                 ############################################################
-                ### 'if' statement used to make sure the plots dont get  ###
-                ### erased when there are no more files to be visualized ###
+                # 'if' statement used to make sure the plots dont get  ###
+                # erased when there are no more files to be visualized ###
                 ############################################################
                 try:
                     self._redraw_figures()
@@ -4258,14 +4286,14 @@ class ElectrochemicalAnimation:
                     print("\nCould not redraw figure\n")
 
         ##################################################################
-        ### If the function has analyzed each frequency for this file, ###
-        ### move onto the next file and reset the frequency index      ###
+        # If the function has analyzed each frequency for this file, ###
+        # move onto the next file and reset the frequency index      ###
         ##################################################################
         if self.count == self.frequency_limit:
 
             ######################################################
-            ### If there are multiple frequencies, perform     ###
-            ### ratiometric analysis and visualize the data on ###
+            # If there are multiple frequencies, perform     ###
+            # ratiometric analysis and visualize the data on ###
             ######################################################
             if method == "Continuous Scan":
                 if len(frequency_list) > 1:
@@ -4279,7 +4307,7 @@ class ElectrochemicalAnimation:
                 track.tracking(self.file, None)
 
             #########################################################################
-            ### If the function has analyzed the final final, remove the callback ###
+            # If the function has analyzed the final final, remove the callback ###
             #########################################################################
             if self.file == numFiles:
                 print(
@@ -4303,8 +4331,8 @@ class ElectrochemicalAnimation:
                 root.after(1, self._step)
 
         ##########################################################
-        ### Elif the function has not analyzed each frequency  ###
-        ### for this file, move onto the next frequency        ###
+        # Elif the function has not analyzed each frequency  ###
+        # for this file, move onto the next frequency        ###
         ##########################################################
         elif self.count < self.frequency_limit:
             self.count += 1
@@ -4314,7 +4342,7 @@ class ElectrochemicalAnimation:
     def _raw_generator(self, myfile, frequency):
 
         ########################################
-        ### Polynomical Regression Range (V) ###
+        # Polynomical Regression Range (V) ###
         ########################################
         # --- if the frequency is equal or below cutoff_frequency, use the low freq parameters ---#
         if frequency <= cutoff_frequency:
@@ -4327,7 +4355,7 @@ class ElectrochemicalAnimation:
             xend = high_xend
 
         ###################################
-        ### Retrieve data from the File ###
+        # Retrieve data from the File ###
         ###################################
         potentials, currents, data_dict = ReadData(myfile, self.electrode)
 
@@ -4341,12 +4369,12 @@ class ElectrochemicalAnimation:
             currents = currents[:-cut_value]
 
         ################################################################
-        ### Adjust the potentials depending on user-input parameters ###
+        # Adjust the potentials depending on user-input parameters ###
         ################################################################
         adjusted_potentials = [value for value in potentials if xend <= value <= xstart]
 
         #########################################
-        ### Savitzky-Golay Smoothing          ###
+        # Savitzky-Golay Smoothing          ###
         #########################################
         min_potential = min(potentials)  # find the min potential
         sg_limit = sg_window / 1000  # mV --> V
@@ -4376,22 +4404,22 @@ class ElectrochemicalAnimation:
             data_dict = dict(zip(potentials, smooth_currents))
 
         #######################################
-        ### adjust the smooth currents to   ###
-        ### match the adjusted potentials   ###
+        # adjust the smooth currents to   ###
+        # match the adjusted potentials   ###
         #######################################
         adjusted_currents = []
         for potential in adjusted_potentials:
             adjusted_currents.append(data_dict[potential])
 
         ######################
-        ### Polynomial fit ###
+        # Polynomial fit ###
         ######################
         polynomial_coeffs = np.polyfit(
             adjusted_potentials, adjusted_currents, polyfit_deg
         )
 
         #############################
-        ### Polynomial Regression ###
+        # Polynomial Regression ###
         #############################
         eval_regress = np.polyval(polynomial_coeffs, adjusted_potentials).tolist()
         regression_dict = dict(
@@ -4399,7 +4427,7 @@ class ElectrochemicalAnimation:
         )  # dictionary with current: potential
 
         ###############################################
-        ### Absolute Max/Min Peak Height Extraction ###
+        # Absolute Max/Min Peak Height Extraction ###
         ###############################################
         # -- If the user selects 'Absolute Max/Min' in the 'Peak Height Extraction Settings'
         # -- within the Settings toolbar this analysis method will be used for PHE
@@ -4411,20 +4439,20 @@ class ElectrochemicalAnimation:
         max2 = max(eval_regress[fit_half:])
 
         ################################################################
-        ### If the user selected Peak Height Extraction, analyze PHE ###
+        # If the user selected Peak Height Extraction, analyze PHE ###
         ################################################################
         Peak_Height = max(max1, max2) - min(min1, min2)
         if SelectedOptions == "Peak Height Extraction":
             data = Peak_Height
 
         ########################################################
-        ### If the user selected AUC extraction, analyze AUC ###
+        # If the user selected AUC extraction, analyze AUC ###
         ########################################################
 
         elif SelectedOptions == "Area Under the Curve":
             ##################################
-            ### Integrate Area Under the   ###
-            ### Curve using a Riemmann Sum  ###
+            # Integrate Area Under the   ###
+            # Curve using a Riemmann Sum  ###
             ##################################
             AUC_index = 1
             AUC = 0
@@ -4445,7 +4473,7 @@ class ElectrochemicalAnimation:
             data = AUC
 
         #######################################
-        ### Save the data into global lists ###
+        # Save the data into global lists ###
         #######################################
         data_list[self.num][self.count][self.index] = data
 
@@ -4462,7 +4490,7 @@ class ElectrochemicalAnimation:
             self.charge_axis.append(Peak_Height / frequency)
 
         #####################################################
-        ### Return data to the animate function as 'args' ###
+        # Return data to the animate function as 'args' ###
         #####################################################
 
         return (
@@ -4497,13 +4525,13 @@ class ElectrochemicalAnimation:
                 )
 
                 #############################################################
-                ### Acquire the current frequency and get the xstart/xend ###
-                ### parameters that will manipulate the visualized data   ###
+                # Acquire the current frequency and get the xstart/xend ###
+                # parameters that will manipulate the visualized data   ###
                 #############################################################
                 frequency = frequency_list[self.count]
 
                 ###################################
-                ### Set the units of the X-axis ###
+                # Set the units of the X-axis ###
                 ###################################
                 if XaxisOptions == "Experiment Time":
                     Xaxis = self.sample_list
@@ -4511,15 +4539,15 @@ class ElectrochemicalAnimation:
                     Xaxis = self.file_list
 
                 ################################################################
-                ### Acquire the artists for this electrode at this frequency ###
-                ### and get the data that will be visualized                 ###
+                # Acquire the artists for this electrode at this frequency ###
+                # and get the data that will be visualized                 ###
                 ################################################################
                 plots = plot_list[self.num][
                     self.count
                 ]  # 'count' is the frequency index value
 
                 ##########################
-                ### Visualize the data ###
+                # Visualize the data ###
                 ##########################
 
                 # --- Peak Height ---#
@@ -4538,7 +4566,7 @@ class ElectrochemicalAnimation:
                     ]
 
                 ####################################################
-                ### Set the data of the artists to be visualized ###
+                # Set the data of the artists to be visualized ###
                 ####################################################
                 if InjectionPoint is None:
                     plots[0].set_data(
@@ -4549,8 +4577,8 @@ class ElectrochemicalAnimation:
                     plots[4].set_data(Xaxis, NormalizedDataList)  # Norm Data
 
                 ##########################################################
-                ### If an Injection Point has been set, visualize the  ###
-                ### data before and after the injection separately     ###
+                # If an Injection Point has been set, visualize the  ###
+                # data before and after the injection separately     ###
                 ##########################################################
                 elif InjectionPoint is not None:
 
@@ -4558,7 +4586,7 @@ class ElectrochemicalAnimation:
                         InjectionIndex = InjectionPoint - 1
 
                         ####################################################
-                        ### Set the data of the artists to be visualized ###
+                        # Set the data of the artists to be visualized ###
                         ####################################################
 
                         plots[0].set_data(
@@ -4633,13 +4661,13 @@ class ElectrochemicalAnimation:
                 )
 
                 ################################################################
-                ### Acquire the artists for this electrode at this frequency ###
-                ### and get the data that will be visualized                 ###
+                # Acquire the artists for this electrode at this frequency ###
+                # and get the data that will be visualized                 ###
                 ################################################################
                 plots = plot_list[self.num]
 
                 ##########################
-                ### Visualize the data ###
+                # Visualize the data ###
                 ##########################
 
                 # --- Peak Height ---#
@@ -4649,7 +4677,7 @@ class ElectrochemicalAnimation:
                 ]  # 'num' is the electrode index value
 
                 ####################################################
-                ### Set the data of the artists to be visualized ###
+                # Set the data of the artists to be visualized ###
                 ####################################################
                 plots[0].set_data(
                     potentials, smooth_currents
@@ -4670,7 +4698,7 @@ class ElectrochemicalAnimation:
             return EmptyPlots
 
     ############################
-    ### Ratiometric Analysis ###
+    # Ratiometric Analysis ###
     ############################
     def _ratiometric_generator(self):
 
@@ -4709,17 +4737,17 @@ class ElectrochemicalAnimation:
         KDM = [X * 100 for X in KDM_list[self.num]]
 
         ##########################################
-        ## If an injection point has not been   ##
-        ## chosen, visualize the data as usual  ##
+        # If an injection point has not been   ##
+        # chosen, visualize the data as usual  ##
         ##########################################
         if InjectionPoint is None:
             plots[0].set_data(Xaxis, norm)
             plots[2].set_data(Xaxis, KDM)
 
         ############################################
-        ## If an injection point has been chosen  ##
-        ## chosen, visualize the injection        ##
-        ## points separately                      ##
+        # If an injection point has been chosen  ##
+        # chosen, visualize the injection        ##
+        # points separately                      ##
         ############################################
         elif InjectionPoint is not None:
 
@@ -4746,7 +4774,7 @@ class ElectrochemicalAnimation:
 
         ##############################
         ##############################
-        ### END OF ANIMATION CLASS ###
+        # END OF ANIMATION CLASS ###
         ##############################
         ##############################
 
@@ -4768,7 +4796,7 @@ class ElectrochemicalAnimation:
 
 
 ##############################
-### Normalization Function ###
+# Normalization Function ###
 ##############################
 class DataNormalization:
     def __init__(self):
@@ -4779,7 +4807,7 @@ class DataNormalization:
 
         sample = len(file_list) * SampleRate / 3600
         #######################################################
-        ## Check the frequency and apply the baseline offset ##
+        # Check the frequency and apply the baseline offset ##
         #######################################################
         frequency = frequency_list[count]
         if frequency == HighLowList["Low"]:
@@ -4798,21 +4826,22 @@ class DataNormalization:
             if NormalizationPoint not in NormalizationVault:
                 NormalizationVault.append(NormalizationPoint)
 
-            # -- if the software has still been normalizing to the first file, start normalizing to the normalization point --#
+            # -- if the software has still been normalizing to the first file,
+            # start normalizing to the normalization point --#
             if not InitializedNormalization:
                 InitializedNormalization = True
 
             ###########################################################
-            ### If the rest of the data has already been normalized ###
-            ### to this point, continue to normalize the data for   ###
-            ### the current file to the normalization point         ###
+            # If the rest of the data has already been normalized ###
+            # to this point, continue to normalize the data for   ###
+            # the current file to the normalization point         ###
             ###########################################################
             normalized_data_list[num][count][index] = (
                 data / data_list[num][count][NormalizationIndex]
             )
 
             ###########################################################################
-            ### If this is a low frequency, apply the offset to the normalized data ###
+            # If this is a low frequency, apply the offset to the normalized data ###
             ###########################################################################
             if frequency == HighLowList["Low"]:
                 offset_normalized_data_list[num][index] = (
@@ -4820,12 +4849,12 @@ class DataNormalization:
                 )
 
         #######################################################################
-        ### Elif the chosen normalization point is greater than the current ###
-        ### file, continue to normalize to the previous normalization point ###
+        # Elif the chosen normalization point is greater than the current ###
+        # file, continue to normalize to the previous normalization point ###
         #######################################################################
         elif InitializedNormalization:
 
-            ### Acquire the normalization point that was previously selected ###
+            # Acquire the normalization point that was previously selected ###
             TempNormalizationPoint = NormalizationVault[-1]
             TempNormalizationIndex = TempNormalizationPoint - 1
 
@@ -4834,19 +4863,20 @@ class DataNormalization:
             )
 
             ###########################################################################
-            ### If this is a low frequency, apply the offset to the normalized data ###
+            # If this is a low frequency, apply the offset to the normalized data ###
             ###########################################################################
             if frequency_list[count] == HighLowList["Low"]:
                 offset_normalized_data_list[num][index] = (
                     normalized_data_list[num][count][index] + Offset
                 )
 
-        # --- Else, if the initial normalization point has not yet been reached, normalize to the first file ---#
+        # --- Else, if the initial normalization point has not yet been reached,
+        # normalize to the first file ---#
         elif not InitializedNormalization:
             normalized_data_list[num][count][index] = data / data_list[num][count][0]
 
             ###########################################################################
-            ### If this is a low frequency, apply the offset to the normalized data ###
+            # If this is a low frequency, apply the offset to the normalized data ###
             ###########################################################################
             if frequency_list[count] == HighLowList["Low"]:
                 offset_normalized_data_list[num][index] = (
@@ -4854,14 +4884,14 @@ class DataNormalization:
                 )
 
     ################################################################
-    ### If the normalization point has been changed, renormalize ###
-    ### the data list to the new normalization point             ###
+    # If the normalization point has been changed, renormalize ###
+    # the data list to the new normalization point             ###
     ################################################################
     def RenormalizeData(self, file):
 
         ##############################################################
-        ## If the normalization point equals the current file,      ##
-        ## normalize all of the data to the new normalization point ##
+        # If the normalization point equals the current file,      ##
+        # normalize all of the data to the new normalization point ##
         #############################################################
         if file == NormalizationPoint:
             index = file - 1
@@ -4875,14 +4905,14 @@ class DataNormalization:
                     ]
 
                     ##################################################
-                    ## If the frequency is below cutoff_frequency, ###
-                    ## add the baseline Offset                     ###
+                    # If the frequency is below cutoff_frequency, ###
+                    # add the baseline Offset                     ###
                     ##################################################
                     if frequency_list[count] == HighLowList["Low"]:
                         for index in range(len(file_list)):
 
                             ##########################
-                            ## Calculate the offset ##
+                            # Calculate the offset ##
                             ##########################
                             sample = sample_list[index]
                             file = file_list[index]
@@ -4898,26 +4928,26 @@ class DataNormalization:
                             )
 
             ################################################
-            ### Analyze KDM using new normalization data ###
+            # Analyze KDM using new normalization data ###
             ################################################
             if len(frequency_list) > 1:
                 self.ResetRatiometricData()
 
             ###############################
-            ### GUI Normalization Label ###
+            # GUI Normalization Label ###
             ###############################
             NormWarning["fg"] = "green"
             NormWarning["text"] = "Normalized to file %s" % str(NormalizationPoint)
 
             ########################################################################
-            ### If .txt file export has been activated, update the exported data ###
+            # If .txt file export has been activated, update the exported data ###
             ########################################################################
             if SaveVar:
                 text_file_export.TxtFileNormalization()
 
         #########################################################################
-        ## If the Normalization Point has been changed and the current file is ##
-        ## greater than the new point, renormalize the data to the new point   ##
+        # If the Normalization Point has been changed and the current file is ##
+        # greater than the new point, renormalize the data to the new point   ##
         #########################################################################
         if NormalizationWaiting:
             index = file - 1
@@ -4926,21 +4956,21 @@ class DataNormalization:
                 for count in range(len(frequency_list)):
 
                     ##########################
-                    ## Renormalize the data ##
+                    # Renormalize the data ##
                     ##########################
                     normalized_data_list[num][count][:index] = [
                         idx / data_list[num][count][NormalizationIndex]
                         for idx in data_list[num][count][:index]
                     ]
                     ##################################################
-                    ## If the frequency is below cutoff_frequency,  ##
-                    ## add the baseline Offset                      ##
+                    # If the frequency is below cutoff_frequency,  ##
+                    # add the baseline Offset                      ##
                     ##################################################
                     if frequency_list[count] == HighLowList["Low"]:
                         for index in range(len(file_list)):
 
                             ##########################
-                            ## Calculate the offset ##
+                            # Calculate the offset ##
                             ##########################
                             sample = sample_list[index]
                             file = index + 1
@@ -4957,9 +4987,9 @@ class DataNormalization:
                             )
 
             ################################################
-            ## Using the newly normalized data, calculate ##
-            ## the Normalized Ratio and KDM               ##
-            ## for each file that has been analyzed       ##
+            # Using the newly normalized data, calculate ##
+            # the Normalized Ratio and KDM               ##
+            # for each file that has been analyzed       ##
             ################################################
             if len(frequency_list) > 1:
                 self.ResetRatiometricData()
@@ -4974,12 +5004,12 @@ class DataNormalization:
                 text_file_export.TxtFileNormalization()
 
     #############################################################
-    ### Readjust the data to the new user-inputted parameters ###
+    # Readjust the data to the new user-inputted parameters ###
     #############################################################
     def ResetRatiometricData(self):
 
         ############################################
-        ### Readjust Low Frequencies with Offset ###
+        # Readjust Low Frequencies with Offset ###
         ############################################
 
         # -- Iterate through every frequency --#
@@ -5006,13 +5036,14 @@ class DataNormalization:
                         ][count][index] + float(Offset)
 
         ####################################################
-        ### Readjust KDM with newly adjusted frequencies ###
+        # Readjust KDM with newly adjusted frequencies ###
         ####################################################
         for file in file_list:
             index = file - 1
             for num in range(electrode_count):
 
-                # grab the index value for the current high and low frequencies used for ratiometric analysis #
+                # grab the index value for the current high and low frequencies
+                # used for ratiometric analysis #
                 HighCount = frequency_dict[HighFrequency]
 
                 HighPoint = normalized_data_list[num][HighCount][index]
@@ -5032,8 +5063,8 @@ class DataNormalization:
 
 
 ##################################################
-### Post Analysis Module for data manipulation ###
-### after the completion of data analysis      ###
+# Post Analysis Module for data manipulation ###
+# after the completion of data analysis      ###
 ##################################################
 
 
@@ -5042,7 +5073,7 @@ class PostAnalysis(tk.Frame):
         global analysis_complete
 
         ############################
-        ### Class-wide variables ###
+        # Class-wide variables ###
         ############################
         self.parent = parent
         self.container = container
@@ -5067,14 +5098,14 @@ class PostAnalysis(tk.Frame):
             self.Low = False
 
         ##########################################
-        ### Initialize the Post Analysis Frame ###
+        # Initialize the Post Analysis Frame ###
         ##########################################
         self._initialize_frame()
 
     def _initialize_frame(self):
 
         ###################################################
-        ### Initialize the Frame and create its Widgets ###
+        # Initialize the Frame and create its Widgets ###
         ###################################################
         tk.Frame.__init__(self, self.parent)  # initialize the frame
 
@@ -5203,14 +5234,14 @@ class PostAnalysis(tk.Frame):
             )
             Button.grid(row=row_value, column=column_value, pady=2, padx=5)
 
-            ## allows .grid() to alternate between
-            ## packing into column 1 and column 2
+            # allows .grid() to alternate between
+            # packing into column 1 and column 2
             if column_value == 1:
                 column_value = 0
                 row_value += 1
 
-            ## if gridding into the 1st column,
-            ## grid the next into the 2nd column
+            # if gridding into the 1st column,
+            # grid the next into the 2nd column
             else:
                 column_value += 1
             frame_value += 1
@@ -5257,14 +5288,14 @@ class PostAnalysis(tk.Frame):
             analysis_complete = True
 
             #####################################
-            ### Raise the Post Analysis Frame ###
+            # Raise the Post Analysis Frame ###
             #####################################
             ShowFrames[PostAnalysis].tkraise()
 
     def _adjust_data(self):
 
         ###################################
-        ### Renormalize all of the data ###
+        # Renormalize all of the data ###
         ###################################
         NormalizationIndex = NormalizationPoint - 1
 
@@ -5276,14 +5307,14 @@ class PostAnalysis(tk.Frame):
                         for idx in data_list[num][count]
                     ]
                     ##################################################
-                    ## If the frequency is below cutoff_frequency,  ##
-                    ## add the baseline Offset                      ##
+                    # If the frequency is below cutoff_frequency,  ##
+                    # add the baseline Offset                      ##
                     ##################################################
                     if frequency_list[count] == HighLowList["Low"]:
                         for index in range(numFiles):
 
                             ##########################
-                            ## Calculate the offset ##
+                            # Calculate the offset ##
                             ##########################
                             sample = sample_list[index]
                             file = file_list[index]
@@ -5307,7 +5338,7 @@ class PostAnalysis(tk.Frame):
         if SaveVar:
             text_file_export.TxtFileNormalization()
 
-        ### Draw the readjusted data
+        # Draw the readjusted data
         self._draw()
 
     def _draw(self):
@@ -5315,7 +5346,7 @@ class PostAnalysis(tk.Frame):
 
         for num in range(electrode_count):
 
-            ## get the figure for the electrode ##
+            # get the figure for the electrode ##
             fig, ax = figures[num]
 
             subplot_count = 0
@@ -5324,7 +5355,7 @@ class PostAnalysis(tk.Frame):
                 frequency = frequency_list[count]
 
                 ###################################
-                ### Set the units of the X-axis ###
+                # Set the units of the X-axis ###
                 ###################################
                 if XaxisOptions == "Experiment Time":
                     Xaxis = sample_list
@@ -5332,13 +5363,13 @@ class PostAnalysis(tk.Frame):
                     Xaxis = file_list
 
                 ################################################################
-                ### Acquire the artists for this electrode at this frequency ###
-                ### and get the data that will be visualized                 ###
+                # Acquire the artists for this electrode at this frequency ###
+                # and get the data that will be visualized                 ###
                 ################################################################
                 plots = plot_list[num][count]  # 'count' is the frequency index value
 
                 ##########################
-                ### Visualize the data ###
+                # Visualize the data ###
                 ##########################
 
                 # --- Peak Height ---#
@@ -5350,7 +5381,7 @@ class PostAnalysis(tk.Frame):
                 else:
                     NormalizedDataList = normalized_data_list[num][count]
 
-                ### Draw new data ###
+                # Draw new data ###
                 ax[1, subplot_count].clear()
                 peak = ax[1, subplot_count].plot(Xaxis, data, "bo", markersize=1)
 
@@ -5360,7 +5391,7 @@ class PostAnalysis(tk.Frame):
                 )
 
                 #####################
-                ## Set the Y Label ##
+                # Set the Y Label ##
                 #####################
                 ax[0, 0].set_ylabel("Current\n(µA)", fontweight="bold")
                 if SelectedOptions == "Peak Height Extraction":
@@ -5369,7 +5400,7 @@ class PostAnalysis(tk.Frame):
                     ax[1, 0].set_ylabel("AUC (a.u.)", fontweight="bold")
                 ax[2, 0].set_ylabel("Normalized", fontweight="bold")
 
-                ### If necessary, redraw ratiometric data ###
+                # If necessary, redraw ratiometric data ###
                 if len(frequency_list) > 1:
                     ratio_fig, ratio_ax = ratiometric_figures[num]
 
@@ -5401,11 +5432,13 @@ class PostAnalysis(tk.Frame):
                 ratio_fig.canvas.draw_idle()
 
     #########################################################
-    ### Post Analysis adjustment of High and Low          ###
-    ### frequencies used for KDM and ratiometric analysis ###
+    # Post Analysis adjustment of High and Low          ###
+    # frequencies used for KDM and ratiometric analysis ###
     #########################################################
     def PostAnalysisKDM(self):
-        global HighFrequency, LowFrequencyOffset, LowFrequencySlope, LowFrequency, HighLowList, LowFrequencyEntry, HighFrequencyEntry, ExistVar, WrongFrequencyLabel, RatioMetricCheck
+        global HighFrequency, LowFrequencyOffset, LowFrequencySlope, LowFrequency
+        global HighLowList, LowFrequencyEntry, HighFrequencyEntry, ExistVar
+        global WrongFrequencyLabel, RatioMetricCheck
 
         HighFrequency = int(self.HighFrequencyEntry.get())
         LowFrequency = int(self.LowFrequencyEntry.get())
@@ -5495,7 +5528,7 @@ class PostAnalysis(tk.Frame):
             post_analysis._adjust_data()
 
     ######################################################
-    ### Data Export TopWindow and Associated Functions ###
+    # Data Export TopWindow and Associated Functions ###
     ######################################################
 
     def DataExportTopLevel(self):
@@ -5506,7 +5539,7 @@ class PostAnalysis(tk.Frame):
         self.ExportTopLevelExists = True
 
         ##############################################
-        ### Pack all of the widgets into the frame ###
+        # Pack all of the widgets into the frame ###
         ##############################################
 
         # --- File Path ---#
@@ -5583,9 +5616,9 @@ class PostAnalysis(tk.Frame):
     def ElectrodeCurSelect(self, evt):
 
         ###################################################
-        ## electrode_list: list; ints                    ##
-        ## electrode_dict: dict; {electrode: index}      ##
-        ## electrode_count: int                          ##
+        # electrode_list: list; ints                    ##
+        # electrode_dict: dict; {electrode: index}      ##
+        # electrode_count: int                          ##
         ###################################################
 
         self.electrode_list = [
@@ -5626,13 +5659,13 @@ class PostAnalysis(tk.Frame):
 
         try:
 
-            ### prompt the user to select a  ###
-            ### directory for  data analysis ###
+            # prompt the user to select a  ###
+            # directory for  data analysis ###
             FilePath = filedialog.askdirectory(parent=parent)
             FilePath = "".join(FilePath + "/")
 
-            ### Path for directory in which the    ###
-            ### exported .txt file will be placed  ###
+            # Path for directory in which the    ###
+            # exported .txt file will be placed  ###
             ExportPath = FilePath.split("/")
 
             # -- change the text of the find file button to the folder the user chose --#
@@ -5644,7 +5677,7 @@ class PostAnalysis(tk.Frame):
             del ExportPath[-1]
             ExportPath = "/".join(ExportPath)
             ExportPath = "".join(ExportPath + "/")
-            ## Indicates that the user has selected a File Path ###
+            # Indicates that the user has selected a File Path ###
             FoundFilePath = True
 
             if self.PathWarningExists:
@@ -5672,7 +5705,8 @@ class PostAnalysis(tk.Frame):
         )
 
     def _reset(self):
-        global HighAlreadyReset, LowAlreadyReset, AlreadyInitiated, PoisonPill, key, container, analysis_complete
+        global HighAlreadyReset, LowAlreadyReset, AlreadyInitiated
+        global PoisonPill, key, container, analysis_complete
 
         self.completion_value = 0
         analysis_complete = False
@@ -5694,7 +5728,7 @@ class PostAnalysis(tk.Frame):
         self.show_frame(InputFrame)
         self.close_frame(PostAnalysis)
 
-        ## Take resize weight away from the Visualization Canvas
+        # Take resize weight away from the Visualization Canvas
         container.columnconfigure(1, weight=0)
 
     # --- Function to switch between visualization frames ---#
@@ -5707,7 +5741,7 @@ class PostAnalysis(tk.Frame):
         frame.tkraise()
 
     #####################################
-    ### Destory the frames on Reset() ###
+    # Destory the frames on Reset() ###
     #####################################
     def close_frame(self, cont):
         frame = ShowFrames[cont]
@@ -5742,7 +5776,7 @@ class PostAnalysis(tk.Frame):
 
 ###############################################################################
 ###############################################################################
-###### Classes and Functions for Real-Time Tracking and Text File Export ######
+# Classes and Functions for Real-Time Tracking and Text File Export ######
 ###############################################################################
 ###############################################################################
 
@@ -5778,7 +5812,7 @@ class Track:
 
             if method == "Continuous Scan":
 
-                ### Global File List
+                # Global File List
                 _update_global_lists(file)
 
                 HighFrequency = HighLowList["High"]
@@ -5835,18 +5869,18 @@ class Track:
 
 ################################################
 ################################################
-### Functions for Real Time Text File Export ###
+# Functions for Real Time Text File Export ###
 ################################################
 ################################################
 
 
 ##################################
-### Real-Time Text File Export ###
+# Real-Time Text File Export ###
 ##################################
 class TextFileExport:
 
     ###############################
-    ### Initialize the .txt file ###
+    # Initialize the .txt file ###
     ###############################
     def __init__(self, electrodes=None, frequencies=None):
 
@@ -5938,7 +5972,7 @@ class TextFileExport:
                 writer.writerow(TxtList)
 
     #################################################################
-    ### Write the data from the current file into the Export File ###
+    # Write the data from the current file into the Export File ###
     #################################################################
     def ContinuousScanExport(self, _file_):
 
@@ -6054,7 +6088,7 @@ class TextFileExport:
             output.write(filedata)
 
     #################################################################
-    ### Write the data from the current file into the Export File ###
+    # Write the data from the current file into the Export File ###
     #################################################################
     def FrequencyMapExport(self, file, frequency):
 
@@ -6125,7 +6159,7 @@ class TextFileExport:
             time.sleep(3)
 
     ###############################################
-    ### Normalize the data within the Text File ###
+    # Normalize the data within the Text File ###
     ###############################################
     def TxtFileNormalization(self, electrodes=None, frequencies=None):
         TxtList = []
@@ -6136,7 +6170,8 @@ class TextFileExport:
                 electrodes=self.electrode_list, frequencies=self.frequency_list
             )
 
-            # --- rewrite the data for the files that have already been analyzed and normalize them to the new standard---#
+            # --- rewrite the data for the files that have already been analyzed
+            # and normalize them to the new standard---#
             if analysis_complete:
                 analysis_range = len(file_list)
             else:
@@ -6308,7 +6343,7 @@ def _update_global_lists(file):
 
 
 ############################################
-### Initialize GUI to start the program  ###
+# Initialize GUI to start the program  ###
 ############################################
 
 if __name__ == "__main__":
@@ -6333,6 +6368,5 @@ if __name__ == "__main__":
             pass
 
             # *########################################*#
-            # *############ End of Program ############*#
+            # *######## End of Program ############*#
             # *########################################*#
-
