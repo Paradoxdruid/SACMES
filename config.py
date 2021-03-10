@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from typing import List, Dict, Any
 import tkinter as tk
 import matplotlib.pyplot as plt
+from queue import Queue
+import tkinter.ttk as ttk
 
 
 @dataclass
@@ -68,78 +70,76 @@ class Config:
     resize_interval: int
     InjectionPoint: int
     InjectionVar: bool
-    ratio_min
-    ratio_max
-    min_norm
-    max_norm
-    min_raw
-    max_raw
-    min_data
-    max_data
-    InitializedNormalization
-    RatioMetricCheck
-    NormWarningExists
-    NormalizationVault
-    wait_time
-    SaveVar
-    track
-    numFiles
-    SampleRate
-    ratiometricanalysis
-    frames
-    generate
-    Plot
-    anim
-    NormalizationPoint
-    q
-    wait_time
-    track
-    initialize
-    LowFrequencyEntry
-    high_xstart_entry
-    low_xstart_entry
-    high_xend_entry
-    low_xend_entry
-    HighFrequencyEntry
-    NormWarning
-    FileLabel
-    RealTimeSampleLabel
-    SetPointNorm
-    NormalizationVar
-    low_xstart
-    high_xstart
-    low_xend
-    high_xend
-    sg_window
-    LowFrequencyOffset
-    LowFrequencySlope
-    ExistVar
-    WrongFrequencyLabel
-    analysis_complete
-    key
-    PoisonPill
-    LowAlreadyReset
-    HighAlreadyReset
-    extrapolate
-    AlreadyReset
+    ratio_min: float
+    ratio_max: float
+    min_norm: float
+    max_norm: float
+    min_raw: float
+    max_raw: float
+    min_data: float
+    max_data: float
+    InitializedNormalization: bool
+    RatioMetricCheck: bool
+    NormWarningExists: bool
+    NormalizationVault: List[int]
+    wait_time: Any  # TODO: class wrapper for updating noralization status
+    SaveVar: bool
+    numFiles: int
+    SampleRate: float
+    ratiometricanalysis: str = "unused"  # TODO: currently unused
+    generate: str = "unused"  # TODO: currently unused
+    Plot: str = "unused"  # TODO: currently unused
+    anim: List[Any]
+    NormalizationPoint: int
+    q: Queue
+    initialize: Any  # wrapper for InitializedFrequencyMapCanvas
+    LowFrequencyEntry: tk.Entry
+    high_xstart_entry: tk.Entry
+    low_xstart_entry: tk.Entry
+    high_xend_entry: tk.Entry
+    low_xend_entry: tk.Entry
+    HighFrequencyEntry: tk.Entry
+    NormWarning: tk.Label
+    FileLabel: ttk.Label
+    RealTimeSampleLabel: ttk.Label
+    SetPointNorm: ttk.Entry
+    NormalizationVar: tk.StringVar
+    low_xstart: float
+    high_xstart: float
+    low_xend: float
+    high_xend: float
+    sg_window: float
+    LowFrequencyOffset: float
+    LowFrequencySlope: float
+    ExistVar: bool
+    WrongFrequencyLabel: tk.Label
+    analysis_complete: bool
+    key: int
+    PoisonPill: bool
+    LowAlreadyReset: bool
+    HighAlreadyReset: bool
+    extrapolate: str = "unused"  # TODO: currently unused
+    AlreadyReset: bool
     FrameFileLabel: tk.Label
-    text_file_export
-    offset_normalized_data_list
-    FrameReference
-    KDM_List
-    empty_ratiometric_plots
-    empty_ratiometric_plots
-    ratiometric_figures
-    normalized_ratiometric_data_list
-    normalized_data_list
-    frequency_list
-    data_list
-    plot_list
-    EmptyPlots
-    sample_list
-    PlotFrames
-    list_val
-    EmptyRatioPlots
-    peak
-    norm
-    NormalizationWaiting
+    text_file_export: Any  # TODO: wrapper for TextFileExport
+    offset_normalized_data_list: List[int]
+    FrameReference: Any  # TODO: wrapper for ContinuousScanVisualizationFrame
+    KDM_list: List[Any]  # TODO: looks self-referential
+    empty_ratiometric_plots: List[Any]  # TODO: currently unused
+    ratiometric_plots: List[Any]
+    ratiometric_figures: List[Any]  # TODO: list of MakeRatioMetricFigure
+    normalized_ratiometric_data_list: List[float]
+    normalized_data_list: List[Any]
+    frequency_list: List[int]
+    data_list: List[Any]
+    plot_list: List[Any]
+    EmptyPlots: List[Any]
+    sample_list: List[float]
+    PlotFrames: Dict[
+        tk.Frame, Any
+    ]  # TODO: this is messy, looks like frames as key and value
+    list_val: int
+    EmptyRatioPlots: List[Any]
+    peak: Any  # TODO: pyplot plot?
+    norm: Any  # TODO: pyplot plot?
+    NormalizationWaiting: bool
