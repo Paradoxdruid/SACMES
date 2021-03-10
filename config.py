@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 from typing import List, Dict, Any
 import tkinter as tk
-import matplotlib.pyplot as plt
 from queue import Queue
 import tkinter.ttk as ttk
 
@@ -11,13 +10,13 @@ import tkinter.ttk as ttk
 @dataclass
 class Config:
     # File data
-    encoding: str = "utf-16"
-    container: tk.Frame
-    Plot: str = "unused"  # TODO: Unused
+    encoding: str
+    container: Any
+    Plot: str  # TODO: Unused
 
     HighLowList: Dict[str, int]
     delimiter: int
-    extension: str = ".csv"
+    extension: str
 
     # Tkinter Frames
     frame_list: List[tk.Frame]
@@ -25,28 +24,28 @@ class Config:
     ShowFrames: Dict[str, tk.Frame]
 
     # Current Data Values
-    current_column: int = 1
-    current_column_index: int = 0
-    voltage_column: int = 1
-    voltage_column_index: int = 0
-    spacing_index: int = 3
+    current_column: int
+    current_column_index: int
+    voltage_column: int
+    voltage_column_index: int
+    spacing_index: int
     total_columns: int
-    byte_limit: int = 3000
-    byte_index: int = 2
-    figures: List[plt.Plot]
-    StartNormalizationVar: str = "unused"  # TODO: unused
-    SaveBox: str = "unused"  # TODO: unused
+    byte_limit: int
+    byte_index: int
+    figures: List[Any]
+    StartNormalizationVar: str  # TODO: unused
+    SaveBox: str  # TODO: unused
     ManipulateFrequenciesFrame: tk.Frame
-    InputFrequencies: List[int] = [30, 80, 240]
-    e_var: str = "single"
-    FilePath: str = ""
-    ExportPath: str = ""
+    InputFrequencies: List[int]
+    e_var: str
+    FilePath: str
+    ExportPath: str
     FoundFilePath: bool
     DataFolder: str
-    method: str = ""
-    SelectedOptions: str = ""
-    XaxisOptions: str = ""
-    electrode_count: int = 0
+    method: str
+    SelectedOptions: str
+    XaxisOptions: str
+    electrode_count: int
     electrode_list: List[int]
     electrode_dict: Dict[int, int]
     frequency_list: List[int]
@@ -60,9 +59,9 @@ class Config:
     ExportFilePath: str
     AlreadyInitiated: bool
     FileHandle: str
-    starting_file: int = 1
+    starting_file: int
     post_analysis: tk.Frame
-    handle_variable: str = ""
+    handle_variable: str
     track: Any  # TODO: Track class seems like an odd wrapper for updating lists
     Interval: int
     PlotContainer: tk.Frame
@@ -86,9 +85,9 @@ class Config:
     SaveVar: bool
     numFiles: int
     SampleRate: float
-    ratiometricanalysis: str = "unused"  # TODO: currently unused
-    generate: str = "unused"  # TODO: currently unused
-    Plot: str = "unused"  # TODO: currently unused
+    ratiometricanalysis: str  # TODO: currently unused
+    generate: str  # TODO: currently unused
+    Plot: str  # TODO: currently unused
     anim: List[Any]
     NormalizationPoint: int
     q: Queue
@@ -118,7 +117,7 @@ class Config:
     PoisonPill: bool
     LowAlreadyReset: bool
     HighAlreadyReset: bool
-    extrapolate: str = "unused"  # TODO: currently unused
+    extrapolate: str  # TODO: currently unused
     AlreadyReset: bool
     FrameFileLabel: tk.Label
     text_file_export: Any  # TODO: wrapper for TextFileExport
