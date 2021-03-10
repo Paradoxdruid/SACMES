@@ -20,8 +20,9 @@ import datetime
 # Python 3
 import tkinter as tk
 import tkinter.ttk as ttk
-from tkinter.ttk import *  # noqa
-from tkinter import *  # noqa
+
+# from tkinter.ttk import *  # noqa
+# from tkinter import *  # noqa
 from tkinter import filedialog, Menu
 
 
@@ -31,13 +32,16 @@ from matplotlib.patches import Polygon
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 import csv
-from pylab import *  # noqa
-from numpy import *  # noqa
+
+# from pylab import *  # noqa
+# from numpy import *  # noqa
 from numpy import sqrt
-from scipy.interpolate import *  # noqa
+
+# from scipy.interpolate import *  # noqa
 from scipy.signal import *  # noqa
 from scipy.signal import savgol_filter
-from itertools import *  # noqa
+
+# from itertools import *  # noqa
 import threading
 from queue import Queue
 
@@ -469,10 +473,10 @@ class MainWindow(tk.Tk):
             label="Customize File Format",
             command=lambda: self.extraction_adjustment_frame(),
         )
-        self.delimiter_value = IntVar()
+        self.delimiter_value = tk.IntVar()
         self.delimiter_value.set(1)
 
-        self.extension_value = IntVar()
+        self.extension_value = tk.IntVar()
         self.extension_value.set(1)
 
         self.byte_menu = tk.Menu(menubar)
@@ -515,7 +519,7 @@ class MainWindow(tk.Tk):
 
         container_value += 1
         self.list_val_entry = tk.Entry(container, width=5)
-        self.list_val_entry.insert(END, current_column)
+        self.list_val_entry.insert(tk.END, current_column)
         self.list_val_entry.grid(row=container_value, column=0, pady=5)
 
         container_value = 0
@@ -524,7 +528,7 @@ class MainWindow(tk.Tk):
 
         container_value += 1
         self.voltage_column = tk.Entry(container, width=5)
-        self.voltage_column.insert(END, voltage_column)
+        self.voltage_column.insert(tk.END, voltage_column)
         self.voltage_column.grid(row=container_value, column=1, pady=5)
 
         container_value += 1
@@ -542,7 +546,7 @@ class MainWindow(tk.Tk):
         )
 
         self.spacing_val_entry = tk.Entry(inner_frame, width=4)
-        self.spacing_val_entry.insert(END, 3)
+        self.spacing_val_entry.insert(tk.END, 3)
         self.spacing_val_entry.grid(row=0, column=0, pady=1)
 
         # -- new frame --#
@@ -678,7 +682,7 @@ class InputFrame(
         ).grid(row=row_value, column=0, columnspan=2)
         self.ImportFileEntry = tk.Entry(self)
         self.ImportFileEntry.grid(row=row_value + 1, column=0, columnspan=2, pady=5)
-        self.ImportFileEntry.insert(END, handle_variable)
+        self.ImportFileEntry.insert(tk.END, handle_variable)
 
         # --- File Handle Input ---#
         HandleLabel = tk.Label(self, text="Exported File Handle:", font=LARGE_FONT)
@@ -688,7 +692,7 @@ class InputFrame(
         day = str(now.day)
         month = str(now.month)
         year = str(now.year)
-        self.filehandle.insert(END, "DataExport_%s_%s_%s.txt" % (year, month, day))
+        self.filehandle.insert(tk.END, "DataExport_%s_%s_%s.txt" % (year, month, day))
         self.filehandle.grid(row=row_value + 1, column=2, columnspan=2, pady=5)
 
         row_value += 2
@@ -702,14 +706,14 @@ class InputFrame(
         numFileLabel = tk.Label(self, text="Number of Files:", font=LARGE_FONT)
         numFileLabel.grid(row=row_value, column=0, columnspan=2, pady=4)
         self.numfiles = ttk.Entry(self, width=7)
-        self.numfiles.insert(END, "50")
+        self.numfiles.insert(tk.END, "50")
         self.numfiles.grid(row=row_value + 1, column=0, columnspan=2, pady=6)
 
         # --- Analysis interval for event callback in ElectrochemicalAnimation ---#
         IntervalLabel = tk.Label(self, text="Analysis Interval (ms):", font=LARGE_FONT)
         IntervalLabel.grid(row=row_value, column=2, columnspan=2, pady=4)
         self.Interval = ttk.Entry(self, width=7)
-        self.Interval.insert(END, "10")
+        self.Interval.insert(tk.END, "10")
         self.Interval.grid(row=row_value + 1, column=2, columnspan=2, pady=6)
 
         row_value += 2
@@ -718,13 +722,13 @@ class InputFrame(
         SampleLabel = tk.Label(self, text="Sampling Rate (s):", font=LARGE_FONT)
         SampleLabel.grid(row=row_value, column=0, columnspan=2)
         self.sample_rate = ttk.Entry(self, width=7)
-        self.sample_rate.insert(END, "20")
+        self.sample_rate.insert(tk.END, "20")
         self.sample_rate.grid(row=row_value + 1, column=0, columnspan=2)
 
         self.resize_label = tk.Label(self, text="Resize Interval", font=LARGE_FONT)
         self.resize_label.grid(row=row_value, column=2, columnspan=2)
         self.resize_entry = tk.Entry(self, width=7)
-        self.resize_entry.insert(END, "200")
+        self.resize_entry.insert(tk.END, "200")
         self.resize_entry.grid(row=row_value + 1, column=2, columnspan=2)
 
         row_value += 2
@@ -757,7 +761,7 @@ class InputFrame(
             self.ElectrodeListboxFrame, text="Select Electrodes:", font=LARGE_FONT
         )
         self.ElectrodeLabel.grid(row=0, column=0, columnspan=2, sticky="nswe")
-        self.ElectrodeCount = Listbox(
+        self.ElectrodeCount = tk.Listbox(
             self.ElectrodeListboxFrame,
             relief="groove",
             exportselection=0,
@@ -770,9 +774,9 @@ class InputFrame(
         self.ElectrodeCount.bind("<<ListboxSelect>>", self.ElectrodeCurSelect)
         self.ElectrodeCount.grid(row=1, column=0, columnspan=2, sticky="nswe")
         for electrode in electrodes:
-            self.ElectrodeCount.insert(END, electrode)
+            self.ElectrodeCount.insert(tk.END, electrode)
 
-        self.scrollbar = Scrollbar(self.ElectrodeListboxFrame, orient="vertical")
+        self.scrollbar = tk.Scrollbar(self.ElectrodeListboxFrame, orient="vertical")
         self.scrollbar.config(width=10, command=self.ElectrodeCount.yview)
         self.scrollbar.grid(row=1, column=1, sticky="nse")
         self.ElectrodeCount.config(yscrollcommand=self.scrollbar.set)
@@ -838,7 +842,7 @@ class InputFrame(
         self.FrequencyListExists = False
 
         # --- ListBox containing the frequencies given on line 46 (InputFrequencies) -#
-        self.FrequencyList = Listbox(
+        self.FrequencyList = tk.Listbox(
             self.ListboxFrame,
             relief="groove",
             exportselection=0,
@@ -851,11 +855,11 @@ class InputFrame(
         self.FrequencyList.bind("<<ListboxSelect>>", self.FrequencyCurSelect)
         self.FrequencyList.grid(row=1, padx=10, sticky="nswe")
         for frequency in frequencies:
-            self.FrequencyList.insert(END, frequency)
+            self.FrequencyList.insert(tk.END, frequency)
 
         # --- Scroll Bar ---#
         if self.ScrollBarVal:
-            self.scrollbar = Scrollbar(self.ListboxFrame, orient="vertical")
+            self.scrollbar = tk.Scrollbar(self.ListboxFrame, orient="vertical")
             self.scrollbar.config(width=10, command=self.FrequencyList.yview)
             self.scrollbar.grid(row=1, sticky="nse")
             self.FrequencyList.config(yscrollcommand=self.scrollbar.set)
@@ -923,7 +927,7 @@ class InputFrame(
         # --- Select Analysis Method---#
         Methods = ["Continuous Scan", "Frequency Map"]
         MethodsLabel = tk.Label(self, text="Select Analysis Method", font=LARGE_FONT)
-        self.MethodsBox = Listbox(
+        self.MethodsBox = tk.Listbox(
             self,
             relief="groove",
             exportselection=0,
@@ -938,12 +942,12 @@ class InputFrame(
         self.MethodsBox.grid(row=row_value, column=0, columnspan=4)
         row_value += 1
         for method in Methods:
-            self.MethodsBox.insert(END, method)
+            self.MethodsBox.insert(tk.END, method)
 
         # --- Select Data to be Plotted ---#
         Options = ["Peak Height Extraction", "Area Under the Curve"]
         OptionsLabel = tk.Label(self, text="Select Data to be Plotted", font=LARGE_FONT)
-        self.PlotOptions = Listbox(
+        self.PlotOptions = tk.Listbox(
             self,
             relief="groove",
             exportselection=0,
@@ -957,7 +961,7 @@ class InputFrame(
         self.PlotOptions.grid(row=row_value + 1, column=0, columnspan=2)
 
         for option in Options:
-            self.PlotOptions.insert(END, option)
+            self.PlotOptions.insert(tk.END, option)
 
         # --- Warning label for if the user does not select an analysis method ---#
         self.NoOptionsSelected = tk.Label(
@@ -968,7 +972,7 @@ class InputFrame(
         # --- Select units of the X-axis ---#
         PlotOptions = ["Experiment Time", "File Number"]
         PlotLabel = tk.Label(self, text="Select X-axis units", font=LARGE_FONT)
-        self.XaxisOptions = Listbox(
+        self.XaxisOptions = tk.Listbox(
             self,
             relief="groove",
             exportselection=0,
@@ -981,7 +985,7 @@ class InputFrame(
         PlotLabel.grid(row=row_value, column=2, columnspan=2)
         self.XaxisOptions.grid(row=row_value + 1, column=2, columnspan=2)
         for option in PlotOptions:
-            self.XaxisOptions.insert(END, option)
+            self.XaxisOptions.insert(tk.END, option)
 
         row_value += 2
         ############################################################
@@ -1015,7 +1019,7 @@ class InputFrame(
         self.raw_data_min_parameter_label.grid(row=1, column=0)
         self.raw_data_min = tk.Entry(AdjustmentFrame, width=5)
         self.raw_data_min.insert(
-            END, "2"
+            tk.END, "2"
         )  # initial minimum is set to 0.5*minimum current (baseline) of file 1
         self.raw_data_min.grid(row=2, column=0, padx=5, pady=2, ipadx=2)
 
@@ -1026,7 +1030,7 @@ class InputFrame(
         self.raw_data_max_parameter_label.grid(row=3, column=0)
         self.raw_data_max = tk.Entry(AdjustmentFrame, width=5)
         self.raw_data_max.insert(
-            END, "2"
+            tk.END, "2"
         )  # initial adjustment is set to 2x the max current (Peak Height) of file 1
         self.raw_data_max.grid(row=4, column=0, padx=5, pady=2, ipadx=2)
 
@@ -1037,7 +1041,7 @@ class InputFrame(
         self.data_min_parameter_label.grid(row=1, column=1)
         self.data_min = tk.Entry(AdjustmentFrame, width=5)
         self.data_min.insert(
-            END, "2"
+            tk.END, "2"
         )  # initial minimum is set to 0.5*minimum current (baseline) of file 1
         self.data_min.grid(row=2, column=1, padx=5, pady=2, ipadx=2)
 
@@ -1048,7 +1052,7 @@ class InputFrame(
         self.data_max_parameter_label.grid(row=3, column=1)
         self.data_max = tk.Entry(AdjustmentFrame, width=5)
         self.data_max.insert(
-            END, "2"
+            tk.END, "2"
         )  # initial adjustment is set to 2x the max current (Peak Height) of file 1
         self.data_max.grid(row=4, column=1, padx=5, pady=2, ipadx=2)
 
@@ -1058,7 +1062,7 @@ class InputFrame(
         )
         self.norm_data_min_parameter_label.grid(row=1, column=2)
         self.norm_data_min = tk.Entry(AdjustmentFrame, width=5)
-        self.norm_data_min.insert(END, "0")  # initial minimum is set to 0
+        self.norm_data_min.insert(tk.END, "0")  # initial minimum is set to 0
         self.norm_data_min.grid(row=2, column=2, padx=5, pady=2, ipadx=2)
 
         # --- Normalized Data Maximum Parameter Adjustment ---#
@@ -1067,7 +1071,7 @@ class InputFrame(
         )
         self.norm_data_max_parameter_label.grid(row=3, column=2)
         self.norm_data_max = tk.Entry(AdjustmentFrame, width=5)
-        self.norm_data_max.insert(END, "2")  # initial maximum is set to 2
+        self.norm_data_max.insert(tk.END, "2")  # initial maximum is set to 2
         self.norm_data_max.grid(row=4, column=2, padx=5, pady=2, ipadx=2)
 
         # --- Raw Data Minimum Parameter Adjustment ---#
@@ -1077,7 +1081,7 @@ class InputFrame(
         self.KDM_min_label.grid(row=1, column=3)
         self.KDM_min = tk.Entry(AdjustmentFrame, width=5)
         self.KDM_min.insert(
-            END, "0"
+            tk.END, "0"
         )  # initial minimum is set to 0.5*minimum current (baseline) of file 1
         self.KDM_min.grid(row=2, column=3, padx=5, pady=2, ipadx=2)
 
@@ -1088,14 +1092,14 @@ class InputFrame(
         self.KDM_Max_label.grid(row=3, column=3)
         self.KDM_max = tk.Entry(AdjustmentFrame, width=5)
         self.KDM_max.insert(
-            END, "2"
+            tk.END, "2"
         )  # initial adjustment is set to 2x the max current (Peak Height) of file 1
         self.KDM_max.grid(row=4, column=3, padx=5, pady=2, ipadx=2)
 
         # --- Ask the User if they want to export the data to a .txt file ---#
-        self.SaveVar = BooleanVar()
+        self.SaveVar = tk.BooleanVar()
         self.SaveVar.set(False)
-        self.SaveBox = Checkbutton(
+        self.SaveBox = tk.Checkbutton(
             self,
             variable=self.SaveVar,
             onvalue=True,
@@ -1104,9 +1108,9 @@ class InputFrame(
         ).grid(row=row_value, column=0, columnspan=2)
 
         # --- Ask the User if they want to export the data to a .txt file ---#
-        self.InjectionVar = BooleanVar()
+        self.InjectionVar = tk.BooleanVar()
         self.InjectionVar.set(False)
-        self.InjectionCheck = Checkbutton(
+        self.InjectionCheck = tk.Checkbutton(
             self,
             variable=self.InjectionVar,
             onvalue=True,
@@ -1147,7 +1151,7 @@ class InputFrame(
 
     def AddFrequency(self):
         Frequencies = self.FrequencyEntry.get()
-        self.FrequencyEntry.delete(0, END)
+        self.FrequencyEntry.delete(0, tk.END)
 
         if Frequencies is not None:
             FrequencyList = Frequencies.split(" ")
@@ -1157,14 +1161,14 @@ class InputFrame(
             InputFrequencies.sort()
 
             self.FrequencyList.delete(0, 1)
-            self.FrequencyList.delete(0, END)
+            self.FrequencyList.delete(0, tk.END)
 
             for frequency in InputFrequencies:
-                self.FrequencyList.insert(END, frequency)
+                self.FrequencyList.insert(tk.END, frequency)
 
     def DeleteFrequency(self):
         Frequencies = self.FrequencyEntry.get()
-        self.FrequencyEntry.delete(0, END)
+        self.FrequencyEntry.delete(0, tk.END)
 
         if Frequencies is not None:
             FrequencyList = Frequencies.split(" ")
@@ -1175,10 +1179,10 @@ class InputFrame(
                 if Frequency in InputFrequencies:
                     InputFrequencies.remove(Frequency)
 
-                self.FrequencyList.delete(0, END)
+                self.FrequencyList.delete(0, tk.END)
 
                 for frequency in InputFrequencies:
-                    self.FrequencyList.insert(END, int(frequency))
+                    self.FrequencyList.insert(tk.END, int(frequency))
 
     def Clear(self):
         global InputFrequencies
@@ -1867,6 +1871,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
         global low_xstart_entry, high_xend_entry, low_xend_entry, HighFrequencyEntry
         global NormWarning, FileLabel, RealTimeSampleLabel
         global SetPointNorm, NormalizationPoint, NormalizationVar
+        global low_xstart, low_xend, high_xstart, high_xend
 
         tk.Frame.__init__(self, parent)  # Initialize the frame
 
@@ -1958,7 +1963,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
             self.HighFrequencyLabel.grid(row=1, column=1, pady=5, padx=5)
 
             HighFrequencyEntry = tk.Entry(self.FrequencyFrame, width=7)
-            HighFrequencyEntry.insert(END, HighFrequency)
+            HighFrequencyEntry.insert(tk.END, HighFrequency)
             HighFrequencyEntry.grid(row=2, column=1, padx=5)
 
             # --- Low Frequency Selection for KDM and Ratiometric Analysis ---#
@@ -1968,14 +1973,14 @@ class ContinuousScanManipulationFrame(tk.Frame):
             self.LowFrequencyLabel.grid(row=1, column=0, pady=5, padx=5)
 
             LowFrequencyEntry = tk.Entry(self.FrequencyFrame, width=7)
-            LowFrequencyEntry.insert(END, LowFrequency)
+            LowFrequencyEntry.insert(tk.END, LowFrequency)
             LowFrequencyEntry.grid(row=2, column=0, padx=5)
 
             self.LowFrequencyOffsetLabel = tk.Label(
                 self.FrequencyFrame, text="Low Frequency\n Offset", font=MEDIUM_FONT
             ).grid(row=3, column=0, pady=2, padx=2)
             self.LowFrequencyOffset = tk.Entry(self.FrequencyFrame, width=7)
-            self.LowFrequencyOffset.insert(END, LowFrequencyOffset)
+            self.LowFrequencyOffset.insert(tk.END, LowFrequencyOffset)
             self.LowFrequencyOffset.grid(row=4, column=0, padx=2, pady=2)
 
             self.LowFrequencySlopeLabel = tk.Label(
@@ -1984,7 +1989,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
                 font=MEDIUM_FONT,
             ).grid(row=3, column=1, pady=2, padx=2)
             self.LowFrequencySlope = tk.Entry(self.FrequencyFrame, width=7)
-            self.LowFrequencySlope.insert(END, LowFrequencySlope)
+            self.LowFrequencySlope.insert(tk.END, LowFrequencySlope)
             self.LowFrequencySlope.grid(row=4, column=1, padx=2, pady=2)
 
             self.ApplyFrequencies = ttk.Button(
@@ -2027,7 +2032,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
         self.SmoothingLabel.grid(row=1, column=0, columnspan=4, pady=1)
         self.SmoothingEntry = tk.Entry(RegressionFrame, width=10)
         self.SmoothingEntry.grid(row=2, column=0, columnspan=4, pady=3)
-        self.SmoothingEntry.insert(END, sg_window)
+        self.SmoothingEntry.insert(tk.END, sg_window)
 
         # --- Check for the presence of high and low frequencies ---#
         if frequency_list[-1] > cutoff_frequency:
@@ -2059,7 +2064,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
                 LowParameterFrame, text="xstart (V)", font=MEDIUM_FONT
             ).grid(row=0, column=0)
             self.low_xstart_entry = tk.Entry(LowParameterFrame, width=7)
-            self.low_xstart_entry.insert(END, str(low_xstart))
+            self.low_xstart_entry.insert(tk.END, str(low_xstart))
             self.low_xstart_entry.grid(row=1, column=0)
             low_xstart_entry = self.low_xstart_entry
 
@@ -2068,7 +2073,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
                 LowParameterFrame, text="xend (V)", font=MEDIUM_FONT
             ).grid(row=0, column=1)
             self.low_xend_entry = tk.Entry(LowParameterFrame, width=7)
-            self.low_xend_entry.insert(END, str(low_xend))
+            self.low_xend_entry.insert(tk.END, str(low_xend))
             self.low_xend_entry.grid(row=1, column=1)
             low_xend_entry = self.low_xend_entry
 
@@ -2091,7 +2096,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
                 HighParameterFrame, text="xstart (V)", font=MEDIUM_FONT
             ).grid(row=0, column=0)
             self.high_xstart_entry = tk.Entry(HighParameterFrame, width=7)
-            self.high_xstart_entry.insert(END, str(high_xstart))
+            self.high_xstart_entry.insert(tk.END, str(high_xstart))
             self.high_xstart_entry.grid(row=1, column=0)
             high_xstart_entry = self.high_xstart_entry
 
@@ -2100,7 +2105,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
                 HighParameterFrame, text="xend (V)", font=MEDIUM_FONT
             ).grid(row=0, column=1)
             self.high_xend_entry = tk.Entry(HighParameterFrame, width=7)
-            self.high_xend_entry.insert(END, str(high_xend))
+            self.high_xend_entry.insert(tk.END, str(high_xend))
             self.high_xend_entry.grid(row=1, column=1)
             high_xend_entry = self.high_xend_entry
 
@@ -2481,7 +2486,7 @@ class FrequencyMapManipulationFrame(tk.Frame):
         self.SmoothingLabel.grid(row=1, column=0, columnspan=4, pady=1)
         self.SmoothingEntry = tk.Entry(RegressionFrame, width=10)
         self.SmoothingEntry.grid(row=2, column=0, columnspan=4, pady=3)
-        self.SmoothingEntry.insert(END, sg_window)
+        self.SmoothingEntry.insert(tk.END, sg_window)
 
         # --- Check for the presence of high and low frequencies ---#
         if frequency_list[-1] > 50:
@@ -2511,7 +2516,7 @@ class FrequencyMapManipulationFrame(tk.Frame):
                 LowParameterFrame, text="xstart (V)", font=MEDIUM_FONT
             ).grid(row=0, column=0)
             self.low_xstart_entry = tk.Entry(LowParameterFrame, width=7)
-            self.low_xstart_entry.insert(END, str(low_xstart))
+            self.low_xstart_entry.insert(tk.END, str(low_xstart))
             self.low_xstart_entry.grid(row=1, column=0)
             low_xstart_entry = self.low_xstart_entry
 
@@ -2520,7 +2525,7 @@ class FrequencyMapManipulationFrame(tk.Frame):
                 LowParameterFrame, text="xend (V)", font=MEDIUM_FONT
             ).grid(row=0, column=1)
             self.low_xend_entry = tk.Entry(LowParameterFrame, width=7)
-            self.low_xend_entry.insert(END, str(low_xend))
+            self.low_xend_entry.insert(tk.END, str(low_xend))
             self.low_xend_entry.grid(row=1, column=1)
             low_xend_entry = self.low_xend_entry
 
@@ -2543,7 +2548,7 @@ class FrequencyMapManipulationFrame(tk.Frame):
                 HighParameterFrame, text="xstart (V)", font=MEDIUM_FONT
             ).grid(row=0, column=0)
             self.high_xstart_entry = tk.Entry(HighParameterFrame, width=7)
-            self.high_xstart_entry.insert(END, str(high_xstart))
+            self.high_xstart_entry.insert(tk.END, str(high_xstart))
             self.high_xstart_entry.grid(row=1, column=0)
             high_xstart_entry = self.high_xstart_entry
 
@@ -2552,7 +2557,7 @@ class FrequencyMapManipulationFrame(tk.Frame):
                 HighParameterFrame, text="xend (V)", font=MEDIUM_FONT
             ).grid(row=0, column=1)
             self.high_xend_entry = tk.Entry(HighParameterFrame, width=7)
-            self.high_xend_entry.insert(END, str(high_xend))
+            self.high_xend_entry.insert(tk.END, str(high_xend))
             self.high_xend_entry.grid(row=1, column=1)
             high_xend_entry = self.high_xend_entry
 
@@ -2773,7 +2778,7 @@ class FrequencyMapManipulationFrame(tk.Frame):
 
 class ContinuousScanVisualizationFrame(tk.Frame):
     def __init__(self, electrode, count, parent, controller):
-        global FrameFileLabel
+        global FrameFileLabel, ratiometric_figures
 
         tk.Frame.__init__(self, parent)
 
@@ -3359,7 +3364,7 @@ class InitializeContinuousCanvas:
             linear_fit = np.polyfit(
                 [regression_dict[min1], regression_dict[min2]], [min1, min2], 1
             )
-            linear_regression = polyval(
+            linear_regression = np.polyval(
                 linear_fit, [regression_dict[min1], regression_dict[min2]]
             ).tolist()
 
@@ -3742,7 +3747,7 @@ class InitializeFrequencyMapCanvas:
             linear_fit = np.polyfit(
                 [regression_dict[min1], regression_dict[min2]], [min1, min2], 1
             )
-            linear_regression = polyval(
+            linear_regression = np.polyval(
                 linear_fit, [regression_dict[min1], regression_dict[min2]]
             ).tolist()
 
@@ -3910,7 +3915,7 @@ class ElectrochemicalAnimation:
                 self.q = Queue
 
                 # -- set the poison pill event for Reset --#
-                self.PoisonPill = Event()
+                self.PoisonPill = tk.Event()
                 PoisonPill = self.PoisonPill  # global reference
 
                 self.file = 1
@@ -4875,7 +4880,7 @@ class DataNormalization:
     # the data list to the new normalization point             ###
     ################################################################
     def RenormalizeData(self, file):
-
+        global NormalizationWaiting
         ##############################################################
         # If the normalization point equals the current file,      ##
         # normalize all of the data to the new normalization point ##
@@ -5153,7 +5158,7 @@ class PostAnalysis(tk.Frame):
             self.HighFrequencyLabel.grid(row=1, column=1, pady=5, padx=5)
 
             self.HighFrequencyEntry = tk.Entry(self.FrequencyFrame, width=7)
-            self.HighFrequencyEntry.insert(END, HighFrequency)
+            self.HighFrequencyEntry.insert(tk.END, HighFrequency)
             self.HighFrequencyEntry.grid(row=2, column=1, padx=5)
 
             # --- Low Frequency Selection for KDM and Ratiometric Analysis ---#
@@ -5163,14 +5168,14 @@ class PostAnalysis(tk.Frame):
             self.LowFrequencyLabel.grid(row=1, column=0, pady=5, padx=5)
 
             self.LowFrequencyEntry = tk.Entry(self.FrequencyFrame, width=7)
-            self.LowFrequencyEntry.insert(END, LowFrequency)
+            self.LowFrequencyEntry.insert(tk.END, LowFrequency)
             self.LowFrequencyEntry.grid(row=2, column=0, padx=5)
 
             self.LowFrequencyOffsetLabel = tk.Label(
                 self.FrequencyFrame, text="Low Frequency\n Offset", font=MEDIUM_FONT
             ).grid(row=3, column=0, pady=2, padx=2)
             self.LowFrequencyOffset = tk.Entry(self.FrequencyFrame, width=7)
-            self.LowFrequencyOffset.insert(END, LowFrequencyOffset)
+            self.LowFrequencyOffset.insert(tk.END, LowFrequencyOffset)
             self.LowFrequencyOffset.grid(row=4, column=0, padx=2, pady=2)
 
             self.LowFrequencySlopeLabel = tk.Label(
@@ -5179,7 +5184,7 @@ class PostAnalysis(tk.Frame):
                 font=MEDIUM_FONT,
             ).grid(row=3, column=1, pady=2, padx=2)
             self.LowFrequencySlope = tk.Entry(self.FrequencyFrame, width=7)
-            self.LowFrequencySlope.insert(END, LowFrequencySlope)
+            self.LowFrequencySlope.insert(tk.END, LowFrequencySlope)
             self.LowFrequencySlope.grid(row=4, column=1, padx=2, pady=2)
 
             self.ApplyFrequencies = ttk.Button(
@@ -5550,14 +5555,14 @@ class PostAnalysis(tk.Frame):
         HandleLabel = tk.Label(self.win, text="Exported File Handle:", font=LARGE_FONT)
         HandleLabel.grid(row=4, column=0, columnspan=2)
         self.filehandle = ttk.Entry(self.win)
-        self.filehandle.insert(END, FileHandle)
+        self.filehandle.insert(tk.END, FileHandle)
         self.filehandle.grid(row=5, column=0, columnspan=2, pady=5)
 
         self.ElectrodeLabel = tk.Label(
             self.win, text="Select Electrodes:", font=LARGE_FONT
         )
         self.ElectrodeLabel.grid(row=10, column=0, sticky="nswe")
-        self.ElectrodeCount = Listbox(
+        self.ElectrodeCount = tk.Listbox(
             self.win,
             relief="groove",
             exportselection=0,
@@ -5570,7 +5575,7 @@ class PostAnalysis(tk.Frame):
         self.ElectrodeCount.bind("<<ListboxSelect>>", self.ElectrodeCurSelect)
         self.ElectrodeCount.grid(row=11, column=0, padx=10, sticky="nswe")
         for electrode in electrode_list:
-            self.ElectrodeCount.insert(END, electrode)
+            self.ElectrodeCount.insert(tk.END, electrode)
 
         # --- ListBox containing the frequencies given on line 46 (InputFrequencies)-#
 
@@ -5578,7 +5583,7 @@ class PostAnalysis(tk.Frame):
             self.win, text="Select Frequencies", font=LARGE_FONT
         )
         self.FrequencyLabel.grid(row=10, column=1, padx=10)
-        self.FrequencyList = Listbox(
+        self.FrequencyList = tk.Listbox(
             self.win,
             relief="groove",
             exportselection=0,
@@ -5591,7 +5596,7 @@ class PostAnalysis(tk.Frame):
         self.FrequencyList.bind("<<ListboxSelect>>", self.FrequencyCurSelect)
         self.FrequencyList.grid(row=11, column=1, padx=10, sticky="nswe")
         for frequency in frequency_list:
-            self.FrequencyList.insert(END, frequency)
+            self.FrequencyList.insert(tk.END, frequency)
 
         ExportData = tk.Button(
             self.win, text="Export Data", command=lambda: self.PostAnalysisDataExport()

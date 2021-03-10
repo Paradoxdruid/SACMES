@@ -7,7 +7,7 @@ from queue import Queue
 import tkinter.ttk as ttk
 
 
-@dataclass
+@dataclass(init=False)
 class Config:
     # File data
     encoding: str
