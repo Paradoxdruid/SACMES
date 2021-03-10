@@ -23,7 +23,7 @@ class Config:
     PlotValues: List[tk.Frame]
     ShowFrames: Dict[str, tk.Frame]
 
-    # Current Data Values
+    # Current Data Values  -- mark for refactoring progress
     current_column: int
     current_column_index: int
     voltage_column: int
