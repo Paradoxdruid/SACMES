@@ -17,17 +17,11 @@ matplotlib.use("TkAgg")
 import time
 import datetime
 
-try:
-    import Tkinter as tk
-    from Tkinter.ttk import *  # noqa
-    from Tkinter import *  # noqa
-    from Tknter import filedialog, Menu
-
-except ImportError:  # Python 3
-    import tkinter as tk
-    from tkinter.ttk import *  # noqa
-    from tkinter import *  # noqa
-    from tkinter import filedialog, Menu
+# Python 3
+import tkinter as tk
+from tkinter.ttk import *  # noqa
+from tkinter import *  # noqa
+from tkinter import filedialog, Menu
 
 
 from matplotlib import style
@@ -44,7 +38,9 @@ from itertools import *  # noqa
 import threading
 from queue import Queue
 
-style.use("ggplot")
+# global variables moved to dataclass
+from config import Config as cg
+
 
 # ---Filter out error warnings---#
 import warnings
@@ -53,6 +49,8 @@ warnings.simplefilter("ignore", np.RankWarning)  # numpy polyfit_deg warning
 warnings.filterwarnings(
     action="ignore", module="scipy", message="^internal gelsd"
 )  # RuntimeWarning
+
+style.use("ggplot")
 
 
 # ---------------------------------------------------------------------------------------------------#
@@ -1334,7 +1332,7 @@ class InputFrame(
     #####################################################################
     def CheckPoint(self):
         global mypath, Option, FileHandle, SelectedOptions, ExportFilePath
-        global AlreadyInitiated, delimeter
+        global AlreadyInitiated, delimiter
 
         try:
             # --- check to see if the data analysis method has been
