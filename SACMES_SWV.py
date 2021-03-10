@@ -471,7 +471,7 @@ class MainWindow(tk.Tk):
         editmenu.add_separator()
         editmenu.add_command(
             label="Customize File Format",
-            command=lambda: self.extraction_adjustment_frame(),
+            command=self.extraction_adjustment_frame,  # was lambda
         )
         self.delimiter_value = tk.IntVar()
         self.delimiter_value.set(1)
@@ -601,11 +601,11 @@ class MainWindow(tk.Tk):
 
         row_value += 1
         apply_list_val = ttk.Button(
-            win, text="Apply", command=lambda: self.get_list_val()
+            win, text="Apply", command=self.get_list_val  # was lambda
         )
         apply_list_val.grid(row=row_value, column=0, pady=6)
 
-        exit = ttk.Button(win, text="Exit", command=lambda: win.destroy())
+        exit = ttk.Button(win, text="Exit", command=win.destroy)  # was lambda
         exit.grid(row=row_value, column=1, pady=3)
 
     def get_list_val(self):
@@ -892,26 +892,26 @@ class InputFrame(
             ManipulateFrequenciesFrame,
             text="Add",
             font=MEDIUM_FONT,
-            command=lambda: self.AddFrequency(),
+            command=self.AddFrequency,  # was lambda
         ).grid(row=2, column=0)
         DeleteFrequencyButton = tk.Button(
             ManipulateFrequenciesFrame,
             text="Delete",
             font=MEDIUM_FONT,
-            command=lambda: self.DeleteFrequency(),
+            command=self.DeleteFrequency,  # was lambda
         ).grid(row=2, column=1)
         ClearFrequencyButton = tk.Button(
             ManipulateFrequenciesFrame,
             text="Clear",
             font=MEDIUM_FONT,
-            command=lambda: self.Clear(),
+            command=self.Clear,  # was lambda
         ).grid(row=3, column=0, columnspan=2)
 
         ReturnButton = tk.Button(
             ManipulateFrequenciesFrame,
             text="Return",
             font=MEDIUM_FONT,
-            command=lambda: self.Return(),
+            command=self.Return,  # was lambda
         ).grid(row=4, column=0, columnspan=2)
 
         ManipulateFrequenciesFrame.rowconfigure(0, weight=1)
@@ -1121,13 +1121,13 @@ class InputFrame(
 
         # --- Quit Button ---#
         self.QuitButton = ttk.Button(
-            self, width=9, text="Quit Program", command=lambda: quit()
+            self, width=9, text="Quit Program", command=quit  # was lambda
         )
         self.QuitButton.grid(row=row_value, column=0, columnspan=2, pady=10, padx=10)
 
         # --- Button to Initialize Data Analysis --#
         StartButton = ttk.Button(
-            self, width=9, text="Initialize", command=lambda: self.CheckPoint()
+            self, width=9, text="Initialize", command=self.CheckPoint  # was lambda
         )
         StartButton.grid(row=row_value, column=2, columnspan=2, pady=10, padx=10)
         row_value += 1
@@ -1908,7 +1908,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
         NormalizeButton = ttk.Button(
             self,
             text="Apply Norm",
-            command=lambda: self.RealTimeNormalization(),
+            command=self.RealTimeNormalization,  # was lambda
             width=10,
         )
         self.NormWarning = tk.Label(self, text="", fg="red", font=MEDIUM_FONT)
@@ -1931,7 +1931,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
         InjectionButton = ttk.Button(
             self,
             text="Apply Injection",
-            command=lambda: self.RealTimeInjection(),
+            command=self.RealTimeInjection,  # lambda
             width=10,
         )
         self.SetInjectionPoint = ttk.Entry(self, width=8)
@@ -1995,7 +1995,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
             self.ApplyFrequencies = ttk.Button(
                 self.FrequencyFrame,
                 text="Apply Frequencies",
-                command=lambda: self.RealTimeKDM(),
+                command=self.RealTimeKDM,  # lambda
             )
             self.ApplyFrequencies.grid(row=5, column=0, columnspan=4, pady=5, padx=5)
 
@@ -2136,7 +2136,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
             RegressionFrame,
             text="Apply Adjustments",
             font=LARGE_FONT,
-            command=lambda: self.AdjustParameters(),
+            command=self.AdjustParameters,  # lambda
         )
         self.AdjustParameterButton.grid(row=5, column=0, columnspan=4, pady=10, padx=10)
 
@@ -2168,19 +2168,19 @@ class ContinuousScanManipulationFrame(tk.Frame):
 
         # --- Start ---#
         StartButton = ttk.Button(
-            self, text="Start", style="Fun.TButton", command=lambda: self.SkeletonKey()
+            self, text="Start", style="Fun.TButton", command=self.SkeletonKey  # lambda
         )
         StartButton.grid(row=row_value, column=0, pady=5, padx=5)
 
         # --- Reset ---#
         Reset = ttk.Button(
-            self, text="Reset", style="Fun.TButton", command=lambda: self.Reset()
+            self, text="Reset", style="Fun.TButton", command=self.Reset  # lambda
         )
         Reset.grid(row=row_value, column=1, pady=5, padx=5)
         row_value += 1
 
         # --- Quit ---#
-        QuitButton = ttk.Button(self, text="Quit Program", command=lambda: quit())
+        QuitButton = ttk.Button(self, text="Quit Program", command=quit)  # lambda
         QuitButton.grid(row=row_value, column=0, columnspan=4, pady=5)
 
         for row in range(row_value):
@@ -2588,7 +2588,7 @@ class FrequencyMapManipulationFrame(tk.Frame):
             RegressionFrame,
             text="Apply Adjustments",
             font=LARGE_FONT,
-            command=lambda: self.AdjustParameters(),
+            command=self.AdjustParameters,  # was lambda
         )
         self.AdjustParameterButton.grid(row=5, column=0, columnspan=4, pady=10, padx=10)
 
@@ -2621,19 +2621,22 @@ class FrequencyMapManipulationFrame(tk.Frame):
 
         # --- Start ---#
         StartButton = ttk.Button(
-            self, text="Start", style="Fun.TButton", command=lambda: self.SkeletonKey()
+            self,
+            text="Start",
+            style="Fun.TButton",
+            command=self.SkeletonKey,  # was lambda
         )
         StartButton.grid(row=row_value, column=0, pady=5, padx=5)
 
         # --- Reset ---#
         Reset = ttk.Button(
-            self, text="Reset", style="Fun.TButton", command=lambda: self.Reset()
+            self, text="Reset", style="Fun.TButton", command=self.Reset  # was lambda
         )
         Reset.grid(row=row_value, column=1, pady=5, padx=5)
         row_value += 1
 
         # --- Quit ---#
-        QuitButton = ttk.Button(self, text="Quit Program", command=lambda: quit())
+        QuitButton = ttk.Button(self, text="Quit Program", command=quit)  # was lambda
         QuitButton.grid(row=row_value, column=0, columnspan=4, pady=5)
 
         for row in range(row_value):
@@ -5131,7 +5134,7 @@ class PostAnalysis(tk.Frame):
         NormalizeButton = ttk.Button(
             NormalizationFrame,
             text="Apply Norm",
-            command=lambda: self.PostAnalysisNormalization(),
+            command=self.PostAnalysisNormalization,  # lambda
             width=10,
         )
         NormalizeButton.grid(row=2, column=0)
@@ -5190,14 +5193,14 @@ class PostAnalysis(tk.Frame):
             self.ApplyFrequencies = ttk.Button(
                 self.FrequencyFrame,
                 text="Apply Frequencies",
-                command=lambda: self.PostAnalysisKDM(),
+                command=self.PostAnalysisKDM,  # lambda
             )
             self.ApplyFrequencies.grid(row=5, column=0, columnspan=2, pady=5, padx=5)
 
         self.RedrawButton = ttk.Button(
             DataAdjustmentFrame,
             text="Redraw Figures",
-            command=lambda: self._draw(),
+            command=self._draw,  # lambda
             width=12,
         )
         self.RedrawButton.grid(row=3, column=0, pady=7)
@@ -5257,12 +5260,12 @@ class PostAnalysis(tk.Frame):
 
         # --- Reset ---#
         Reset = ttk.Button(
-            self, text="Reset", style="Fun.TButton", command=lambda: self._reset()
+            self, text="Reset", style="Fun.TButton", command=self._reset  # lambda
         )
         Reset.grid(row=row_value, column=1, pady=5, padx=5)
 
         # --- Quit ---#
-        QuitButton = ttk.Button(self, text="Quit Program", command=lambda: quit())
+        QuitButton = ttk.Button(self, text="Quit Program", command=quit)  # lambda
         QuitButton.grid(row=row_value, column=0, pady=5)
 
         for row in range(row_value):
@@ -5599,12 +5602,12 @@ class PostAnalysis(tk.Frame):
             self.FrequencyList.insert(tk.END, frequency)
 
         ExportData = tk.Button(
-            self.win, text="Export Data", command=lambda: self.PostAnalysisDataExport()
+            self.win, text="Export Data", command=self.PostAnalysisDataExport  # lambda
         )
         ExportData.grid(row=15, column=0, columnspan=2)
 
         CloseButton = tk.Button(
-            self.win, text="Close", command=lambda: self.win.destroy()
+            self.win, text="Close", command=self.win.destroy  # lambda
         )
         CloseButton.grid(row=16, column=0, columnspan=2, pady=10)
 
