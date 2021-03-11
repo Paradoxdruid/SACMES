@@ -209,7 +209,7 @@ def _retrieve_file(file, electrode, frequency):
 
             return filename, filename2, filename3, filename4
 
-        elif cg.method == "Frequency Map":
+        if cg.method == "Frequency Map":
 
             if cg.e_var == "single":
                 filename = "%s%dHz%s" % (cg.handle_variable, frequency, cg.extension)
@@ -596,8 +596,8 @@ class MainWindow(tk.Tk):
         )
         apply_list_val.grid(row=row_value, column=0, pady=6)
 
-        exit = ttk.Button(win, text="Exit", command=win.destroy)  # was lambda
-        exit.grid(row=row_value, column=1, pady=3)
+        exitButton = ttk.Button(win, text="Exit", command=win.destroy)  # was lambda
+        exitButton.grid(row=row_value, column=1, pady=3)
 
     def get_list_val(self):
         cg.current_column = int(self.list_val_entry.get())
@@ -612,13 +612,13 @@ class MainWindow(tk.Tk):
         cg.delimiter = self.delimiter_value.get()
         cg.extension = self.extension_value.get()
 
-    def set_bytes(self, bytes, index):
+    def set_bytes(self, the_bytes, index):
         # -- reset the self.byte_menu widgets --#
-        self.byte_menu.entryconfigure(index, label="✓%s" % bytes)
+        self.byte_menu.entryconfigure(index, label="✓%s" % the_bytes)
         self.byte_menu.entryconfigure(cg.byte_index, label="   %s" % str(cg.byte_limit))
 
         # -- now change the current data being used --#
-        cg.byte_limit = int(bytes)
+        cg.byte_limit = int(the_bytes)
         cg.byte_index = index
 
     def show_frame(self, cont):
@@ -853,7 +853,7 @@ class InputFrame(
             self.ListboxFrame,
             text="Edit",
             font=MEDIUM_FONT,
-            command=cg.ManipulateFrequenciesFrame.tkraise,
+            command=lambda: cg.ManipulateFrequenciesFrame.tkraise(),
         ).grid(row=2, column=0, columnspan=4)
 
         ###########################################################
@@ -1750,9 +1750,7 @@ class CheckPoint:
 
             if cg.list_val > cg.total_columns:
                 return False
-
-            else:
-                return True
+            return True
 
         else:
             print("\nverify_multi: could not find a line\nthat began with an integer\n")
@@ -5844,8 +5842,10 @@ class TextFileExport:
                     TxtList.append("AvgKDM")
                     TxtList.append("KDM_STD")
 
-            with open(self.TextFileHandle, "w+", encoding="utf-8", newline="") as input:
-                writer = csv.writer(input, delimiter=" ")
+            with open(
+                self.TextFileHandle, "w+", encoding="utf-8", newline=""
+            ) as our_input:
+                writer = csv.writer(our_input, delimiter=" ")
                 writer.writerow(TxtList)
 
         elif cg.method == "Frequency Map":
@@ -5878,14 +5878,14 @@ class TextFileExport:
     def ContinuousScanExport(self, _file_):
 
         index = _file_ - 1
-        list = []
+        our_list = []
         AvgList = []
-        list.append(str(_file_))
-        list.append(str((_file_ * cg.SampleRate) / 3600))
+        our_list.append(str(_file_))
+        our_list.append(str((_file_ * cg.SampleRate) / 3600))
         # --- Peak Height ---#
         for count in range(len(cg.frequency_list)):
             for num in range(cg.electrode_count):
-                list.append(cg.data_list[num][count][index])
+                our_list.append(cg.data_list[num][count][index])
 
         # --- Avg. Peak Height ---#
         if self.electrode_count > 1:
@@ -5894,15 +5894,15 @@ class TextFileExport:
                 for num in range(cg.electrode_count):
                     average += cg.data_list[num][count][index]
                 average = average / cg.electrode_count
-                list.append(average)
+                our_list.append(average)
 
         # --- Peak Height/AUC Data Normalization ---#
         for count in range(len(cg.frequency_list)):
             for num in range(cg.electrode_count):
                 if cg.frequency_list[count] == cg.HighLowList["Low"]:
-                    list.append(cg.offset_normalized_data_list[num][index])
+                    our_list.append(cg.offset_normalized_data_list[num][index])
                 else:
-                    list.append(cg.normalized_data_list[num][count][index])
+                    our_list.append(cg.normalized_data_list[num][count][index])
 
         # --- Average normalized data across all electrodes for each frequency ---#
         if self.electrode_count > 1:
@@ -5924,7 +5924,7 @@ class TextFileExport:
                     average += item  # add every item
                 average = average / cg.electrode_count
                 AverageNorm = sum(NormalizedFrequencyCurrents) / cg.electrode_count
-                list.append(AverageNorm)
+                our_list.append(AverageNorm)
 
         # --- Standard Deviation ---#
         if self.electrode_count > 1:
@@ -5940,42 +5940,42 @@ class TextFileExport:
                 StandardDeviation = float(
                     sqrt(sum(STDList) / (cg.electrode_count - 1))
                 )  # standard deviation of a sample
-                list.append(StandardDeviation)
+                our_list.append(StandardDeviation)
 
         if len(cg.frequency_list) > 1:
             # --- Append Normalized Ratiometric Data ---#
             NormList = []
 
             for num in range(cg.electrode_count):
-                list.append(cg.normalized_ratiometric_data_list[num][index])
+                our_list.append(cg.normalized_ratiometric_data_list[num][index])
                 NormList.append(cg.normalized_ratiometric_data_list[num][index])
 
             if self.electrode_count > 1:
                 NormAverage = sum(NormList) / cg.electrode_count
-                list.append(NormAverage)
+                our_list.append(NormAverage)
 
                 NormSTDlist = [(X - NormAverage) ** 2 for X in NormList]
                 NormStandardDeviation = sqrt(
                     sum(NormSTDlist) / (cg.electrode_count - 1)
                 )  # standard deviation of a sample
-                list.append(NormStandardDeviation)
+                our_list.append(NormStandardDeviation)
 
             # --- Append KDM ---#
             KDMList = []
             for num in range(cg.electrode_count):
-                list.append(cg.KDM_list[num][index])
+                our_list.append(cg.KDM_list[num][index])
                 KDMList.append(cg.KDM_list[num][index])
             if self.electrode_count > 1:
                 KDM_Average = sum(KDMList) / cg.electrode_count
-                list.append(KDM_Average)
+                our_list.append(KDM_Average)
                 KDM_STD_list = [(X - KDM_Average) ** 2 for X in KDMList]
                 KDM_STD = sqrt(sum(KDM_STD_list) / (cg.electrode_count - 1))
-                list.append(KDM_STD)
+                our_list.append(KDM_STD)
 
         # --- Write the data into the .txt file ---#
-        with open(self.TextFileHandle, "a", encoding="utf-8", newline="") as input:
-            writer = csv.writer(input, delimiter=" ")
-            writer.writerow(list)
+        with open(self.TextFileHandle, "a", encoding="utf-8", newline="") as our_input:
+            writer = csv.writer(our_input, delimiter=" ")
+            writer.writerow(our_list)
         with open(
             self.TextFileHandle, "r", encoding="utf-8", newline=""
         ) as filecontents:
@@ -5993,17 +5993,17 @@ class TextFileExport:
     #################################################################
     def FrequencyMapExport(self, file, frequency):
 
-        list = []
+        our_list = []
         index = file - 1
         try:
 
-            list.append(str(frequency))
+            our_list.append(str(frequency))
             count = cg.frequency_dict[int(frequency)]
 
             # Peak Height / AUC
             for num in range(cg.electrode_count):
-                list.append(cg.data_list[num][count][index])
-                list.append(cg.data_list[num][count][index] / int(frequency))
+                our_list.append(cg.data_list[num][count][index])
+                our_list.append(cg.data_list[num][count][index] / int(frequency))
 
             # Average Peak Height / AUC
             if self.electrode_count > 1:
@@ -6011,7 +6011,7 @@ class TextFileExport:
                 for num in range(cg.electrode_count):
                     value += cg.data_list[num][count][index]
                 average = value / cg.electrode_count
-                list.append(average)
+                our_list.append(average)
 
                 # Standard Deviation of a Sample across all electrodes
                 # for Peak Height/AUC
@@ -6023,11 +6023,11 @@ class TextFileExport:
                 std_list = [(value - average) ** 2 for value in std_list]
 
                 standard_deviation = sqrt(sum(std_list) / (cg.electrode_count - 1))
-                list.append(standard_deviation)
+                our_list.append(standard_deviation)
 
                 # -- Average Charge --#
                 avg_charge = average / int(frequency)
-                list.append(avg_charge)
+                our_list.append(avg_charge)
 
                 # -- Charge STD --#
                 std_list = []
@@ -6039,12 +6039,14 @@ class TextFileExport:
                 charge_standard_deviation = sqrt(
                     sum(std_list) / (cg.electrode_count - 1)
                 )
-                list.append(charge_standard_deviation)
+                our_list.append(charge_standard_deviation)
 
             # --- Write the data into the .txt file ---#
-            with open(self.TextFileHandle, "a", encoding="utf-8", newline="") as input:
-                writer = csv.writer(input, delimiter=" ")
-                writer.writerow(list)
+            with open(
+                self.TextFileHandle, "a", encoding="utf-8", newline=""
+            ) as our_input:
+                writer = csv.writer(our_input, delimiter=" ")
+                writer.writerow(our_list)
             with open(
                 self.TextFileHandle, "r", encoding="utf-8", newline=""
             ) as filecontents:
@@ -6082,17 +6084,17 @@ class TextFileExport:
 
             for index in range(analysis_range):
                 _file_ = index + 1
-                list = []
+                our_list = []
                 AvgList = []
-                list.append(str(_file_))
-                list.append(str((_file_ * cg.SampleRate) / 3600))
+                our_list.append(str(_file_))
+                our_list.append(str((_file_ * cg.SampleRate) / 3600))
 
                 # --- peak height ---#
                 for frequency in self.frequency_list:
                     count = cg.frequency_dict[frequency]
                     for electrode in self.electrode_list:
                         num = cg.electrode_dict[electrode]
-                        list.append(cg.data_list[num][count][index])
+                        our_list.append(cg.data_list[num][count][index])
 
                 # --- Avg. Peak Height ---#
                 if self.electrode_count > 1:
@@ -6103,7 +6105,7 @@ class TextFileExport:
                             num = cg.electrode_dict[electrode]
                             average += cg.data_list[num][count][index]
                         average = average / self.electrode_count
-                        list.append(average)
+                        our_list.append(average)
 
                 # --- Data Normalization ---#
                 for frequency in self.frequency_list:
@@ -6113,9 +6115,9 @@ class TextFileExport:
                         num = cg.electrode_dict[electrode]
 
                         if frequency == cg.HighLowList["Low"]:
-                            list.append(cg.offset_normalized_data_list[num][index])
+                            our_list.append(cg.offset_normalized_data_list[num][index])
                         else:
-                            list.append(cg.normalized_data_list[num][count][index])
+                            our_list.append(cg.normalized_data_list[num][count][index])
 
                 # --- Average Data Normalization ---#
                 if self.electrode_count > 1:
@@ -6137,7 +6139,7 @@ class TextFileExport:
                         AverageNorm = (
                             sum(NormalizedFrequencyCurrents) / self.electrode_count
                         )
-                        list.append(AverageNorm)
+                        our_list.append(AverageNorm)
 
                     # --- Standard Deviation between electrodes ---#
                     for frequency in self.frequency_list:
@@ -6164,7 +6166,7 @@ class TextFileExport:
                         StandardDeviation = sqrt(
                             sum(STDList) / (self.electrode_count - 1)
                         )
-                        list.append(StandardDeviation)
+                        our_list.append(StandardDeviation)
 
                 if len(self.frequency_list) > 1:
 
@@ -6173,41 +6175,41 @@ class TextFileExport:
                     for electrode in self.electrode_list:
                         num = cg.electrode_dict[electrode]
 
-                        list.append(cg.normalized_ratiometric_data_list[num][index])
+                        our_list.append(cg.normalized_ratiometric_data_list[num][index])
                         NormList.append(cg.normalized_ratiometric_data_list[num][index])
 
                     if self.electrode_count > 1:
                         NormAverage = sum(NormList) / self.electrode_count
-                        list.append(NormAverage)
+                        our_list.append(NormAverage)
 
                         NormSTDlist = [(X - NormAverage) ** 2 for X in NormList]
                         NormStandardDeviation = sqrt(
                             sum(NormSTDlist) / (self.electrode_count - 1)
                         )  # standard deviation of a sample
-                        list.append(NormStandardDeviation)
+                        our_list.append(NormStandardDeviation)
 
                     # --- Append KDM ---#
                     KDMList = []
                     for electrode in self.electrode_list:
                         num = cg.electrode_dict[electrode]
 
-                        list.append(cg.KDM_list[num][index])
+                        our_list.append(cg.KDM_list[num][index])
                         KDMList.append(cg.KDM_list[num][index])
 
                     if self.electrode_count > 1:
                         KDM_Average = sum(KDMList) / self.electrode_count
-                        list.append(KDM_Average)
+                        our_list.append(KDM_Average)
 
                         KDM_STD_list = [(X - KDM_Average) ** 2 for X in KDMList]
                         KDM_STD = sqrt(sum(KDM_STD_list) / (self.electrode_count - 1))
-                        list.append(KDM_STD)
+                        our_list.append(KDM_STD)
 
                 # --- Write the data into the .txt file ---#
                 with open(
                     self.TextFileHandle, "a", encoding="utf-8", newline=""
-                ) as input:
-                    writer = csv.writer(input, delimiter=" ")
-                    writer.writerow(list)
+                ) as our_input:
+                    writer = csv.writer(our_input, delimiter=" ")
+                    writer.writerow(our_list)
                 with open(
                     self.TextFileHandle, "r", encoding="utf-8", newline=""
                 ) as filecontents:
