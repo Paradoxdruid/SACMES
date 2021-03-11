@@ -16,13 +16,8 @@ matplotlib.use("TkAgg")
 # ---Import Modules---#
 import time
 import datetime
-
-# Python 3
 import tkinter as tk
 import tkinter.ttk as ttk
-
-# from tkinter.ttk import *  # noqa
-# from tkinter import *  # noqa
 from tkinter import filedialog, Menu
 
 
@@ -33,12 +28,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 import csv
 
-# from pylab import *  # noqa
-# from numpy import *  # noqa
 from numpy import sqrt
-
-# from scipy.interpolate import *  # noqa
-from scipy.signal import *  # noqa
 from scipy.signal import savgol_filter
 
 # from itertools import *  # noqa
@@ -49,7 +39,6 @@ from queue import Queue
 from config import Config
 
 cg = Config()
-
 
 # ---Filter out error warnings---#
 import warnings
@@ -67,13 +56,17 @@ style.use("ggplot")
 
 # -- file handle variable --#
 handle_variable = ""  # default handle variable is nothing
-e_var = "single"  # default input file is 'Multichannel', or a single file
+cg.e_var = "single"  # default input file is 'Multichannel', or a single file
 # containing all electrodes
 PHE_method = "Abs"  # default PHE Extraction is difference between absolute max/min
 
 # ------------------------------------------------------------#
 
-InputFrequencies = [30, 80, 240]  # frequencies initially displayed in Frequency Listbox
+cg.InputFrequencies = [
+    30,
+    80,
+    240,
+]  # frequencies initially displayed in Frequency Listbox
 electrodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
 # ------------------------------------------------------------------------------------#
@@ -102,9 +95,9 @@ cutoff_frequency = 50  # frequency that separates 'low' and 'high'
 key = 0  # SkeletonKey
 search_lim = 15  # Search limit (sec)
 PoisonPill = False  # Stop Animation variable
-FoundFilePath = False  # If the user-inputted file is found
+cg.FoundFilePath = False  # If the user-inputted file is found
 ExistVar = False  # If Checkpoints are not met ExistVar = True
-AlreadyInitiated = False  # indicates if the user has already initiated analysis
+cg.AlreadyInitiated = False  # indicates if the user has already initiated analysis
 HighAlreadyReset = False  # If data for high frequencies has been reset
 LowAlreadyReset = False  # If data for low frequencies has been reset
 analysis_complete = False  # If analysis has completed, begin PostAnalysis
@@ -114,19 +107,19 @@ analysis_complete = False  # If analysis has completed, begin PostAnalysis
 ##################################
 cg.delimiter = 1  # default delimiter is a space; 2 = tab
 cg.extension = 1
-current_column = 4  # column index for list_val.
-current_column_index = 3
+cg.current_column = 4  # column index for list_val.
+cg.current_column_index = 3
 # list_val = column_index + 3
 # defauly column is the second (so index = 1)
-voltage_column = 1
-voltage_column_index = 0
-spacing_index = 3
+cg.voltage_column = 1
+cg.voltage_column_index = 0
+cg.spacing_index = 3
 
 # -- set the initial limit in bytes to filter out preinitialized files < 3000b
-byte_limit = 3000
+cg.byte_limit = 3000
 # - set the initial bite index to match the checkbutton
 # - index in the toolbar menu MainWindow.byte_menu
-byte_index = 2
+cg.byte_index = 2
 
 ######################################################
 # Low frequency baseline manipulation Parameters ###
@@ -158,7 +151,7 @@ def _retrieve_file(file, electrode, frequency):
     try:
         if cg.method == "Continuous Scan":
 
-            if e_var == "single":
+            if cg.e_var == "single":
                 filename = "%s%dHz_%d%s" % (
                     handle_variable,
                     frequency,
@@ -184,7 +177,7 @@ def _retrieve_file(file, electrode, frequency):
                     cg.extension,
                 )
 
-            elif e_var == "multiple":
+            elif cg.e_var == "multiple":
                 filename = "E%s_%s%sHz_%d%s" % (
                     electrode,
                     handle_variable,
@@ -218,7 +211,7 @@ def _retrieve_file(file, electrode, frequency):
 
         elif cg.method == "Frequency Map":
 
-            if e_var == "single":
+            if cg.e_var == "single":
                 filename = "%s%dHz%s" % (handle_variable, frequency, cg.extension)
                 filename2 = "%s%dHz_%s" % (handle_variable, frequency, cg.extension)
                 filename3 = "%s%dHz_%d%s" % (
@@ -246,7 +239,7 @@ def _retrieve_file(file, electrode, frequency):
                     cg.extension,
                 )
 
-            elif e_var == "multiple":
+            elif cg.e_var == "multiple":
                 filename = "E%s_%s%sHz%s" % (
                     electrode,
                     handle_variable,
@@ -301,10 +294,10 @@ def ReadData(myfile, electrode):
         # Get the index value of the data depending on if the     ###
         # electrodes are in the same .txt file or separate files  ###
         ###############################################################
-        if e_var == "single":
-            list_val = current_column_index + (electrode - 1) * spacing_index
-        elif e_var == "multiple":
-            list_val = current_column_index
+        if cg.e_var == "single":
+            list_val = cg.current_column_index + (electrode - 1) * cg.spacing_index
+        elif cg.e_var == "multiple":
+            list_val = cg.current_column_index
 
         #####################
         # Read the data ###
@@ -369,7 +362,7 @@ def ReadData(myfile, electrode):
                     currents[list_num] = current_value
 
                     # ---Potentials---#
-                    potential_value = line.split(cg.delimiter)[voltage_column_index]
+                    potential_value = line.split(cg.delimiter)[cg.voltage_column_index]
                     potential_value = potential_value.strip(",")
                     potential_value = float(potential_value)
                     potentials[list_num] = potential_value
@@ -400,11 +393,11 @@ def ReadData(myfile, electrode):
 #######################################
 def _get_listval(electrode):
     try:
-        if e_var == "single":
-            list_val = current_column_index + (electrode - 1) * spacing_index
+        if cg.e_var == "single":
+            list_val = cg.current_column_index + (electrode - 1) * cg.spacing_index
 
-        elif e_var == "multiple":
-            list_val = current_column_index
+        elif cg.e_var == "multiple":
+            list_val = cg.current_column_index
 
             return list_val
     except:
@@ -519,7 +512,7 @@ class MainWindow(tk.Tk):
 
         container_value += 1
         self.list_val_entry = tk.Entry(container, width=5)
-        self.list_val_entry.insert(tk.END, current_column)
+        self.list_val_entry.insert(tk.END, cg.current_column)
         self.list_val_entry.grid(row=container_value, column=0, pady=5)
 
         container_value = 0
@@ -528,7 +521,7 @@ class MainWindow(tk.Tk):
 
         container_value += 1
         self.voltage_column = tk.Entry(container, width=5)
-        self.voltage_column.insert(tk.END, voltage_column)
+        self.voltage_column.insert(tk.END, cg.voltage_column)
         self.voltage_column.grid(row=container_value, column=1, pady=5)
 
         container_value += 1
@@ -609,31 +602,26 @@ class MainWindow(tk.Tk):
         exit.grid(row=row_value, column=1, pady=3)
 
     def get_list_val(self):
-        global current_column, current_column_index, voltage_column
-        global voltage_column_index, spacing_index, total_columns
+        cg.current_column = int(self.list_val_entry.get())
+        cg.current_column_index = cg.current_column - 1
 
-        current_column = int(self.list_val_entry.get())
-        current_column_index = current_column - 1
+        cg.spacing_index = int(self.spacing_val_entry.get())
 
-        spacing_index = int(self.spacing_val_entry.get())
-
-        voltage_column = int(self.voltage_column.get())
-        voltage_column_index = voltage_column - 1
+        cg.voltage_column = int(self.voltage_column.get())
+        cg.voltage_column_index = cg.voltage_column - 1
 
         # Set the delimiter and extension ###
         cg.delimiter = self.delimiter_value.get()
         cg.extension = self.extension_value.get()
 
     def set_bytes(self, bytes, index):
-        global byte_limit, byte_index
-
         # -- reset the self.byte_menu widgets --#
         self.byte_menu.entryconfigure(index, label="✓%s" % bytes)
-        self.byte_menu.entryconfigure(byte_index, label="   %s" % str(byte_limit))
+        self.byte_menu.entryconfigure(cg.byte_index, label="   %s" % str(cg.byte_limit))
 
         # -- now change the current data being used --#
-        byte_limit = int(bytes)
-        byte_index = index
+        cg.byte_limit = int(bytes)
+        cg.byte_index = index
 
     def show_frame(self, cont):
 
@@ -650,7 +638,7 @@ class InputFrame(
     tk.Frame
 ):  # first frame that is displayed when the program is initialized
     def __init__(self, parent, controller):
-        global figures, StartNormalizationVar, SaveBox, ManipulateFrequenciesFrame
+        global StartNormalizationVar, SaveBox
 
         self.parent = parent
         self.controller = controller
@@ -819,7 +807,7 @@ class InputFrame(
         self.ListboxFrame.grid(
             row=row_value, column=2, columnspan=2, padx=10, pady=10, sticky="nsew"
         )
-        frequencies = InputFrequencies
+        frequencies = cg.InputFrequencies
 
         # -- resize ---#
         self.ListboxFrame.rowconfigure(0, weight=1)
@@ -833,7 +821,7 @@ class InputFrame(
 
         # --- If more than 5 frequencies are in the listbox,
         # add a scrollbar as to not take up too much space ---#
-        if len(InputFrequencies) > 5:
+        if len(cg.InputFrequencies) > 5:
             self.ScrollBarVal = True
         else:
             self.ScrollBarVal = False
@@ -868,59 +856,59 @@ class InputFrame(
             self.ListboxFrame,
             text="Edit",
             font=MEDIUM_FONT,
-            command=lambda: ManipulateFrequenciesFrame.tkraise(),
+            command=cg.ManipulateFrequenciesFrame.tkraise,
         ).grid(row=2, column=0, columnspan=4)
 
         ###########################################################
         # Frame for adding/deleting frequencies from the list ###
         ###########################################################
 
-        ManipulateFrequenciesFrame = tk.Frame(self, width=10, bd=3, relief="groove")
-        ManipulateFrequenciesFrame.grid(
+        cg.ManipulateFrequenciesFrame = tk.Frame(self, width=10, bd=3, relief="groove")
+        cg.ManipulateFrequenciesFrame.grid(
             row=row_value, column=2, columnspan=2, padx=10, pady=10, sticky="nsew"
         )
 
         ManipulateFrequencyLabel = tk.Label(
-            ManipulateFrequenciesFrame, text="Enter Frequency(s)", font=MEDIUM_FONT
+            cg.ManipulateFrequenciesFrame, text="Enter Frequency(s)", font=MEDIUM_FONT
         )
         ManipulateFrequencyLabel.grid(row=0, column=0, columnspan=4)
 
-        self.FrequencyEntry = tk.Entry(ManipulateFrequenciesFrame, width=8)
+        self.FrequencyEntry = tk.Entry(cg.ManipulateFrequenciesFrame, width=8)
         self.FrequencyEntry.grid(row=1, column=0, columnspan=4)
 
         AddFrequencyButton = tk.Button(
-            ManipulateFrequenciesFrame,
+            cg.ManipulateFrequenciesFrame,
             text="Add",
             font=MEDIUM_FONT,
             command=self.AddFrequency,  # was lambda
         ).grid(row=2, column=0)
         DeleteFrequencyButton = tk.Button(
-            ManipulateFrequenciesFrame,
+            cg.ManipulateFrequenciesFrame,
             text="Delete",
             font=MEDIUM_FONT,
             command=self.DeleteFrequency,  # was lambda
         ).grid(row=2, column=1)
         ClearFrequencyButton = tk.Button(
-            ManipulateFrequenciesFrame,
+            cg.ManipulateFrequenciesFrame,
             text="Clear",
             font=MEDIUM_FONT,
             command=self.Clear,  # was lambda
         ).grid(row=3, column=0, columnspan=2)
 
         ReturnButton = tk.Button(
-            ManipulateFrequenciesFrame,
+            cg.ManipulateFrequenciesFrame,
             text="Return",
             font=MEDIUM_FONT,
             command=self.Return,  # was lambda
         ).grid(row=4, column=0, columnspan=2)
 
-        ManipulateFrequenciesFrame.rowconfigure(0, weight=1)
-        ManipulateFrequenciesFrame.rowconfigure(1, weight=1)
-        ManipulateFrequenciesFrame.rowconfigure(2, weight=1)
-        ManipulateFrequenciesFrame.rowconfigure(3, weight=1)
-        ManipulateFrequenciesFrame.rowconfigure(4, weight=1)
-        ManipulateFrequenciesFrame.columnconfigure(0, weight=1)
-        ManipulateFrequenciesFrame.columnconfigure(1, weight=1)
+        cg.ManipulateFrequenciesFrame.rowconfigure(0, weight=1)
+        cg.ManipulateFrequenciesFrame.rowconfigure(1, weight=1)
+        cg.ManipulateFrequenciesFrame.rowconfigure(2, weight=1)
+        cg.ManipulateFrequenciesFrame.rowconfigure(3, weight=1)
+        cg.ManipulateFrequenciesFrame.rowconfigure(4, weight=1)
+        cg.ManipulateFrequenciesFrame.columnconfigure(0, weight=1)
+        cg.ManipulateFrequenciesFrame.columnconfigure(1, weight=1)
 
         row_value += 1
 
@@ -1156,14 +1144,14 @@ class InputFrame(
         if Frequencies is not None:
             FrequencyList = Frequencies.split(" ")
             for frequency in FrequencyList:
-                if int(frequency) not in InputFrequencies:
-                    InputFrequencies.append(int(frequency))
-            InputFrequencies.sort()
+                if int(frequency) not in cg.InputFrequencies:
+                    cg.InputFrequencies.append(int(frequency))
+            cg.InputFrequencies.sort()
 
             self.FrequencyList.delete(0, 1)
             self.FrequencyList.delete(0, tk.END)
 
-            for frequency in InputFrequencies:
+            for frequency in cg.InputFrequencies:
                 self.FrequencyList.insert(tk.END, frequency)
 
     def DeleteFrequency(self):
@@ -1176,19 +1164,17 @@ class InputFrame(
             for Frequency in FrequencyList:
 
                 Frequency = int(Frequency)
-                if Frequency in InputFrequencies:
-                    InputFrequencies.remove(Frequency)
+                if Frequency in cg.InputFrequencies:
+                    cg.InputFrequencies.remove(Frequency)
 
                 self.FrequencyList.delete(0, tk.END)
 
-                for frequency in InputFrequencies:
+                for frequency in cg.InputFrequencies:
                     self.FrequencyList.insert(tk.END, int(frequency))
 
     def Clear(self):
-        global InputFrequencies
-
         self.FrequencyList.delete(0, tk.END)
-        InputFrequencies = []
+        cg.InputFrequencies = []
 
     def Return(self):
         self.ListboxFrame.tkraise()
@@ -1198,47 +1184,46 @@ class InputFrame(
         self.ElectrodeSettingsFrame.tkraise()
 
     def ElectrodeSelect(self, variable):
-        global e_var
 
         if variable == "Multiplex":
-            e_var = "multiple"
+            cg.e_var = "multiple"
 
             self.SingleElectrodeFile["style"] = "Off.TButton"
             self.MultipleElectrodeFiles["style"] = "On.TButton"
 
         elif variable == "Multichannel":
-            e_var = "single"
+            cg.e_var = "single"
 
             self.SingleElectrodeFile["style"] = "On.TButton"
             self.MultipleElectrodeFiles["style"] = "Off.TButton"
 
     def FindFile(self, parent):
-        global FilePath, ExportPath, FoundFilePath, DataFolder
+        global DataFolder
 
         try:
 
             # prompt the user to select a  ###
             # directory for  data analysis ###
-            FilePath = filedialog.askdirectory(parent=parent)
-            FilePath = "".join(FilePath + "/")
+            cg.FilePath = filedialog.askdirectory(parent=parent)
+            cg.FilePath = "".join(cg.FilePath + "/")
 
             # Path for directory in which the    ###
             # exported .txt file will be placed  ###
-            ExportPath = FilePath.split("/")
+            cg.ExportPath = cg.FilePath.split("/")
 
             # -- change the text of the find file button to the folder the user chose -#
-            DataFolder = "%s/%s" % (ExportPath[-3], ExportPath[-2])
+            DataFolder = "%s/%s" % (cg.ExportPath[-3], cg.ExportPath[-2])
 
             self.SelectFilePath["style"] = "On.TButton"
             self.SelectFilePath["text"] = DataFolder
 
-            del ExportPath[-1]
-            del ExportPath[-1]
-            ExportPath = "/".join(ExportPath)
-            ExportPath = "".join(ExportPath + "/")
+            del cg.ExportPath[-1]
+            del cg.ExportPath[-1]
+            cg.ExportPath = "/".join(cg.ExportPath)
+            cg.ExportPath = "".join(cg.ExportPath + "/")
 
             # Indicates that the user has selected a File Path ###
-            FoundFilePath = True
+            cg.FoundFilePath = True
 
             if self.PathWarningExists:
                 self.NoSelectedPath["text"] = ""
@@ -1254,12 +1239,12 @@ class InputFrame(
 
     # --- Analysis Method ---#
     def SelectPlotOptions(self, evt):
-        global SelectedOptions
-        SelectedOptions = str((self.PlotOptions.get(self.PlotOptions.curselection())))
+        cg.SelectedOptions = str(
+            (self.PlotOptions.get(self.PlotOptions.curselection()))
+        )
 
     def SelectXaxisOptions(self, evt):
-        global XaxisOptions
-        XaxisOptions = str((self.XaxisOptions.get(self.XaxisOptions.curselection())))
+        cg.XaxisOptions = str((self.XaxisOptions.get(self.XaxisOptions.curselection())))
 
     # --- Electrode Selection ---#
     def ElectrodeCurSelect(self, evt):
@@ -1268,63 +1253,60 @@ class InputFrame(
         # electrode_dict: dict; {electrode: index}      ##
         # electrode_count: int                          ##
         ###################################################
-        global electrode_count, electrode_list, electrode_dict
 
-        electrode_list = [
+        cg.electrode_list = [
             self.ElectrodeCount.get(idx) for idx in self.ElectrodeCount.curselection()
         ]
-        electrode_list = [int(electrode) for electrode in electrode_list]
-        electrode_count = len(electrode_list)
+        cg.electrode_list = [int(electrode) for electrode in cg.electrode_list]
+        cg.electrode_count = len(cg.electrode_list)
 
         index = 0
-        electrode_dict = {}
-        for electrode in electrode_list:
-            electrode_dict[electrode] = index
+        cg.electrode_dict = {}
+        for electrode in cg.electrode_list:
+            cg.electrode_dict[electrode] = index
             index += 1
 
-        if electrode_count == 0:
+        if cg.electrode_count == 0:
             self.ElectrodeListExists = False
             self.ElectrodeLabel["fg"] = "red"
 
-        elif electrode_count != 0:
+        elif cg.electrode_count != 0:
             self.ElectrodeListExists = True
             self.ElectrodeLabel["fg"] = "black"
 
     # --- Frequency Selection ---#
     def FrequencyCurSelect(self, evt):
-        global frequency_list, frequency_dict, LowFrequency, HighFrequency
-
-        frequency_list = [
+        cg.frequency_list = [
             self.FrequencyList.get(idx) for idx in self.FrequencyList.curselection()
         ]
 
-        if len(frequency_list) != 0:
+        if len(cg.frequency_list) != 0:
 
             self.FrequencyListExists = True
             self.FrequencyLabel["fg"] = "black"
 
-            for var in frequency_list:
+            for var in cg.frequency_list:
                 var = int(var)
 
-            LowFrequency = min(
-                frequency_list
+            cg.LowFrequency = min(
+                cg.frequency_list
             )  # Initial Low Frequency for KDM/Ratiometric analysis
-            HighFrequency = max(
-                frequency_list
+            cg.HighFrequency = max(
+                cg.frequency_list
             )  # Initial High Frequency for KDM/Ratiometric analysis
 
-            cg.HighLowList["High"] = HighFrequency
-            cg.HighLowList["Low"] = LowFrequency
+            cg.HighLowList["High"] = cg.HighFrequency
+            cg.HighLowList["Low"] = cg.LowFrequency
 
             # --- Frequency Dictionary ---#
-            frequency_dict = {}
+            cg.frequency_dict = {}
             count = 0
-            for frequency in frequency_list:
+            for frequency in cg.frequency_list:
                 frequency = int(frequency)
-                frequency_dict[frequency] = count
+                cg.frequency_dict[frequency] = count
                 count += 1
 
-        elif len(frequency_list) == 0:
+        elif len(cg.frequency_list) == 0:
             self.FrequencyListExists = False
             self.FrequencyLabel["fg"] = "red"
 
@@ -1344,13 +1326,12 @@ class InputFrame(
     # they have, initialize the program                             ###
     #####################################################################
     def CheckPoint(self):
-        global mypath, Option, FileHandle, SelectedOptions, ExportFilePath
-        global AlreadyInitiated
+        global FileHandle
 
         try:
             # --- check to see if the data analysis method has been
             # selected by the user ---#
-            Option = SelectedOptions
+            cg.Option = cg.SelectedOptions
 
             # --- If a data analysis method was selected and a warning label was
             # already created, forget it ---#
@@ -1367,9 +1348,9 @@ class InputFrame(
         # Initialize Canvases and begin tracking animation  ###
         #########################################################
         try:
-            mypath = FilePath  # file path
-            FileHandle = str(self.filehandle.get())  # handle for exported .txt file
-            ExportFilePath = "".join(ExportPath + FileHandle)
+            cg.mypath = cg.FilePath  # file path
+            cg.FileHandle = str(self.filehandle.get())  # handle for exported .txt file
+            cg.ExportFilePath = "".join(cg.ExportPath + cg.FileHandle)
 
             if self.PathWarningExists:
                 self.NoSelectedPath.grid_forget()
@@ -1378,7 +1359,7 @@ class InputFrame(
         except:
             # -- if the user did not select a file path for data analysis,
             # raise a warning label ---#
-            if not FoundFilePath:
+            if not cg.FoundFilePath:
                 self.NoSelectedPath.grid(row=1, column=0, columnspan=4)
                 self.PathWarningExists = True
 
@@ -1405,14 +1386,14 @@ class InputFrame(
     ########################################################################
 
     def StartProgram(self):
-        global FileHandle, starting_file, post_analysis, handle_variable
-        global track, Interval, PlotContainer, e_var, data_normalization
+        global starting_file, post_analysis, handle_variable
+        global track, Interval, PlotContainer, data_normalization
         global resize_interval, InjectionPoint, InjectionVar, ratio_min, ratio_max
         global min_norm, max_norm, min_raw, max_raw, min_data, max_data
-        global HighFrequency, LowFrequency, InitializedNormalization, RatioMetricCheck
-        global NormWarningExists, NormalizationVault, mypath, electrode_count
+        global InitializedNormalization, RatioMetricCheck
+        global NormWarningExists, NormalizationVault
         global wait_time, SaveVar, track, numFiles, SampleRate, ratiometricanalysis
-        global frames, generate, figures, Plot, anim
+        global frames, generate, Plot, anim
         global NormalizationPoint, q
 
         # ---Get the User Input and make it globally accessible---#
@@ -1486,10 +1467,10 @@ class InputFrame(
         cg.container.columnconfigure(1, weight=1)
 
         # --- High and Low Frequency Selection for Drift Correction (KDM) ---#
-        HighFrequency = max(frequency_list)
-        LowFrequency = min(frequency_list)
-        cg.HighLowList["High"] = HighFrequency
-        cg.HighLowList["Low"] = LowFrequency
+        cg.HighFrequency = max(cg.frequency_list)
+        cg.LowFrequency = min(cg.frequency_list)
+        cg.HighLowList["High"] = cg.HighFrequency
+        cg.HighLowList["Low"] = cg.LowFrequency
 
         # --- Create a timevault for normalization variables if the chosen
         # normalization point has not yet been analyzed ---#
@@ -1502,7 +1483,7 @@ class InputFrame(
         # If all checkpoints have been met, initialize the program ###
         ################################################################
         if not self.NoSelection:
-            if FoundFilePath:
+            if cg.FoundFilePath:
 
                 checkpoint = CheckPoint(self.parent, self.controller)
 
@@ -1515,8 +1496,6 @@ class InputFrame(
 ####################################
 class CheckPoint:
     def __init__(self, parent, controller):
-        global total_columns
-
         # -- Check to see if the user's settings are accurate
         # -- Search for the presence of the files. If they exist,
         # -- initialize the functions and frames for Real Time Analysis
@@ -1537,7 +1516,7 @@ class CheckPoint:
         self.frame_dict = {}
         self.label_dict = {}
         self.already_verified = {}
-        for electrode in electrode_list:
+        for electrode in cg.electrode_list:
             electrode_label = tk.Label(
                 self.win, text="E%s" % electrode, font=LARGE_FONT
             ).grid(row=row_value, column=0, pady=5, padx=5)
@@ -1550,7 +1529,7 @@ class CheckPoint:
 
             column_value = 0
             if cg.method == "Continuous Scan":
-                for frequency in frequency_list:
+                for frequency in cg.frequency_list:
                     label = tk.Label(frame, text="%sHz" % str(frequency), fg="red")
                     label.grid(row=0, column=column_value, padx=5, pady=5)
                     self.label_dict[electrode][frequency] = label
@@ -1562,8 +1541,8 @@ class CheckPoint:
                     frame, text="E%s" % electrode, font=HUGE_FONT
                 )
                 electrode_label.grid(row=row_value, column=column_value, pady=5, padx=5)
-                self.label_dict[electrode][frequency_list[0]] = electrode_label
-                self.already_verified[electrode][frequency_list[0]] = False
+                self.label_dict[electrode][cg.frequency_list[0]] = electrode_label
+                self.already_verified[electrode][cg.frequency_list[0]] = False
 
                 if column_value == 1:
                     column_value = 0
@@ -1578,29 +1557,29 @@ class CheckPoint:
         self.num = 0
         self.count = 0
         self.analysis_count = 0
-        self.analysis_limit = electrode_count * len(frequency_list)
-        self.electrode_limit = electrode_count - 1
-        self.frequency_limit = len(frequency_list) - 1
+        self.analysis_limit = cg.electrode_count * len(cg.frequency_list)
+        self.electrode_limit = cg.electrode_count - 1
+        self.frequency_limit = len(cg.frequency_list) - 1
 
         root.after(50, self.verify)
 
     def verify(self):
 
-        self.electrode = electrode_list[self.num]
+        self.electrode = cg.electrode_list[self.num]
 
         if not self.StopSearch:
 
             if cg.method == "Continuous Scan":
-                for frequency in frequency_list:
+                for frequency in cg.frequency_list:
 
                     filename, filename2, filename3, filename4 = _retrieve_file(
                         1, self.electrode, frequency
                     )
 
-                    myfile = mypath + filename  # path of your file
-                    myfile2 = mypath + filename2
-                    myfile3 = mypath + filename3
-                    myfile4 = mypath + filename4
+                    myfile = cg.mypath + filename  # path of your file
+                    myfile2 = cg.mypath + filename2
+                    myfile3 = cg.mypath + filename3
+                    myfile4 = cg.mypath + filename4
 
                     try:
                         # retrieves the size of the file in bytes
@@ -1620,9 +1599,9 @@ class CheckPoint:
                                 except:
                                     mydata_bytes = 1
 
-                    if mydata_bytes > byte_limit:
+                    if mydata_bytes > cg.byte_limit:
 
-                        if e_var == "single":
+                        if cg.e_var == "single":
                             check_ = self.verify_multi(myfile)
                         else:
                             check_ = True
@@ -1655,7 +1634,7 @@ class CheckPoint:
 
             elif cg.method == "Frequency Map":
 
-                frequency = frequency_list[0]
+                frequency = cg.frequency_list[0]
 
                 (
                     filename,
@@ -1666,12 +1645,12 @@ class CheckPoint:
                     filename6,
                 ) = _retrieve_file(1, self.electrode, frequency)
 
-                myfile = mypath + filename  # path of your file
-                myfile2 = mypath + filename2
-                myfile3 = mypath + filename3
-                myfile4 = mypath + filename4
-                myfile5 = mypath + filename5
-                myfile6 = mypath + filename6
+                myfile = cg.mypath + filename  # path of your file
+                myfile2 = cg.mypath + filename2
+                myfile3 = cg.mypath + filename3
+                myfile4 = cg.mypath + filename4
+                myfile5 = cg.mypath + filename5
+                myfile6 = cg.mypath + filename6
 
                 try:
                     # retrieves the size of the file in bytes
@@ -1699,9 +1678,9 @@ class CheckPoint:
                                     except:
                                         mydata_bytes = 1
 
-                if mydata_bytes > byte_limit:
+                if mydata_bytes > cg.byte_limit:
 
-                    if e_var == "single":
+                    if cg.e_var == "single":
                         check_ = self.verify_multi(myfile)
                     else:
                         check_ = True
@@ -1715,7 +1694,7 @@ class CheckPoint:
                                 ] = "green"
                                 self.analysis_count += 1
 
-                    if self.analysis_count == electrode_count:
+                    if self.analysis_count == cg.electrode_count:
                         if not self.StopSearch:
                             self.StopSearch = True
                             self.win.destroy()
@@ -1775,14 +1754,14 @@ class CheckPoint:
                     check_split = False
 
                 if check_split:
-                    total_columns = len(check_split_list)
+                    cg.total_columns = len(check_split_list)
                     check_ = True
                     break
 
         if check_:
-            list_val = current_column + (self.electrode - 1) * spacing_index
+            list_val = cg.current_column + (self.electrode - 1) * cg.spacing_index
 
-            if list_val > total_columns:
+            if list_val > cg.total_columns:
                 return False
 
             else:
@@ -1943,7 +1922,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
             SetInjectionLabel.grid(row=2, column=1, pady=2, sticky="nsew")
 
         row_value = 6
-        if len(frequency_list) > 1:
+        if len(cg.frequency_list) > 1:
 
             self.FrequencyFrame = tk.Frame(self, relief="groove", bd=3)
             self.FrequencyFrame.grid(
@@ -1963,7 +1942,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
             self.HighFrequencyLabel.grid(row=1, column=1, pady=5, padx=5)
 
             HighFrequencyEntry = tk.Entry(self.FrequencyFrame, width=7)
-            HighFrequencyEntry.insert(tk.END, HighFrequency)
+            HighFrequencyEntry.insert(tk.END, cg.HighFrequency)
             HighFrequencyEntry.grid(row=2, column=1, padx=5)
 
             # --- Low Frequency Selection for KDM and Ratiometric Analysis ---#
@@ -1973,7 +1952,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
             self.LowFrequencyLabel.grid(row=1, column=0, pady=5, padx=5)
 
             LowFrequencyEntry = tk.Entry(self.FrequencyFrame, width=7)
-            LowFrequencyEntry.insert(tk.END, LowFrequency)
+            LowFrequencyEntry.insert(tk.END, cg.LowFrequency)
             LowFrequencyEntry.grid(row=2, column=0, padx=5)
 
             self.LowFrequencyOffsetLabel = tk.Label(
@@ -2035,12 +2014,12 @@ class ContinuousScanManipulationFrame(tk.Frame):
         self.SmoothingEntry.insert(tk.END, sg_window)
 
         # --- Check for the presence of high and low frequencies ---#
-        if frequency_list[-1] > cutoff_frequency:
+        if cg.frequency_list[-1] > cutoff_frequency:
             self.High = True
         else:
             self.High = False
 
-        if frequency_list[0] <= cutoff_frequency:
+        if cg.frequency_list[0] <= cutoff_frequency:
             self.Low = True
         else:
             self.Low = False
@@ -2244,7 +2223,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
     # used for KDM and ratiometric analysis             ###
     #########################################################
     def RealTimeKDM(self):
-        global HighFrequency, LowFrequencyOffset, LowFrequencySlope, LowFrequency
+        global LowFrequencyOffset, LowFrequencySlope
         global LowFrequencyEntry, HighFrequencyEntry, ExistVar
         global WrongFrequencyLabel, RatioMetricCheck
 
@@ -2257,10 +2236,10 @@ class ContinuousScanManipulationFrame(tk.Frame):
         # --- Reset the variable for the Warning Label (WrongFrequencyLabel) ---#
         CheckVar = 0
 
-        if int(HighFrequency) not in frequency_list:
+        if int(cg.HighFrequency) not in cg.frequency_list:
             CheckVar += 3
 
-        if int(LowFrequency) not in frequency_list:
+        if int(cg.LowFrequency) not in cg.frequency_list:
             CheckVar += 1
 
         # --- if only the HighFrequency does not exist ---#
@@ -2342,12 +2321,12 @@ class ContinuousScanManipulationFrame(tk.Frame):
     # Function to Reset and raise the user input frame ###
     ########################################################
     def Reset(self):
-        global key, PoisonPill, analysis_complete, AlreadyInitiated
+        global key, PoisonPill, analysis_complete
         global LowAlreadyReset, HighAlreadyReset
 
         key = 0
         PoisonPill = True
-        AlreadyInitiated = False  # reset the start variable
+        cg.AlreadyInitiated = False  # reset the start variable
 
         if self.High:
             HighAlreadyReset = True
@@ -2386,17 +2365,17 @@ class ContinuousScanManipulationFrame(tk.Frame):
     # Function to start returning visualized data ###
     ###################################################
     def SkeletonKey(self):
-        global key, PoisonPill, data_analysis, extrapolate, AlreadyInitiated
+        global key, PoisonPill, data_analysis, extrapolate
 
-        if not AlreadyInitiated:
+        if not cg.AlreadyInitiated:
 
             ######################################################################
             # Initialize Animation (Visualization) for each electrode figure ###
             ######################################################################
             fig_count = 0  # index value for the frame
-            for figure in figures:
+            for figure in cg.figures:
                 fig, self.ax = figure
-                electrode = electrode_list[fig_count]
+                electrode = cg.electrode_list[fig_count]
                 anim.append(
                     ElectrochemicalAnimation(
                         fig, electrode, resize_interval=resize_interval, fargs=None
@@ -2404,7 +2383,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
                 )
                 fig_count += 1
 
-            AlreadyInitiated = True
+            cg.AlreadyInitiated = True
 
             # --- reset poison pill variables --#
             PoisonPill = False
@@ -2489,11 +2468,11 @@ class FrequencyMapManipulationFrame(tk.Frame):
         self.SmoothingEntry.insert(tk.END, sg_window)
 
         # --- Check for the presence of high and low frequencies ---#
-        if frequency_list[-1] > 50:
+        if cg.frequency_list[-1] > 50:
             self.High = True
         else:
             self.High = False
-        if frequency_list[0] <= 50:
+        if cg.frequency_list[0] <= 50:
             self.Low = True
         else:
             self.Low = False
@@ -2687,11 +2666,11 @@ class FrequencyMapManipulationFrame(tk.Frame):
     # Function to Reset and raise the user input frame ###
     ########################################################
     def Reset(self):
-        global key, PoisonPill, AlreadyInitiated, AlreadyReset
+        global key, PoisonPill, AlreadyReset
 
         key = 0
         PoisonPill = True
-        AlreadyInitiated = False  # reset the start variable
+        cg.AlreadyInitiated = False  # reset the start variable
         AlreadyReset = True
 
         # Raise the initial user input frame
@@ -2718,17 +2697,17 @@ class FrequencyMapManipulationFrame(tk.Frame):
     # Function to start returning visualized data ###
     ###################################################
     def SkeletonKey(self):
-        global key, PoisonPill, AlreadyInitiated
+        global key, PoisonPill
 
-        if not AlreadyInitiated:
+        if not cg.AlreadyInitiated:
 
             ######################################################################
             # Initialize Animation (Visualization) for each electrode figure ###
             ######################################################################
             fig_count = 0  # index value for the frame
-            for figure in figures:
+            for figure in cg.figures:
                 fig, self.ax = figure
-                electrode = electrode_list[fig_count]
+                electrode = cg.electrode_list[fig_count]
                 anim.append(
                     ElectrochemicalAnimation(
                         fig, electrode, resize_interval=None, fargs=None
@@ -2736,7 +2715,7 @@ class FrequencyMapManipulationFrame(tk.Frame):
                 )
                 fig_count += 1
 
-            AlreadyInitiated = True
+            cg.AlreadyInitiated = True
 
             # --- reset poison pill variables --#
             PoisonPill = False
@@ -2797,14 +2776,14 @@ class ContinuousScanVisualizationFrame(tk.Frame):
         FrameFileLabel.grid(row=0, column=1, pady=3, sticky="ne")
 
         # --- Voltammogram, Raw Peak Height, and Normalized Figure and Artists ---#
-        fig, ax = figures[count]  # Call the figure and artists for the electrode
+        fig, ax = cg.figures[count]  # Call the figure and artists for the electrode
         canvas = FigureCanvasTkAgg(fig, self)  # and place the artists within the frame
         canvas.draw()  # initial draw call to create the artists that will be blitted
         canvas.get_tk_widget().grid(
             row=1, columnspan=2, pady=6, ipady=5, sticky="news"
         )  # does not affect size of figure within plot container
 
-        if len(frequency_list) > 1:
+        if len(cg.frequency_list) > 1:
             # --- Ratiometric Figure and Artists ---#
             fig, ax = ratiometric_figures[
                 count
@@ -2839,7 +2818,7 @@ class FrequencyMapVisualizationFrame(tk.Frame):
         FrameFileLabel.grid(row=0, column=1, pady=3, sticky="ne")
 
         # --- Voltammogram, Raw Peak Height, and Normalized Figure and Artists ---#
-        fig, ax = figures[count]  # Call the figure and artists for the electrode
+        fig, ax = cg.figures[count]  # Call the figure and artists for the electrode
         canvas = FigureCanvasTkAgg(fig, self)  # and place the artists within the frame
         canvas.draw()  # initial draw call to create the artists that will be blitted
         canvas.get_tk_widget().grid(
@@ -2866,44 +2845,44 @@ class FrequencyMapVisualizationFrame(tk.Frame):
 
 class InitializeContinuousCanvas:
     def __init__(self):
-        global text_file_export, electrode_count, offset_normalized_data_list, anim
-        global Frame, FrameReference, FileHandle, PlotContainer, KDM_list
+        global text_file_export, offset_normalized_data_list, anim
+        global Frame, FrameReference, PlotContainer, KDM_list
         global empty_ratiometric_plots, ratiometric_plots, ratiometric_figures
-        global normalized_ratiometric_data_list, normalized_data_list, frequency_list
-        global data_list, plot_list, EmptyPlots, file_list, figures
+        global normalized_ratiometric_data_list, normalized_data_list
+        global data_list, plot_list, EmptyPlots, file_list
         global sample_list, Plot, PlotFrames
 
         ##############################################
         # Generate global lists for data storage ###
         ##############################################
 
-        self.length = len(frequency_list)
-        electrode_count = int(electrode_count)
+        self.length = len(cg.frequency_list)
+        cg.electrode_count = int(cg.electrode_count)
 
         # --- Animation list ---#
         anim = []
 
         # --- Figure lists ---#
-        figures = []
+        cg.figures = []
         ratiometric_figures = []
 
         ############################################
         # Create global lists for data storage ###
         ############################################
-        data_list = [0] * electrode_count  # Peak Height/AUC data (after smoothing
+        data_list = [0] * cg.electrode_count  # Peak Height/AUC data (after smoothing
         # and polynomial regression)
         avg_data_list = (
             []
         )  # Average Peak Height/AUC across all electrodes for each frequency
         std_data_list = []  # standard deviation between electrodes for each frequency
-        normalized_data_list = [0] * electrode_count  # normalized data
+        normalized_data_list = [0] * cg.electrode_count  # normalized data
         offset_normalized_data_list = [
             0
-        ] * electrode_count  # to hold data with low frequency offset
+        ] * cg.electrode_count  # to hold data with low frequency offset
         normalized_ratiometric_data_list = []  # uses ratio of normalized peak heights
         KDM_list = []  # hold the data for kinetic differential measurements
 
-        for num in range(electrode_count):
+        for num in range(cg.electrode_count):
             data_list[num] = [0] * self.length  # a data list for each eletrode
             normalized_data_list[num] = [0] * self.length
             offset_normalized_data_list[num] = [0] * numFiles
@@ -2915,7 +2894,7 @@ class InitializeContinuousCanvas:
                 ] * numFiles  # use [0]*numFiles to preallocate list space
                 normalized_data_list[num][count] = [0] * numFiles
 
-        for num in range(electrode_count):
+        for num in range(cg.electrode_count):
             normalized_ratiometric_data_list.append([])
             KDM_list.append([])
 
@@ -2932,12 +2911,12 @@ class InitializeContinuousCanvas:
         ######################################################
         # Create a figure and artists for each electrode ###
         ######################################################
-        for num in range(electrode_count):
-            electrode = electrode_list[num]
+        for num in range(cg.electrode_count):
+            electrode = cg.electrode_list[num]
             figure = self.MakeFigure(electrode)
-            figures.append(figure)
+            cg.figures.append(figure)
 
-            if len(frequency_list) > 1:
+            if len(cg.frequency_list) > 1:
                 ratio_figure = self.MakeRatiometricFigure(electrode)
                 ratiometric_figures.append(ratio_figure)
 
@@ -3012,20 +2991,20 @@ class InitializeContinuousCanvas:
 
             # changing the column index
             # ---Set the electrode index value---#
-            if e_var == "single":
-                list_val = current_column_index + (electrode - 1) * spacing_index
+            if cg.e_var == "single":
+                list_val = cg.current_column_index + (electrode - 1) * cg.spacing_index
                 # changing
-            elif e_var == "multiple":
-                list_val = current_column_index
+            elif cg.e_var == "multiple":
+                list_val = cg.current_column_index
 
             #######################
             # Set axis labels ###
             #######################
 
             ax[0, 0].set_ylabel("Current\n(µA)", fontweight="bold")
-            if SelectedOptions == "Peak Height Extraction":
+            if cg.SelectedOptions == "Peak Height Extraction":
                 ax[1, 0].set_ylabel("Peak Height\n(µA)", fontweight="bold")
-            elif SelectedOptions == "Area Under the Curve":
+            elif cg.SelectedOptions == "Area Under the Curve":
                 ax[1, 0].set_ylabel("AUC (a.u.)", fontweight="bold")
             ax[2, 0].set_ylabel("Normalized", fontweight="bold")
 
@@ -3035,7 +3014,7 @@ class InitializeContinuousCanvas:
             electrode_plot = []
             subplot_count = 0
             for freq in range(length):
-                frequency = frequency_list[freq]
+                frequency = cg.frequency_list[freq]
                 ax[0, subplot_count].set_xlabel("Potential (V)")
 
                 # --- if the resize interval is larger than the number of files, ---#
@@ -3047,7 +3026,7 @@ class InitializeContinuousCanvas:
                 elif resize_interval <= numFiles:
                     xlim_factor = resize_interval
 
-                if XaxisOptions == "Experiment Time":
+                if cg.XaxisOptions == "Experiment Time":
                     ax[1, subplot_count].set_xlim(
                         0, (xlim_factor * SampleRate) / 3600 + (SampleRate / 7200)
                     )
@@ -3056,7 +3035,7 @@ class InitializeContinuousCanvas:
                     )
                     ax[2, subplot_count].set_xlabel("Time (h)")
 
-                elif XaxisOptions == "File Number":
+                elif cg.XaxisOptions == "File Number":
                     ax[1, subplot_count].set_xlim(-0.05, xlim_factor + 0.1)
                     ax[2, subplot_count].set_xlim(-0.05, xlim_factor + 0.1)
                     ax[2, subplot_count].set_xlabel("File Number")
@@ -3171,7 +3150,7 @@ class InitializeContinuousCanvas:
             axes[0, 0].set_ylabel("% Signal", fontweight="bold")
             axes[0, 1].set_ylabel("% Signal", fontweight="bold")
 
-            if XaxisOptions == "Experiment Time":
+            if cg.XaxisOptions == "Experiment Time":
                 axes[0, 0].set_xlim(
                     0, (xlim_factor * SampleRate) / 3600 + (SampleRate / 7200)
                 )
@@ -3181,7 +3160,7 @@ class InitializeContinuousCanvas:
                 axes[0, 0].set_xlabel("Time (h)")
                 axes[0, 1].set_xlabel("Time (h)")
 
-            elif XaxisOptions == "File Number":
+            elif cg.XaxisOptions == "File Number":
                 axes[0, 0].set_xlim(0, xlim_factor + 0.1)
                 axes[0, 1].set_xlim(0, xlim_factor + 0.1)
                 axes[0, 0].set_xlabel("File Number")
@@ -3241,10 +3220,10 @@ class InitializeContinuousCanvas:
                 1, electrode, frequency
             )
 
-            myfile = mypath + filename  # path of your file
-            myfile2 = mypath + filename2
-            myfile3 = mypath + filename3
-            myfile4 = mypath + filename4
+            myfile = cg.mypath + filename  # path of your file
+            myfile2 = cg.mypath + filename2
+            myfile3 = cg.mypath + filename3
+            myfile4 = cg.mypath + filename4
 
             try:
                 # retrieves the size of the file in bytes
@@ -3264,7 +3243,7 @@ class InitializeContinuousCanvas:
                         except:
                             mydata_bytes = 1
 
-            if mydata_bytes > byte_limit:
+            if mydata_bytes > cg.byte_limit:
                 print("Found File %s" % myfile)
                 self.RunInitialization(myfile, ax, subplot_count, electrode, frequency)
 
@@ -3371,11 +3350,11 @@ class InitializeContinuousCanvas:
                 linear_fit, [regression_dict[min1], regression_dict[min2]]
             ).tolist()
 
-            if SelectedOptions == "Peak Height Extraction":
+            if cg.SelectedOptions == "Peak Height Extraction":
                 Peak_Height = max(max1, max2) - min(min1, min2)
                 data = Peak_Height
 
-            if SelectedOptions == "Area Under the Curve":
+            if cg.SelectedOptions == "Area Under the Curve":
                 AUC_index = 1
                 AUC = 0
 
@@ -3426,16 +3405,16 @@ class InitializeContinuousCanvas:
 ##################################################################
 class InitializeFrequencyMapCanvas:
     def __init__(self):
-        global text_file_export, SaveVar, file_list, electrode_count, anim, Frame
-        global FrameReference, FileHandle, PlotContainer, frequency_list, data_list
-        global plot_list, EmptyPlots, figures, Plot, PlotFrames
+        global text_file_export, SaveVar, file_list, anim, Frame
+        global FrameReference, PlotContainer, data_list
+        global plot_list, EmptyPlots, Plot, PlotFrames
 
         ##############################################
         # Generate global lists for data storage ###
         ##############################################
 
-        self.length = len(frequency_list)
-        electrode_count = int(electrode_count)
+        self.length = len(cg.frequency_list)
+        cg.electrode_count = int(cg.electrode_count)
 
         # --- Animation list ---#
         anim = []
@@ -3444,15 +3423,15 @@ class InitializeFrequencyMapCanvas:
         file_list = [0] * numFiles
 
         # --- Figure lists ---#
-        figures = []
+        cg.figures = []
 
         ############################################
         # Create global lists for data storage ###
         ############################################
-        data_list = [0] * electrode_count  # Peak Height/AUC data (after smoothing
+        data_list = [0] * cg.electrode_count  # Peak Height/AUC data (after smoothing
         # and polynomial regression)
 
-        for num in range(electrode_count):
+        for num in range(cg.electrode_count):
             data_list[num] = [0] * self.length  # a data list for each eletrode
             for count in range(
                 self.length
@@ -3466,10 +3445,10 @@ class InitializeFrequencyMapCanvas:
         ######################################################
         # Create a figure and artists for each electrode ###
         ######################################################
-        for num in range(electrode_count):
-            electrode = electrode_list[num]
+        for num in range(cg.electrode_count):
+            electrode = cg.electrode_list[num]
             figure = self.MakeFigure(electrode)
-            figures.append(figure)
+            cg.figures.append(figure)
 
         #####################################################
         # Create a frame for each electrode and embed   ###
@@ -3538,10 +3517,10 @@ class InitializeFrequencyMapCanvas:
             )  # adjust the spacing between subplots
 
             # ---Set the electrode index value---#
-            if e_var == "single":
-                list_val = current_column_index + (electrode - 1) * spacing_index
-            elif e_var == "multiple":
-                list_val = current_column_index
+            if cg.e_var == "single":
+                list_val = cg.current_column_index + (electrode - 1) * cg.spacing_index
+            elif cg.e_var == "multiple":
+                list_val = cg.current_column_index
 
             #######################
             # Set axis labels ###
@@ -3556,7 +3535,7 @@ class InitializeFrequencyMapCanvas:
             ##########################################
             electrode_plot = []
 
-            max_frequency = frequency_list[-1]
+            max_frequency = cg.frequency_list[-1]
             ax[1, 0].set_xscale("log")
             ##########################################################################
             ##########################################################################
@@ -3619,7 +3598,7 @@ class InitializeFrequencyMapCanvas:
         self.list_val = _get_listval(electrode)
 
         try:
-            frequency = frequency_list[0]
+            frequency = cg.frequency_list[0]
             (
                 filename,
                 filename2,
@@ -3629,12 +3608,12 @@ class InitializeFrequencyMapCanvas:
                 filename6,
             ) = _retrieve_file(1, electrode, frequency)
 
-            myfile = mypath + filename  # path of your file
-            myfile2 = mypath + filename2
-            myfile3 = mypath + filename3
-            myfile4 = mypath + filename4
-            myfile5 = mypath + filename5
-            myfile6 = mypath + filename6
+            myfile = cg.mypath + filename  # path of your file
+            myfile2 = cg.mypath + filename2
+            myfile3 = cg.mypath + filename3
+            myfile4 = cg.mypath + filename4
+            myfile5 = cg.mypath + filename5
+            myfile6 = cg.mypath + filename6
             try:
                 # retrieves the size of the file in bytes
                 mydata_bytes = os.path.getsize(myfile)
@@ -3661,7 +3640,7 @@ class InitializeFrequencyMapCanvas:
                                 except:
                                     mydata_bytes = 1
 
-            if mydata_bytes > byte_limit:
+            if mydata_bytes > cg.byte_limit:
                 print("Found File %s" % myfile)
                 self.RunInitialization(myfile, ax, electrode)
 
@@ -3756,7 +3735,7 @@ class InitializeFrequencyMapCanvas:
 
             Peak_Height = max(max1, max2) - min(min1, min2)
 
-            if SelectedOptions == "Area Under the Curve":
+            if cg.SelectedOptions == "Area Under the Curve":
                 AUC_index = 1
                 AUC = 0
 
@@ -3778,7 +3757,7 @@ class InitializeFrequencyMapCanvas:
             minimum_current = min(min1, min2)
             maximum_current = max(max1, max2)
             peak_current = maximum_current - minimum_current
-            charge = peak_current / (frequency_list[0])
+            charge = peak_current / (cg.frequency_list[0])
 
             # Reverse voltammogram to match the 'Texas' convention ##
             ax[0, 0].set_xlim(MAX_POTENTIAL, MIN_POTENTIAL)
@@ -3791,7 +3770,7 @@ class InitializeFrequencyMapCanvas:
             ax[1, 0].set_ylim(
                 charge - abs(min_data * charge), charge + abs(max_data * charge)
             )
-            ax[1, 0].set_xlim(int(frequency_list[0]), int(frequency_list[-1]))
+            ax[1, 0].set_xlim(int(cg.frequency_list[0]), int(cg.frequency_list[-1]))
 
             return True
 
@@ -3828,7 +3807,7 @@ class ElectrochemicalAnimation:
     ):
 
         self.electrode = electrode  # Electrode for this class instance
-        self.num = electrode_dict[self.electrode]  # Electrode index value
+        self.num = cg.electrode_dict[self.electrode]  # Electrode index value
         self.spacer = "".join(
             ["       "] * self.electrode
         )  # Spacer value for print statements
@@ -3836,7 +3815,7 @@ class ElectrochemicalAnimation:
         self.index = 0  # File Index Value
         self.count = 0  # Frequency index value
         self.frequency_limit = (
-            len(frequency_list) - 1
+            len(cg.frequency_list) - 1
         )  # ' -1 ' so it matches the index value
 
         # Lists for sample rate (time passed)  ###
@@ -3985,10 +3964,10 @@ class ElectrochemicalAnimation:
         ############################################
         # Resize raw and normalized data plots ###
         ############################################
-        fig, ax = figures[self.num]
-        for count in range(len(frequency_list)):
+        fig, ax = cg.figures[self.num]
+        for count in range(len(cg.frequency_list)):
 
-            if XaxisOptions == "Experiment Time":
+            if cg.XaxisOptions == "Experiment Time":
                 ax[1, count].set_xlim(
                     0, (self.resize_limit * SampleRate) / 3600 + (SampleRate / 7200)
                 )
@@ -3996,21 +3975,21 @@ class ElectrochemicalAnimation:
                     0, (self.resize_limit * SampleRate) / 3600 + (SampleRate / 7200)
                 )
 
-            elif XaxisOptions == "File Number":
+            elif cg.XaxisOptions == "File Number":
                 ax[1, count].set_xlim(0, self.resize_limit + 0.1)
                 ax[2, count].set_xlim(0, self.resize_limit + 0.1)
 
         ##################################
         # Readjust Ratiometric Plots ###
         ##################################
-        if len(frequency_list) > 1:
+        if len(cg.frequency_list) > 1:
             fig, ax = ratiometric_figures[self.num]
 
-            if XaxisOptions == "File Number":
+            if cg.XaxisOptions == "File Number":
                 ax[0, 0].set_xlim(0, self.resize_limit + 0.1)
                 ax[0, 1].set_xlim(0, self.resize_limit + 0.1)
 
-            elif XaxisOptions == "Experiment Time":
+            elif cg.XaxisOptions == "Experiment Time":
                 ax[0, 0].set_xlim(
                     0, (self.resize_limit * SampleRate) / 3600 + (SampleRate / 7200)
                 )
@@ -4103,7 +4082,7 @@ class ElectrochemicalAnimation:
 
             # ratiometric plots
             if cg.method == "Continuous Scan":
-                if len(frequency_list) > 1:
+                if len(cg.frequency_list) > 1:
                     ratio_fig, ratio_ax = ratiometric_figures[self.num]
                     ratio_fig.canvas.draw()
 
@@ -4137,20 +4116,20 @@ class ElectrochemicalAnimation:
             self.sample_list.append((len(self.file_list) * SampleRate) / 3600)
 
         # look for the file here ###
-        frequency = int(frequency_list[self.count])
+        frequency = int(cg.frequency_list[self.count])
 
         if cg.method == "Continuous Scan":
-            self.electrode = electrode_list[self.num]
+            self.electrode = cg.electrode_list[self.num]
 
             filename, filename2, filename3, filename4 = _retrieve_file(
                 self.file, self.electrode, frequency
             )
 
             # path of your file
-            myfile = mypath + filename
-            myfile2 = mypath + filename2
-            myfile3 = mypath + filename3
-            myfile4 = mypath + filename4
+            myfile = cg.mypath + filename
+            myfile2 = cg.mypath + filename2
+            myfile3 = cg.mypath + filename3
+            myfile4 = cg.mypath + filename4
 
             try:
                 # retrieves the size of the file in bytes
@@ -4181,12 +4160,12 @@ class ElectrochemicalAnimation:
                 filename6,
             ) = _retrieve_file(self.file, self.electrode, frequency)
 
-            myfile = mypath + filename  # path of your file
-            myfile2 = mypath + filename2
-            myfile3 = mypath + filename3
-            myfile4 = mypath + filename4
-            myfile5 = mypath + filename5
-            myfile6 = mypath + filename6
+            myfile = cg.mypath + filename  # path of your file
+            myfile2 = cg.mypath + filename2
+            myfile3 = cg.mypath + filename3
+            myfile4 = cg.mypath + filename4
+            myfile5 = cg.mypath + filename5
+            myfile6 = cg.mypath + filename6
 
             try:
                 # retrieves the size of the file in bytes
@@ -4219,7 +4198,7 @@ class ElectrochemicalAnimation:
                                 except:
                                     mydata_bytes = 1
 
-        if mydata_bytes > byte_limit:
+        if mydata_bytes > cg.byte_limit:
             print("%s%d: Queueing %s" % (self.spacer, self.electrode, filename))
             q.put(lambda: self._run_analysis(myfile, frequency))
 
@@ -4299,7 +4278,7 @@ class ElectrochemicalAnimation:
             # ratiometric analysis and visualize the data on ###
             ######################################################
             if cg.method == "Continuous Scan":
-                if len(frequency_list) > 1:
+                if len(cg.frequency_list) > 1:
                     try:
                         framedata = self._ratiometric_generator()
                         self._draw_next_frame(framedata, fargs="ratiometric_analysis")
@@ -4448,14 +4427,14 @@ class ElectrochemicalAnimation:
         # If the user selected Peak Height Extraction, analyze PHE ###
         ################################################################
         Peak_Height = max(max1, max2) - min(min1, min2)
-        if SelectedOptions == "Peak Height Extraction":
+        if cg.SelectedOptions == "Peak Height Extraction":
             data = Peak_Height
 
         ########################################################
         # If the user selected AUC extraction, analyze AUC ###
         ########################################################
 
-        elif SelectedOptions == "Area Under the Curve":
+        elif cg.SelectedOptions == "Area Under the Curve":
             ##################################
             # Integrate Area Under the   ###
             # Curve using a Riemmann Sum  ###
@@ -4489,7 +4468,7 @@ class ElectrochemicalAnimation:
             )
 
         elif cg.method == "Frequency Map":
-            frequency = frequency_list[self.count]
+            frequency = cg.frequency_list[self.count]
             self.frequency_axis.append(int(frequency))
 
             charge = (Peak_Height / frequency) * 100000
@@ -4525,7 +4504,7 @@ class ElectrochemicalAnimation:
                     % (
                         self.spacer,
                         self.electrode,
-                        frequency_list[self.count],
+                        cg.frequency_list[self.count],
                         self.spacer,
                     )
                 )
@@ -4534,14 +4513,14 @@ class ElectrochemicalAnimation:
                 # Acquire the current frequency and get the xstart/xend ###
                 # parameters that will manipulate the visualized data   ###
                 #############################################################
-                frequency = frequency_list[self.count]
+                frequency = cg.frequency_list[self.count]
 
                 ###################################
                 # Set the units of the X-axis ###
                 ###################################
-                if XaxisOptions == "Experiment Time":
+                if cg.XaxisOptions == "Experiment Time":
                     Xaxis = self.sample_list
-                elif XaxisOptions == "File Number":
+                elif cg.XaxisOptions == "File Number":
                     Xaxis = self.file_list
 
                 ################################################################
@@ -4562,7 +4541,7 @@ class ElectrochemicalAnimation:
                     : len(self.file_list)
                 ]  # 'num' is the electrode index value
 
-                if frequency_list[self.count] == cg.HighLowList["Low"]:
+                if cg.frequency_list[self.count] == cg.HighLowList["Low"]:
                     NormalizedDataList = offset_normalized_data_list[self.num][
                         : len(self.file_list)
                     ]
@@ -4624,7 +4603,7 @@ class ElectrochemicalAnimation:
                         plots[4].set_data(Xaxis, NormalizedDataList)  # Norm Data
                         plots[5].set_data([], [])  # Clear the injection artist
 
-                if SelectedOptions == "Area Under the Curve":
+                if cg.SelectedOptions == "Area Under the Curve":
                     # --- Shaded region of Area Under the Curve ---#
                     vertices = [
                         (adjusted_potentials[0], adjusted_currents[0]),
@@ -4661,7 +4640,7 @@ class ElectrochemicalAnimation:
                     % (
                         self.spacer,
                         self.electrode,
-                        frequency_list[self.count],
+                        cg.frequency_list[self.count],
                         self.spacer,
                     )
                 )
@@ -4713,8 +4692,8 @@ class ElectrochemicalAnimation:
         HighFrequency = cg.HighLowList["High"]
         LowFrequency = cg.HighLowList["Low"]
 
-        HighCount = frequency_dict[HighFrequency]
-        LowCount = frequency_dict[LowFrequency]
+        HighCount = cg.frequency_dict[HighFrequency]
+        LowCount = cg.frequency_dict[LowFrequency]
 
         HighPoint = normalized_data_list[self.num][HighCount][self.index]
         LowPoint = offset_normalized_data_list[self.num][self.index]
@@ -4734,9 +4713,9 @@ class ElectrochemicalAnimation:
 
         plots = ratiometric_plots[self.num]
 
-        if XaxisOptions == "Experiment Time":
+        if cg.XaxisOptions == "Experiment Time":
             Xaxis = self.sample_list
-        elif XaxisOptions == "File Number":
+        elif cg.XaxisOptions == "File Number":
             Xaxis = self.file_list
 
         norm = [X * 100 for X in normalized_ratiometric_data_list[self.num]]
@@ -4803,11 +4782,11 @@ class DataNormalization:
         #######################################################
         # Check the frequency and apply the baseline offset ##
         #######################################################
-        frequency = frequency_list[count]
+        frequency = cg.frequency_list[count]
         if frequency == cg.HighLowList["Low"]:
-            if XaxisOptions == "Experiment Time":
+            if cg.XaxisOptions == "Experiment Time":
                 Offset = (sample * LowFrequencySlope) + LowFrequencyOffset
-            elif XaxisOptions == "File Number":
+            elif cg.XaxisOptions == "File Number":
                 Offset = (file * LowFrequencySlope) + LowFrequencyOffset
         else:
             Offset = 0
@@ -4860,7 +4839,7 @@ class DataNormalization:
             ###########################################################################
             # If this is a low frequency, apply the offset to the normalized data ###
             ###########################################################################
-            if frequency_list[count] == cg.HighLowList["Low"]:
+            if cg.frequency_list[count] == cg.HighLowList["Low"]:
                 offset_normalized_data_list[num][index] = (
                     normalized_data_list[num][count][index] + Offset
                 )
@@ -4873,7 +4852,7 @@ class DataNormalization:
             ###########################################################################
             # If this is a low frequency, apply the offset to the normalized data ###
             ###########################################################################
-            if frequency_list[count] == cg.HighLowList["Low"]:
+            if cg.frequency_list[count] == cg.HighLowList["Low"]:
                 offset_normalized_data_list[num][index] = (
                     normalized_data_list[num][count][index] + Offset
                 )
@@ -4891,8 +4870,8 @@ class DataNormalization:
         if file == NormalizationPoint:
             index = file - 1
             NormalizationIndex = NormalizationPoint - 1
-            for num in range(electrode_count):
-                for count in range(len(frequency_list)):
+            for num in range(cg.electrode_count):
+                for count in range(len(cg.frequency_list)):
 
                     normalized_data_list[num][count][:index] = [
                         (idx / data_list[num][count][NormalizationIndex])
@@ -4903,7 +4882,7 @@ class DataNormalization:
                     # If the frequency is below cutoff_frequency, ###
                     # add the baseline Offset                     ###
                     ##################################################
-                    if frequency_list[count] == cg.HighLowList["Low"]:
+                    if cg.frequency_list[count] == cg.HighLowList["Low"]:
                         for index in range(len(file_list)):
 
                             ##########################
@@ -4911,11 +4890,11 @@ class DataNormalization:
                             ##########################
                             sample = sample_list[index]
                             file = file_list[index]
-                            if XaxisOptions == "Experiment Time":
+                            if cg.XaxisOptions == "Experiment Time":
                                 Offset = (
                                     sample * LowFrequencySlope
                                 ) + LowFrequencyOffset
-                            elif XaxisOptions == "File Number":
+                            elif cg.XaxisOptions == "File Number":
                                 Offset = (file * LowFrequencySlope) + LowFrequencyOffset
 
                             offset_normalized_data_list[num][index] = (
@@ -4925,7 +4904,7 @@ class DataNormalization:
             ################################################
             # Analyze KDM using new normalization data ###
             ################################################
-            if len(frequency_list) > 1:
+            if len(cg.frequency_list) > 1:
                 self.ResetRatiometricData()
 
             ###############################
@@ -4947,8 +4926,8 @@ class DataNormalization:
         if NormalizationWaiting:
             index = file - 1
             NormalizationIndex = NormalizationPoint - 1
-            for num in range(electrode_count):
-                for count in range(len(frequency_list)):
+            for num in range(cg.electrode_count):
+                for count in range(len(cg.frequency_list)):
 
                     ##########################
                     # Renormalize the data ##
@@ -4961,7 +4940,7 @@ class DataNormalization:
                     # If the frequency is below cutoff_frequency,  ##
                     # add the baseline Offset                      ##
                     ##################################################
-                    if frequency_list[count] == cg.HighLowList["Low"]:
+                    if cg.frequency_list[count] == cg.HighLowList["Low"]:
                         for index in range(len(file_list)):
 
                             ##########################
@@ -4970,11 +4949,11 @@ class DataNormalization:
                             sample = sample_list[index]
                             file = index + 1
 
-                            if XaxisOptions == "Experiment Time":
+                            if cg.XaxisOptions == "Experiment Time":
                                 Offset = (
                                     sample * LowFrequencySlope
                                 ) + LowFrequencyOffset
-                            elif XaxisOptions == "File Number":
+                            elif cg.XaxisOptions == "File Number":
                                 Offset = (file * LowFrequencySlope) + LowFrequencyOffset
 
                             offset_normalized_data_list[num][index] = (
@@ -4986,7 +4965,7 @@ class DataNormalization:
             # the Normalized Ratio and KDM               ##
             # for each file that has been analyzed       ##
             ################################################
-            if len(frequency_list) > 1:
+            if len(cg.frequency_list) > 1:
                 self.ResetRatiometricData()
 
             # --- Indicate that the data has been normalized to the
@@ -5009,11 +4988,11 @@ class DataNormalization:
         ############################################
 
         # -- Iterate through every frequency --#
-        for frequency in frequency_list:
+        for frequency in cg.frequency_list:
 
             # -- Only apply the offset if the frequency is below cutoff_frequency --#
             if frequency == cg.HighLowList["Low"]:
-                count = frequency_dict[frequency]
+                count = cg.frequency_dict[frequency]
 
                 # -- Apply the offset to every file --#
                 for index in range(len(file_list)):
@@ -5021,12 +5000,12 @@ class DataNormalization:
                     sample = sample_list[index]
                     file = file_list[index]
 
-                    if XaxisOptions == "Experiment Time":
+                    if cg.XaxisOptions == "Experiment Time":
                         Offset = (sample * LowFrequencySlope) + LowFrequencyOffset
-                    elif XaxisOptions == "File Number":
+                    elif cg.XaxisOptions == "File Number":
                         Offset = (file * LowFrequencySlope) + LowFrequencyOffset
 
-                    for num in range(electrode_count):
+                    for num in range(cg.electrode_count):
                         offset_normalized_data_list[num][index] = normalized_data_list[
                             num
                         ][count][index] + float(Offset)
@@ -5036,11 +5015,11 @@ class DataNormalization:
         ####################################################
         for file in file_list:
             index = file - 1
-            for num in range(electrode_count):
+            for num in range(cg.electrode_count):
 
                 # grab the index value for the current high and low frequencies
                 # used for ratiometric analysis #
-                HighCount = frequency_dict[HighFrequency]
+                HighCount = cg.frequency_dict[cg.HighFrequency]
 
                 HighPoint = normalized_data_list[num][HighCount][index]
                 LowPoint = offset_normalized_data_list[num][index]
@@ -5083,12 +5062,12 @@ class PostAnalysis(tk.Frame):
         self.completion_value = 0
 
         # --- Check for the presence of high and low frequencies ---#
-        if frequency_list[-1] > cutoff_frequency:
+        if cg.frequency_list[-1] > cutoff_frequency:
             self.High = True
         else:
             self.High = False
 
-        if frequency_list[0] <= cutoff_frequency:
+        if cg.frequency_list[0] <= cutoff_frequency:
             self.Low = True
         else:
             self.Low = False
@@ -5143,7 +5122,7 @@ class PostAnalysis(tk.Frame):
         )
         NormWarning = self.NormWarning
 
-        if len(frequency_list) > 1:
+        if len(cg.frequency_list) > 1:
 
             self.FrequencyFrame = tk.Frame(DataAdjustmentFrame, relief="groove", bd=3)
             self.FrequencyFrame.grid(row=2, column=0, pady=10, padx=3, ipady=2)
@@ -5161,7 +5140,7 @@ class PostAnalysis(tk.Frame):
             self.HighFrequencyLabel.grid(row=1, column=1, pady=5, padx=5)
 
             self.HighFrequencyEntry = tk.Entry(self.FrequencyFrame, width=7)
-            self.HighFrequencyEntry.insert(tk.END, HighFrequency)
+            self.HighFrequencyEntry.insert(tk.END, cg.HighFrequency)
             self.HighFrequencyEntry.grid(row=2, column=1, padx=5)
 
             # --- Low Frequency Selection for KDM and Ratiometric Analysis ---#
@@ -5171,7 +5150,7 @@ class PostAnalysis(tk.Frame):
             self.LowFrequencyLabel.grid(row=1, column=0, pady=5, padx=5)
 
             self.LowFrequencyEntry = tk.Entry(self.FrequencyFrame, width=7)
-            self.LowFrequencyEntry.insert(tk.END, LowFrequency)
+            self.LowFrequencyEntry.insert(tk.END, cg.LowFrequency)
             self.LowFrequencyEntry.grid(row=2, column=0, padx=5)
 
             self.LowFrequencyOffsetLabel = tk.Label(
@@ -5280,7 +5259,7 @@ class PostAnalysis(tk.Frame):
 
         self.completion_value += 1
 
-        if self.completion_value == electrode_count:
+        if self.completion_value == cg.electrode_count:
             analysis_complete = True
 
             #####################################
@@ -5296,8 +5275,8 @@ class PostAnalysis(tk.Frame):
         NormalizationIndex = NormalizationPoint - 1
 
         if NormalizationPoint <= numFiles:
-            for num in range(electrode_count):
-                for count in range(len(frequency_list)):
+            for num in range(cg.electrode_count):
+                for count in range(len(cg.frequency_list)):
                     normalized_data_list[num][count] = [
                         (idx / data_list[num][count][NormalizationIndex])
                         for idx in data_list[num][count]
@@ -5306,7 +5285,7 @@ class PostAnalysis(tk.Frame):
                     # If the frequency is below cutoff_frequency,  ##
                     # add the baseline Offset                      ##
                     ##################################################
-                    if frequency_list[count] == cg.HighLowList["Low"]:
+                    if cg.frequency_list[count] == cg.HighLowList["Low"]:
                         for index in range(numFiles):
 
                             ##########################
@@ -5315,11 +5294,11 @@ class PostAnalysis(tk.Frame):
                             sample = sample_list[index]
                             file = file_list[index]
 
-                            if XaxisOptions == "Experiment Time":
+                            if cg.XaxisOptions == "Experiment Time":
                                 Offset = (
                                     sample * LowFrequencySlope
                                 ) + LowFrequencyOffset
-                            elif XaxisOptions == "File Number":
+                            elif cg.XaxisOptions == "File Number":
                                 Offset = (file * LowFrequencySlope) + LowFrequencyOffset
 
                             offset_normalized_data_list[num][index] = (
@@ -5340,22 +5319,22 @@ class PostAnalysis(tk.Frame):
     def _draw(self):
         global peak, norm
 
-        for num in range(electrode_count):
+        for num in range(cg.electrode_count):
 
             # get the figure for the electrode ##
-            fig, ax = figures[num]
+            fig, ax = cg.figures[num]
 
             subplot_count = 0
-            for count in range(len(frequency_list)):
+            for count in range(len(cg.frequency_list)):
 
-                frequency = frequency_list[count]
+                frequency = cg.frequency_list[count]
 
                 ###################################
                 # Set the units of the X-axis ###
                 ###################################
-                if XaxisOptions == "Experiment Time":
+                if cg.XaxisOptions == "Experiment Time":
                     Xaxis = sample_list
-                elif XaxisOptions == "File Number":
+                elif cg.XaxisOptions == "File Number":
                     Xaxis = file_list
 
                 ################################################################
@@ -5372,7 +5351,7 @@ class PostAnalysis(tk.Frame):
 
                 data = data_list[num][count]  # 'num' is the electrode index value
 
-                if frequency_list[count] == cg.HighLowList["Low"]:
+                if cg.frequency_list[count] == cg.HighLowList["Low"]:
                     NormalizedDataList = offset_normalized_data_list[num]
                 else:
                     NormalizedDataList = normalized_data_list[num][count]
@@ -5390,14 +5369,14 @@ class PostAnalysis(tk.Frame):
                 # Set the Y Label ##
                 #####################
                 ax[0, 0].set_ylabel("Current\n(µA)", fontweight="bold")
-                if SelectedOptions == "Peak Height Extraction":
+                if cg.SelectedOptions == "Peak Height Extraction":
                     ax[1, 0].set_ylabel("Peak Height\n(µA)", fontweight="bold")
-                elif SelectedOptions == "Area Under the Curve":
+                elif cg.SelectedOptions == "Area Under the Curve":
                     ax[1, 0].set_ylabel("AUC (a.u.)", fontweight="bold")
                 ax[2, 0].set_ylabel("Normalized", fontweight="bold")
 
                 # If necessary, redraw ratiometric data ###
-                if len(frequency_list) > 1:
+                if len(cg.frequency_list) > 1:
                     ratio_fig, ratio_ax = ratiometric_figures[num]
 
                     norm = [X * 100 for X in normalized_ratiometric_data_list[num]]
@@ -5423,7 +5402,7 @@ class PostAnalysis(tk.Frame):
 
             fig.canvas.draw_idle()
 
-            if len(frequency_list) > 1:
+            if len(cg.frequency_list) > 1:
 
                 ratio_fig.canvas.draw_idle()
 
@@ -5432,12 +5411,12 @@ class PostAnalysis(tk.Frame):
     # frequencies used for KDM and ratiometric analysis ###
     #########################################################
     def PostAnalysisKDM(self):
-        global HighFrequency, LowFrequencyOffset, LowFrequencySlope, LowFrequency
+        global LowFrequencyOffset, LowFrequencySlope
         global LowFrequencyEntry, HighFrequencyEntry, ExistVar
         global WrongFrequencyLabel, RatioMetricCheck
 
-        HighFrequency = int(self.HighFrequencyEntry.get())
-        LowFrequency = int(self.LowFrequencyEntry.get())
+        cg.HighFrequency = int(self.HighFrequencyEntry.get())
+        cg.LowFrequency = int(self.LowFrequencyEntry.get())
 
         LowFrequencyOffset = float(self.LowFrequencyOffset.get())
         LowFrequencySlope = float(self.LowFrequencySlope.get())
@@ -5445,10 +5424,10 @@ class PostAnalysis(tk.Frame):
         # --- Reset the variable for the Warning Label (WrongFrequencyLabel) ---#
         CheckVar = 0
 
-        if int(HighFrequency) not in frequency_list:
+        if int(cg.HighFrequency) not in cg.frequency_list:
             CheckVar += 3
 
-        if int(LowFrequency) not in frequency_list:
+        if int(cg.LowFrequency) not in cg.frequency_list:
             CheckVar += 1
 
         # --- if only the HighFrequency does not exist ---#
@@ -5488,8 +5467,8 @@ class PostAnalysis(tk.Frame):
 
         # --- else, if they both exist, remove the warning label ---#
         else:
-            cg.HighLowList["High"] = HighFrequency
-            cg.HighLowList["Low"] = LowFrequency
+            cg.HighLowList["High"] = cg.HighFrequency
+            cg.HighLowList["Low"] = cg.LowFrequency
 
             data_normalization.ResetRatiometricData()
 
@@ -5558,7 +5537,7 @@ class PostAnalysis(tk.Frame):
         HandleLabel = tk.Label(self.win, text="Exported File Handle:", font=LARGE_FONT)
         HandleLabel.grid(row=4, column=0, columnspan=2)
         self.filehandle = ttk.Entry(self.win)
-        self.filehandle.insert(tk.END, FileHandle)
+        self.filehandle.insert(tk.END, cg.FileHandle)
         self.filehandle.grid(row=5, column=0, columnspan=2, pady=5)
 
         self.ElectrodeLabel = tk.Label(
@@ -5577,7 +5556,7 @@ class PostAnalysis(tk.Frame):
         )
         self.ElectrodeCount.bind("<<ListboxSelect>>", self.ElectrodeCurSelect)
         self.ElectrodeCount.grid(row=11, column=0, padx=10, sticky="nswe")
-        for electrode in electrode_list:
+        for electrode in cg.electrode_list:
             self.ElectrodeCount.insert(tk.END, electrode)
 
         # --- ListBox containing the frequencies given on line 46 (InputFrequencies)-#
@@ -5598,7 +5577,7 @@ class PostAnalysis(tk.Frame):
         )
         self.FrequencyList.bind("<<ListboxSelect>>", self.FrequencyCurSelect)
         self.FrequencyList.grid(row=11, column=1, padx=10, sticky="nswe")
-        for frequency in frequency_list:
+        for frequency in cg.frequency_list:
             self.FrequencyList.insert(tk.END, frequency)
 
         ExportData = tk.Button(
@@ -5624,76 +5603,71 @@ class PostAnalysis(tk.Frame):
         ]
         self.electrode_list = [int(electrode) for electrode in self.electrode_list]
 
-        if electrode_count == 0:
+        if cg.electrode_count == 0:
             self.ElectrodeListExists = False
             self.ElectrodeLabel["fg"] = "red"
 
-        elif electrode_count != 0:
+        elif cg.electrode_count != 0:
             self.ElectrodeListExists = True
             self.ElectrodeLabel["fg"] = "black"
 
     # --- Frequency Selection ---#
     def FrequencyCurSelect(self, evt):
-        global frequency_list, frequency_dict, LowFrequency, HighFrequency
-
         self.frequency_list = [
             self.FrequencyList.get(idx) for idx in self.FrequencyList.curselection()
         ]
 
-        if len(frequency_list) != 0:
+        if len(cg.frequency_list) != 0:
 
             self.FrequencyListExists = True
             self.FrequencyLabel["fg"] = "black"
 
-            for var in frequency_list:
+            for var in cg.frequency_list:
                 var = int(var)
 
-        elif len(frequency_list) == 0:
+        elif len(cg.frequency_list) == 0:
             self.FrequencyListExists = False
             self.FrequencyLabel["fg"] = "red"
 
     def FindFile(self, parent):
-        global FilePath, ExportPath, FoundFilePath
-
         try:
 
             # prompt the user to select a  ###
             # directory for  data analysis ###
-            FilePath = filedialog.askdirectory(parent=parent)
-            FilePath = "".join(FilePath + "/")
+            cg.FilePath = filedialog.askdirectory(parent=parent)
+            cg.FilePath = "".join(cg.FilePath + "/")
 
             # Path for directory in which the    ###
             # exported .txt file will be placed  ###
-            ExportPath = FilePath.split("/")
+            cg.ExportPath = cg.FilePath.split("/")
 
             # -- change the text of the find file button to the folder the user chose -#
-            DataFolder = "%s/%s" % (ExportPath[-3], ExportPath[-2])
+            cg.DataFolder = "%s/%s" % (cg.ExportPath[-3], cg.ExportPath[-2])
 
             self.SelectFilePath["style"] = "On.TButton"
-            self.SelectFilePath["text"] = DataFolder
+            self.SelectFilePath["text"] = cg.DataFolder
 
-            del ExportPath[-1]
-            ExportPath = "/".join(ExportPath)
-            ExportPath = "".join(ExportPath + "/")
+            del cg.ExportPath[-1]
+            cg.ExportPath = "/".join(cg.ExportPath)
+            cg.ExportPath = "".join(cg.ExportPath + "/")
             # Indicates that the user has selected a File Path ###
-            FoundFilePath = True
+            cg.FoundFilePath = True
 
             if self.PathWarningExists:
                 self.NoSelectedPath["text"] = ""
                 self.NoSelectedPath.grid_forget()
 
         except:
-            FoundFilePath = False
+            cg.FoundFilePath = False
             self.NoSelectedPath.grid(row=1, column=0, columnspan=4)
             self.PathWarningExists = True
             self.SelectFilePath["style"] = "Off.TButton"
             self.SelectFilePath["text"] = ""
 
     def PostAnalysisDataExport(self):
-        global ExportFilePath
 
         FileHandle = str(self.filehandle.get())
-        ExportFilePath = "".join(ExportPath + FileHandle)
+        cg.ExportFilePath = "".join(cg.ExportPath + FileHandle)
 
         post_analysis_export = TextFileExport(
             electrodes=self.electrode_list, frequencies=self.frequency_list
@@ -5703,7 +5677,7 @@ class PostAnalysis(tk.Frame):
         )
 
     def _reset(self):
-        global HighAlreadyReset, LowAlreadyReset, AlreadyInitiated
+        global HighAlreadyReset, LowAlreadyReset
         global PoisonPill, key, analysis_complete
 
         self.completion_value = 0
@@ -5714,7 +5688,7 @@ class PostAnalysis(tk.Frame):
 
         key = 0
         PoisonPill = True
-        AlreadyInitiated = False  # reset the start variable
+        cg.AlreadyInitiated = False  # reset the start variable
 
         if self.High:
             HighAlreadyReset = True
@@ -5794,7 +5768,7 @@ class Track:
 
         index = file - 1
 
-        if self.track_list[index] == electrode_count:
+        if self.track_list[index] == cg.electrode_count:
 
             if cg.method == "Continuous Scan":
 
@@ -5824,7 +5798,7 @@ class Track:
 
             elif cg.method == "Frequency Map":
 
-                if self.track_list[index] == electrode_count:
+                if self.track_list[index] == cg.electrode_count:
 
                     if SaveVar:
                         text_file_export.FrequencyMapExport(file, frequency)
@@ -5857,18 +5831,18 @@ class TextFileExport:
     def __init__(self, electrodes=None, frequencies=None):
 
         if electrodes is None:
-            self.electrode_list = electrode_list
+            self.electrode_list = cg.electrode_list
         else:
             self.electrode_list = electrodes
 
         self.electrode_count = len(self.electrode_list)
 
         if frequencies is None:
-            self.frequency_list = frequency_list
+            self.frequency_list = cg.frequency_list
         else:
             self.frequency_list = frequencies
 
-        self.TextFileHandle = ExportFilePath
+        self.TextFileHandle = cg.ExportFilePath
 
         if cg.method == "Continuous Scan":
             TxtList = []
@@ -5877,16 +5851,16 @@ class TextFileExport:
 
             for frequency in self.frequency_list:
                 for electrode in self.electrode_list:
-                    if SelectedOptions == "Peak Height Extraction":
+                    if cg.SelectedOptions == "Peak Height Extraction":
                         TxtList.append("PeakHeight_E%d_%dHz" % (electrode, frequency))
-                    elif SelectedOptions == "Area Under the Curve":
+                    elif cg.SelectedOptions == "Area Under the Curve":
                         TxtList.append("AUC_E%d_%dHz" % (electrode, frequency))
 
             if self.electrode_count > 1:
                 for frequency in self.frequency_list:
-                    if SelectedOptions == "Peak Height Extraction":
+                    if cg.SelectedOptions == "Peak Height Extraction":
                         TxtList.append("Avg_PeakHeight_%dHz" % frequency)
-                    elif SelectedOptions == "Area Under the Curve":
+                    elif cg.SelectedOptions == "Area Under the Curve":
                         TxtList.append("Avg_AUC_%dHz" % frequency)
 
             for frequency in self.frequency_list:
@@ -5926,9 +5900,9 @@ class TextFileExport:
 
             E_count = 1
             for electrode in cg.frame_list:
-                if SelectedOptions == "Peak Height Extraction":
+                if cg.SelectedOptions == "Peak Height Extraction":
                     TxtList.append("PeakHeight_E%d(uA)" % (E_count))
-                elif SelectedOptions == "Area Under the Curve":
+                elif cg.SelectedOptions == "Area Under the Curve":
                     TxtList.append("AUC_E%d" % (E_count))
                 TxtList.append("Charge_E%d(uC)" % (E_count))
                 E_count += 1
@@ -5954,33 +5928,33 @@ class TextFileExport:
         list.append(str(_file_))
         list.append(str((_file_ * SampleRate) / 3600))
         # --- Peak Height ---#
-        for count in range(len(frequency_list)):
-            for num in range(electrode_count):
+        for count in range(len(cg.frequency_list)):
+            for num in range(cg.electrode_count):
                 list.append(data_list[num][count][index])
 
         # --- Avg. Peak Height ---#
         if self.electrode_count > 1:
-            for count in range(len(frequency_list)):
+            for count in range(len(cg.frequency_list)):
                 average = 0
-                for num in range(electrode_count):
+                for num in range(cg.electrode_count):
                     average += data_list[num][count][index]
-                average = average / electrode_count
+                average = average / cg.electrode_count
                 list.append(average)
 
         # --- Peak Height/AUC Data Normalization ---#
-        for count in range(len(frequency_list)):
-            for num in range(electrode_count):
-                if frequency_list[count] == cg.HighLowList["Low"]:
+        for count in range(len(cg.frequency_list)):
+            for num in range(cg.electrode_count):
+                if cg.frequency_list[count] == cg.HighLowList["Low"]:
                     list.append(offset_normalized_data_list[num][index])
                 else:
                     list.append(normalized_data_list[num][count][index])
 
         # --- Average normalized data across all electrodes for each frequency ---#
         if self.electrode_count > 1:
-            for count in range(len(frequency_list)):
+            for count in range(len(cg.frequency_list)):
                 NormalizedFrequencyCurrents = []
-                for num in range(electrode_count):
-                    if frequency_list[count] == cg.HighLowList["Low"]:
+                for num in range(cg.electrode_count):
+                    if cg.frequency_list[count] == cg.HighLowList["Low"]:
                         NormalizedFrequencyCurrents.append(
                             offset_normalized_data_list[num][index]
                         )
@@ -5993,54 +5967,54 @@ class TextFileExport:
                 average = 0  # start at 0
                 for item in NormalizedFrequencyCurrents:
                     average += item  # add every item
-                average = average / electrode_count
-                AverageNorm = sum(NormalizedFrequencyCurrents) / electrode_count
+                average = average / cg.electrode_count
+                AverageNorm = sum(NormalizedFrequencyCurrents) / cg.electrode_count
                 list.append(AverageNorm)
 
         # --- Standard Deviation ---#
         if self.electrode_count > 1:
-            for count in range(len(frequency_list)):
+            for count in range(len(cg.frequency_list)):
                 NormalizedFrequencyCurrents = []
-                for num in range(electrode_count):
+                for num in range(cg.electrode_count):
                     NormalizedFrequencyCurrents.append(
                         normalized_data_list[num][count][index]
                     )
 
-                AverageNorm = sum(NormalizedFrequencyCurrents) / electrode_count
+                AverageNorm = sum(NormalizedFrequencyCurrents) / cg.electrode_count
                 STDList = [(X - AverageNorm) ** 2 for X in NormalizedFrequencyCurrents]
                 StandardDeviation = float(
-                    sqrt(sum(STDList) / (electrode_count - 1))
+                    sqrt(sum(STDList) / (cg.electrode_count - 1))
                 )  # standard deviation of a sample
                 list.append(StandardDeviation)
 
-        if len(frequency_list) > 1:
+        if len(cg.frequency_list) > 1:
             # --- Append Normalized Ratiometric Data ---#
             NormList = []
 
-            for num in range(electrode_count):
+            for num in range(cg.electrode_count):
                 list.append(normalized_ratiometric_data_list[num][index])
                 NormList.append(normalized_ratiometric_data_list[num][index])
 
             if self.electrode_count > 1:
-                NormAverage = sum(NormList) / electrode_count
+                NormAverage = sum(NormList) / cg.electrode_count
                 list.append(NormAverage)
 
                 NormSTDlist = [(X - NormAverage) ** 2 for X in NormList]
                 NormStandardDeviation = sqrt(
-                    sum(NormSTDlist) / (electrode_count - 1)
+                    sum(NormSTDlist) / (cg.electrode_count - 1)
                 )  # standard deviation of a sample
                 list.append(NormStandardDeviation)
 
             # --- Append KDM ---#
             KDMList = []
-            for num in range(electrode_count):
+            for num in range(cg.electrode_count):
                 list.append(KDM_list[num][index])
                 KDMList.append(KDM_list[num][index])
             if self.electrode_count > 1:
-                KDM_Average = sum(KDMList) / electrode_count
+                KDM_Average = sum(KDMList) / cg.electrode_count
                 list.append(KDM_Average)
                 KDM_STD_list = [(X - KDM_Average) ** 2 for X in KDMList]
-                KDM_STD = sqrt(sum(KDM_STD_list) / (electrode_count - 1))
+                KDM_STD = sqrt(sum(KDM_STD_list) / (cg.electrode_count - 1))
                 list.append(KDM_STD)
 
         # --- Write the data into the .txt file ---#
@@ -6069,31 +6043,31 @@ class TextFileExport:
         try:
 
             list.append(str(frequency))
-            count = frequency_dict[int(frequency)]
+            count = cg.frequency_dict[int(frequency)]
 
             # Peak Height / AUC
-            for num in range(electrode_count):
+            for num in range(cg.electrode_count):
                 list.append(data_list[num][count][index])
                 list.append(data_list[num][count][index] / int(frequency))
 
             # Average Peak Height / AUC
             if self.electrode_count > 1:
                 value = 0
-                for num in range(electrode_count):
+                for num in range(cg.electrode_count):
                     value += data_list[num][count][index]
-                average = value / electrode_count
+                average = value / cg.electrode_count
                 list.append(average)
 
                 # Standard Deviation of a Sample across all electrodes
                 # for Peak Height/AUC
 
                 std_list = []
-                for num in range(electrode_count):
+                for num in range(cg.electrode_count):
                     std_list.append(data_list[num][count][index])
 
                 std_list = [(value - average) ** 2 for value in std_list]
 
-                standard_deviation = sqrt(sum(std_list) / (electrode_count - 1))
+                standard_deviation = sqrt(sum(std_list) / (cg.electrode_count - 1))
                 list.append(standard_deviation)
 
                 # -- Average Charge --#
@@ -6102,12 +6076,14 @@ class TextFileExport:
 
                 # -- Charge STD --#
                 std_list = []
-                for num in range(electrode_count):
+                for num in range(cg.electrode_count):
                     std_list.append(data_list[num][count][index])
 
                 std_list = [x / int(frequency) for x in std_list]
                 std_list = [(value - avg_charge) ** 2 for value in std_list]
-                charge_standard_deviation = sqrt(sum(std_list) / (electrode_count - 1))
+                charge_standard_deviation = sqrt(
+                    sum(std_list) / (cg.electrode_count - 1)
+                )
                 list.append(charge_standard_deviation)
 
             # --- Write the data into the .txt file ---#
@@ -6158,28 +6134,28 @@ class TextFileExport:
 
                 # --- peak height ---#
                 for frequency in self.frequency_list:
-                    count = frequency_dict[frequency]
+                    count = cg.frequency_dict[frequency]
                     for electrode in self.electrode_list:
-                        num = electrode_dict[electrode]
+                        num = cg.electrode_dict[electrode]
                         list.append(data_list[num][count][index])
 
                 # --- Avg. Peak Height ---#
                 if self.electrode_count > 1:
                     for frequency in self.frequency_list:
-                        count = frequency_dict[frequency]
+                        count = cg.frequency_dict[frequency]
                         average = 0
                         for electrode in self.electrode_list:
-                            num = electrode_dict[electrode]
+                            num = cg.electrode_dict[electrode]
                             average += data_list[num][count][index]
                         average = average / self.electrode_count
                         list.append(average)
 
                 # --- Data Normalization ---#
                 for frequency in self.frequency_list:
-                    count = frequency_dict[frequency]
+                    count = cg.frequency_dict[frequency]
                     NormalizedFrequencyCurrents = []
                     for electrode in self.electrode_list:
-                        num = electrode_dict[electrode]
+                        num = cg.electrode_dict[electrode]
 
                         if frequency == cg.HighLowList["Low"]:
                             list.append(offset_normalized_data_list[num][index])
@@ -6189,10 +6165,10 @@ class TextFileExport:
                 # --- Average Data Normalization ---#
                 if self.electrode_count > 1:
                     for frequency in self.frequency_list:
-                        count = frequency_dict[frequency]
+                        count = cg.frequency_dict[frequency]
                         NormalizedFrequencyCurrents = []
                         for electrode in self.electrode_list:
-                            num = electrode_dict[electrode]
+                            num = cg.electrode_dict[electrode]
 
                             if frequency == cg.HighLowList["Low"]:
                                 NormalizedFrequencyCurrents.append(
@@ -6210,10 +6186,10 @@ class TextFileExport:
 
                     # --- Standard Deviation between electrodes ---#
                     for frequency in self.frequency_list:
-                        count = frequency_dict[frequency]
+                        count = cg.frequency_dict[frequency]
                         NormalizedFrequencyCurrents = []
                         for electrode in self.electrode_list:
-                            num = electrode_dict[electrode]
+                            num = cg.electrode_dict[electrode]
 
                             if frequency == cg.HighLowList["Low"]:
                                 NormalizedFrequencyCurrents.append(
@@ -6240,7 +6216,7 @@ class TextFileExport:
                     # --- Append Normalized Ratiometric Data ---#
                     NormList = []
                     for electrode in self.electrode_list:
-                        num = electrode_dict[electrode]
+                        num = cg.electrode_dict[electrode]
 
                         list.append(normalized_ratiometric_data_list[num][index])
                         NormList.append(normalized_ratiometric_data_list[num][index])
@@ -6258,7 +6234,7 @@ class TextFileExport:
                     # --- Append KDM ---#
                     KDMList = []
                     for electrode in self.electrode_list:
-                        num = electrode_dict[electrode]
+                        num = cg.electrode_dict[electrode]
 
                         list.append(KDM_list[num][index])
                         KDMList.append(KDM_list[num][index])

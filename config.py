@@ -23,7 +23,7 @@ class Config:
     PlotValues: List[tk.Frame]
     ShowFrames: Dict[str, tk.Frame]
 
-    # Current Data Values  -- mark for refactoring progress
+    # Current Data Values
     current_column: int
     current_column_index: int
     voltage_column: int
@@ -57,8 +57,7 @@ class Config:
     Option: str  # TODO: just a reference to SelectedOptions
     FileHandle: str
     ExportFilePath: str
-    AlreadyInitiated: bool
-    FileHandle: str
+    AlreadyInitiated: bool  # -- marker for global removal progress
     starting_file: int
     post_analysis: tk.Frame
     handle_variable: str
