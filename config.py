@@ -57,7 +57,7 @@ class Config:
     Option: str  # TODO: just a reference to SelectedOptions
     FileHandle: str
     ExportFilePath: str
-    AlreadyInitiated: bool  # -- marker for global removal progress
+    AlreadyInitiated: bool
     starting_file: int
     post_analysis: tk.Frame
     handle_variable: str
@@ -103,7 +103,7 @@ class Config:
     SetPointNorm: ttk.Entry
     NormalizationVar: tk.StringVar
     low_xstart: float
-    high_xstart: float
+    high_xstart: float  # -- marker
     low_xend: float
     high_xend: float
     sg_window: float
@@ -128,7 +128,6 @@ class Config:
     ratiometric_figures: List[Any]  # TODO: list of MakeRatioMetricFigure
     normalized_ratiometric_data_list: List[float]
     normalized_data_list: List[Any]
-    frequency_list: List[int]
     data_list: List[Any]
     plot_list: List[Any]
     EmptyPlots: List[Any]
@@ -141,3 +140,5 @@ class Config:
     peak: Any  # TODO: pyplot plot?
     norm: Any  # TODO: pyplot plot?
     NormalizationWaiting: bool
+    file_list: List[Any]
+    SetPointNormLabel: tk.Label
