@@ -50,6 +50,7 @@ class Config:
     electrode_dict: Dict[int, int]
     frequency_list: List[int]
     frequency_dict: Dict[int, int]
+    electrodes: List[int]
     LowFrequency: int
     HighFrequency: int
     HighLowList: Dict[str, int]
