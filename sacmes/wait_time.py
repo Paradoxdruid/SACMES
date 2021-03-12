@@ -1,8 +1,8 @@
 #! /usr/bin/env python3
-from config import Config
-from .text_export import _update_global_lists
+from config import cg
+from text_export import _update_global_lists
 
-cg = Config()
+# cg = Config()
 
 
 ###############

@@ -1,15 +1,15 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python3
 import tkinter as tk
-from config import Config
+from config import cg
 import os
 import numpy as np
 from scipy.signal import savgol_filter
 import threading
-from .main_window import _retrieve_file, ReadData
+
+# from main_window import _retrieve_file, ReadData
 import time
 
-cg = Config()
-
+# cg = Config()
 
 ###############
 # Styling ###
@@ -134,7 +134,7 @@ class ElectrochemicalAnimation:
 
                 self.file = 1
 
-                root.after(10, self.start)  # initiate the run() method
+                cg.root.after(10, self.start)  # initiate the run() method
 
             def run(self):
 
@@ -146,11 +146,11 @@ class ElectrochemicalAnimation:
                         break
                     else:
                         if not cg.PoisonPill:
-                            root.after(cg.Interval, task)
+                            cg.root.after(cg.Interval, task)
 
                 if not cg.analysis_complete:
                     if not cg.PoisonPill:
-                        root.after(10, self.run)
+                        cg.root.after(10, self.run)
 
         threaded_animation = _threaded_animation(Queue=cg.q)
 
@@ -439,7 +439,7 @@ class ElectrochemicalAnimation:
 
         else:
             if not cg.PoisonPill:
-                root.after(100, self._step)
+                cg.root.after(100, self._step)
 
     def _check_queue(self):
 
@@ -452,11 +452,11 @@ class ElectrochemicalAnimation:
                 break
             else:
                 if not cg.PoisonPill:
-                    root.after(1, self.task)
+                    cg.root.after(1, self.task)
 
         if not cg.analysis_complete:
             if not cg.PoisonPill:
-                root.after(5, self._check_queue)
+                cg.root.after(5, self._check_queue)
 
     def _run_analysis(self, myfile, frequency):
 
@@ -545,7 +545,7 @@ class ElectrochemicalAnimation:
                 self.file += 1
                 self.index += 1
                 self.count = 0
-                root.after(1, self._step)
+                cg.root.after(1, self._step)
 
         ##########################################################
         # Elif the function has not analyzed each frequency  ###
@@ -554,7 +554,7 @@ class ElectrochemicalAnimation:
         elif self.count < self.frequency_limit:
             self.count += 1
 
-            root.after(1, self._step)
+            cg.root.after(1, self._step)
 
     def _raw_generator(self, myfile, frequency):
 

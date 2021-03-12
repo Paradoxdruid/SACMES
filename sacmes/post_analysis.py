@@ -1,12 +1,13 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python3
 import tkinter as tk
-from config import Config
+from config import cg
 import tkinter.ttk as ttk
-from .input_frame import InputFrame
-import matplotlib.pyplot as plt
-from .text_export import TextFileExport
 
-cg = Config()
+# from input_frame import InputFrame
+import matplotlib.pyplot as plt
+from text_export import TextFileExport
+
+# cg = Config()
 
 
 ###############

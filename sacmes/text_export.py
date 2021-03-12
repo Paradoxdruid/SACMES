@@ -1,10 +1,10 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python3
 import csv
-from config import Config
+from config import cg
 from numpy import sqrt
 import time
 
-cg = Config()
+# cg = Config()
 
 
 ###############

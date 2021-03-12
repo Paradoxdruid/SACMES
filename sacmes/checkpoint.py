@@ -1,9 +1,16 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python3
 import tkinter as tk
-from config import Config
+from config import cg
 import os
+from post_analysis import PostAnalysis
+from normalization import DataNormalization
+from wait_time import Track, WaitTime
+from initialization import InitializeContinuousCanvas, InitializeFrequencyMapCanvas
+from scan_frames import ContinuousScanManipulationFrame, FrequencyMapManipulationFrame
+from global_func import _retrieve_file, _get_listval, ReadData
 
-cg = Config()
+
+# cg = Config()
 
 
 ###############
@@ -85,7 +92,7 @@ class CheckPoint:
         self.electrode_limit = cg.electrode_count - 1
         self.frequency_limit = len(cg.frequency_list) - 1
 
-        root.after(50, self.verify)
+        cg.root.after(50, self.verify)
 
     def verify(self):
 
@@ -144,7 +151,7 @@ class CheckPoint:
                                 self.StopSearch = True
                                 self.win.destroy()
 
-                                root.after(10, self.proceed)
+                                cg.root.after(10, self.proceed)
 
                 if self.num < self.electrode_limit:
                     self.num += 1
@@ -154,7 +161,7 @@ class CheckPoint:
 
                 if self.analysis_count < self.analysis_limit:
                     if not self.StopSearch:
-                        root.after(100, self.verify)
+                        cg.root.after(100, self.verify)
 
             elif cg.method == "Frequency Map":
 
@@ -223,7 +230,7 @@ class CheckPoint:
                             self.StopSearch = True
                             self.win.destroy()
 
-                            root.after(10, self.proceed)
+                            cg.root.after(10, self.proceed)
 
                 if self.num < self.electrode_limit:
                     self.num += 1
@@ -232,7 +239,7 @@ class CheckPoint:
 
                 if self.analysis_count < self.analysis_limit:
                     if not self.StopSearch:
-                        root.after(200, self.verify)
+                        cg.root.after(200, self.verify)
 
     def verify_multi(self, myfile):
 
@@ -358,4 +365,3 @@ class CheckPoint:
 
 # ------------------------------------------------------------------------------------#
 # ------------------------------------------------------------------------------------#
-

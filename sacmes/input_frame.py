@@ -1,13 +1,15 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python3
 import tkinter as tk
 import tkinter.ttk as ttk
-from config import Config
+import tkinter.filedialog
+
+from config import cg
 from queue import Queue
 import datetime
-from .checkpoint import CheckPoint
+from checkpoint import CheckPoint
 
 
-cg = Config()
+# cg = Config()
 
 
 ###############
@@ -23,6 +25,8 @@ class InputFrame(
     tk.Frame
 ):  # first frame that is displayed when the program is initialized
     def __init__(self, parent, controller):
+
+        # global cg
 
         self.parent = parent
         self.controller = controller
@@ -587,7 +591,7 @@ class InputFrame(
 
             # prompt the user to select a  ###
             # directory for  data analysis ###
-            cg.FilePath = tk.filedialog.askdirectory(parent=parent)
+            cg.FilePath = tkinter.filedialog.askdirectory()  # (parent=parent)
             cg.FilePath = "".join(cg.FilePath + "/")
 
             # Path for directory in which the    ###

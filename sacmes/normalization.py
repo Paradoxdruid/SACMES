@@ -1,7 +1,7 @@
-#! /usr/bin/env python3
-from config import Config
+#!/usr/bin/env python3
+from config import cg
 
-cg = Config()
+# cg = Config()
 
 
 ###############
