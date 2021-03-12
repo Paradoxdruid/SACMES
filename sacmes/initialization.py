@@ -6,7 +6,9 @@ from matplotlib.patches import Polygon
 import os
 import numpy as np
 from scipy.signal import savgol_filter
-
+from .scan_frames import FrequencyMapVisualizationFrame
+from .text_export import TextFileExport
+from .main_window import ReadData, _get_listval, _retrieve_file
 
 cg = Config()
 
@@ -315,7 +317,7 @@ class InitializeFrequencyMapCanvas:
             #########################################
             # Savitzky-Golay smoothing          ###
             #########################################
-            smooth_currents = savgol_filter(currents, 15, sg_degree)
+            smooth_currents = savgol_filter(currents, 15, cg.sg_degree)
             data_dict = dict(zip(potentials, smooth_currents))
 
             #######################################
@@ -330,7 +332,7 @@ class InitializeFrequencyMapCanvas:
             # Polynomial fit ###
             ######################
             polynomial_coeffs = np.polyfit(
-                adjusted_potentials, adjusted_currents, polyfit_deg
+                adjusted_potentials, adjusted_currents, cg.polyfit_deg
             )
             eval_regress = np.polyval(polynomial_coeffs, adjusted_potentials).tolist()
             regression_dict = dict(

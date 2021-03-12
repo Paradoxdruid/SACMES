@@ -144,3 +144,5 @@ class Config:
     file_list: List[Any]
     SetPointNormLabel: tk.Label
     cutoff_frequency: int
+    polyfit_deg: int
+    sg_degree: int

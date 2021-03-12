@@ -82,10 +82,10 @@ electrodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 cg.sg_window = (
     5  # Savitzky-Golay window (in mV range), must be odd number (increase signal:noise)
 )
-sg_degree = 1  # Savitzky-Golay polynomial degree
-polyfit_deg = 15  # degree of polynomial fit
+cg.sg_degree = 1  # Savitzky-Golay polynomial degree
+cg.polyfit_deg = 15  # degree of polynomial fit
 
-cutoff_frequency = 50  # frequency that separates 'low' and 'high'
+cg.cutoff_frequency = 50  # frequency that separates 'low' and 'high'
 # frequencies for regression analysis and
 # smoothing manipulation
 
