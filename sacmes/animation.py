@@ -14,11 +14,11 @@ import time
 
 ###############
 # Styling ###
-###############
-HUGE_FONT = ("Verdana", 18)
-LARGE_FONT = ("Verdana", 11)
-MEDIUM_FONT = ("Verdnana", 10)
-SMALL_FONT = ("Verdana", 8)
+# ###############
+# HUGE_FONT = ("Verdana", 18)
+# LARGE_FONT = ("Verdana", 11)
+# MEDIUM_FONT = ("Verdnana", 10)
+# SMALL_FONT = ("Verdana", 8)
 
 
 ##########################################################################
@@ -131,7 +131,7 @@ class ElectrochemicalAnimation:
 
                 # -- set the poison pill event for Reset --#
                 self.PoisonPill = tk.Event()
-                PoisonPill = self.PoisonPill  # global reference
+                cg.PoisonPill = self.PoisonPill  # global reference
 
                 self.file = 1
 
@@ -143,7 +143,7 @@ class ElectrochemicalAnimation:
                     try:
                         task = self.q.get(block=False)
 
-                    except:
+                    except Exception:
                         break
                     else:
                         if not cg.PoisonPill:
@@ -370,19 +370,19 @@ class ElectrochemicalAnimation:
             try:
                 # retrieves the size of the file in bytes
                 mydata_bytes = os.path.getsize(myfile)
-            except:
+            except Exception:
                 try:
                     mydata_bytes = os.path.getsize(myfile2)
                     myfile = myfile2
-                except:
+                except Exception:
                     try:
                         mydata_bytes = os.path.getsize(myfile3)
                         myfile = myfile3
-                    except:
+                    except Exception:
                         try:
                             mydata_bytes = os.path.getsize(myfile4)
                             myfile = myfile4
-                        except:
+                        except Exception:
                             mydata_bytes = 1
 
         elif cg.method == "Frequency Map":
@@ -406,32 +406,32 @@ class ElectrochemicalAnimation:
             try:
                 # retrieves the size of the file in bytes
                 mydata_bytes = os.path.getsize(myfile)
-            except:
+            except Exception:
                 try:
                     mydata_bytes = os.path.getsize(myfile2)
                     myfile = myfile2
                     filename = filename2
-                except:
+                except Exception:
                     try:
                         mydata_bytes = os.path.getsize(myfile3)
                         myfile = myfile3
                         filename = filename3
-                    except:
+                    except Exception:
                         try:
                             mydata_bytes = os.path.getsize(myfile4)
                             myfile = myfile4
                             filename = filename4
-                        except:
+                        except Exception:
                             try:
                                 mydata_bytes = os.path.getsize(myfile5)
                                 myfile = myfile5
                                 filename = filename5
-                            except:
+                            except Exception:
                                 try:
                                     mydata_bytes = os.path.getsize(myfile6)
                                     myfile = myfile6
                                     filename = filename6
-                                except:
+                                except Exception:
                                     mydata_bytes = 1
 
         if mydata_bytes > cg.byte_limit:
@@ -448,7 +448,7 @@ class ElectrochemicalAnimation:
             try:
                 print("%sChecking Queue" % self.spacer)
                 task = cg.q.get(block=False)
-            except:
+            except Exception:
                 print("%sQueue Empty" % self.spacer)
                 break
             else:
@@ -500,7 +500,7 @@ class ElectrochemicalAnimation:
                 ############################################################
                 try:
                     self._redraw_figures()
-                except:
+                except Exception:
                     print("\nCould not redraw figure\n")
 
         ##################################################################

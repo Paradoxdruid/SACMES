@@ -15,10 +15,10 @@ from checkpoint import CheckPoint
 ###############
 # Styling ###
 ###############
-HUGE_FONT = ("Verdana", 18)
-LARGE_FONT = ("Verdana", 11)
-MEDIUM_FONT = ("Verdnana", 10)
-SMALL_FONT = ("Verdana", 8)
+# HUGE_FONT = ("Verdana", 18)
+# cg.LARGE_FONT = ("Verdana", 11)
+# cg.MEDIUM_FONT = ("Verdnana", 10)
+# SMALL_FONT = ("Verdana", 8)
 
 
 class InputFrame(
@@ -49,19 +49,19 @@ class InputFrame(
         row_value += 2
 
         self.NoSelectedPath = tk.Label(
-            self, text="No File Path Selected", font=MEDIUM_FONT, fg="red"
+            self, text="No File Path Selected", font=cg.MEDIUM_FONT, fg="red"
         )
         self.PathWarningExists = False  # tracks the existence of a warning label
 
         ImportFileLabel = tk.Label(
-            self, text="Import File Label", font=LARGE_FONT
+            self, text="Import File Label", font=cg.LARGE_FONT
         ).grid(row=row_value, column=0, columnspan=2)
         self.ImportFileEntry = tk.Entry(self)
         self.ImportFileEntry.grid(row=row_value + 1, column=0, columnspan=2, pady=5)
         self.ImportFileEntry.insert(tk.END, cg.handle_variable)
 
         # --- File Handle Input ---#
-        HandleLabel = tk.Label(self, text="Exported File Handle:", font=LARGE_FONT)
+        HandleLabel = tk.Label(self, text="Exported File Handle:", font=cg.LARGE_FONT)
         HandleLabel.grid(row=row_value, column=2, columnspan=2)
         self.filehandle = ttk.Entry(self)
         now = datetime.datetime.now()
@@ -73,20 +73,22 @@ class InputFrame(
 
         row_value += 2
 
-        EmptyLabel = tk.Label(self, text="", font=LARGE_FONT).grid(
+        EmptyLabel = tk.Label(self, text="", font=cg.LARGE_FONT).grid(
             row=row_value, rowspan=2, column=0, columnspan=10
         )
         row_value += 1
 
         # ---File Limit Input---#
-        numFileLabel = tk.Label(self, text="Number of Files:", font=LARGE_FONT)
+        numFileLabel = tk.Label(self, text="Number of Files:", font=cg.LARGE_FONT)
         numFileLabel.grid(row=row_value, column=0, columnspan=2, pady=4)
         self.numfiles = ttk.Entry(self, width=7)
         self.numfiles.insert(tk.END, "50")
         self.numfiles.grid(row=row_value + 1, column=0, columnspan=2, pady=6)
 
         # --- Analysis interval for event callback in ElectrochemicalAnimation ---#
-        IntervalLabel = tk.Label(self, text="Analysis Interval (ms):", font=LARGE_FONT)
+        IntervalLabel = tk.Label(
+            self, text="Analysis Interval (ms):", font=cg.LARGE_FONT
+        )
         IntervalLabel.grid(row=row_value, column=2, columnspan=2, pady=4)
         self.Interval = ttk.Entry(self, width=7)
         self.Interval.insert(tk.END, "10")
@@ -95,13 +97,13 @@ class InputFrame(
         row_value += 2
 
         # ---Sample Rate Variable---#
-        SampleLabel = tk.Label(self, text="Sampling Rate (s):", font=LARGE_FONT)
+        SampleLabel = tk.Label(self, text="Sampling Rate (s):", font=cg.LARGE_FONT)
         SampleLabel.grid(row=row_value, column=0, columnspan=2)
         self.sample_rate = ttk.Entry(self, width=7)
         self.sample_rate.insert(tk.END, "20")
         self.sample_rate.grid(row=row_value + 1, column=0, columnspan=2)
 
-        self.resize_label = tk.Label(self, text="Resize Interval", font=LARGE_FONT)
+        self.resize_label = tk.Label(self, text="Resize Interval", font=cg.LARGE_FONT)
         self.resize_label.grid(row=row_value, column=2, columnspan=2)
         self.resize_entry = tk.Entry(self, width=7)
         self.resize_entry.insert(tk.END, "200")
@@ -134,7 +136,7 @@ class InputFrame(
 
         self.ElectrodeListExists = False
         self.ElectrodeLabel = tk.Label(
-            self.ElectrodeListboxFrame, text="Select Electrodes:", font=LARGE_FONT
+            self.ElectrodeListboxFrame, text="Select Electrodes:", font=cg.LARGE_FONT
         )
         self.ElectrodeLabel.grid(row=0, column=0, columnspan=2, sticky="nswe")
         self.ElectrodeCount = tk.Listbox(
@@ -142,7 +144,7 @@ class InputFrame(
             relief="groove",
             exportselection=0,
             width=10,
-            font=LARGE_FONT,
+            font=cg.LARGE_FONT,
             height=6,
             selectmode="multiple",
             bd=3,
@@ -203,7 +205,7 @@ class InputFrame(
         self.ListboxFrame.columnconfigure(0, weight=1)
 
         self.FrequencyLabel = tk.Label(
-            self.ListboxFrame, text="Select Frequencies", font=LARGE_FONT
+            self.ListboxFrame, text="Select Frequencies", font=cg.LARGE_FONT
         )
         self.FrequencyLabel.grid(row=0, padx=10)
 
@@ -223,7 +225,7 @@ class InputFrame(
             relief="groove",
             exportselection=0,
             width=5,
-            font=LARGE_FONT,
+            font=cg.LARGE_FONT,
             height=6,
             selectmode="multiple",
             bd=3,
@@ -243,7 +245,7 @@ class InputFrame(
         ManipulateFrequencies = tk.Button(
             self.ListboxFrame,
             text="Edit",
-            font=MEDIUM_FONT,
+            font=cg.MEDIUM_FONT,
             command=lambda: cg.ManipulateFrequenciesFrame.tkraise(),
         ).grid(row=2, column=0, columnspan=4)
 
@@ -257,7 +259,9 @@ class InputFrame(
         )
 
         ManipulateFrequencyLabel = tk.Label(
-            cg.ManipulateFrequenciesFrame, text="Enter Frequency(s)", font=MEDIUM_FONT
+            cg.ManipulateFrequenciesFrame,
+            text="Enter Frequency(s)",
+            font=cg.MEDIUM_FONT,
         )
         ManipulateFrequencyLabel.grid(row=0, column=0, columnspan=4)
 
@@ -267,26 +271,26 @@ class InputFrame(
         AddFrequencyButton = tk.Button(
             cg.ManipulateFrequenciesFrame,
             text="Add",
-            font=MEDIUM_FONT,
+            font=cg.MEDIUM_FONT,
             command=self.AddFrequency,  # was lambda
         ).grid(row=2, column=0)
         DeleteFrequencyButton = tk.Button(
             cg.ManipulateFrequenciesFrame,
             text="Delete",
-            font=MEDIUM_FONT,
+            font=cg.MEDIUM_FONT,
             command=self.DeleteFrequency,  # was lambda
         ).grid(row=2, column=1)
         ClearFrequencyButton = tk.Button(
             cg.ManipulateFrequenciesFrame,
             text="Clear",
-            font=MEDIUM_FONT,
+            font=cg.MEDIUM_FONT,
             command=self.Clear,  # was lambda
         ).grid(row=3, column=0, columnspan=2)
 
         ReturnButton = tk.Button(
             cg.ManipulateFrequenciesFrame,
             text="Return",
-            font=MEDIUM_FONT,
+            font=cg.MEDIUM_FONT,
             command=self.Return,  # was lambda
         ).grid(row=4, column=0, columnspan=2)
 
@@ -302,12 +306,12 @@ class InputFrame(
 
         # --- Select Analysis Method---#
         Methods = ["Continuous Scan", "Frequency Map"]
-        MethodsLabel = tk.Label(self, text="Select Analysis Method", font=LARGE_FONT)
+        MethodsLabel = tk.Label(self, text="Select Analysis Method", font=cg.LARGE_FONT)
         self.MethodsBox = tk.Listbox(
             self,
             relief="groove",
             exportselection=0,
-            font=LARGE_FONT,
+            font=cg.LARGE_FONT,
             height=len(Methods),
             selectmode="single",
             bd=3,
@@ -322,12 +326,14 @@ class InputFrame(
 
         # --- Select Data to be Plotted ---#
         Options = ["Peak Height Extraction", "Area Under the Curve"]
-        OptionsLabel = tk.Label(self, text="Select Data to be Plotted", font=LARGE_FONT)
+        OptionsLabel = tk.Label(
+            self, text="Select Data to be Plotted", font=cg.LARGE_FONT
+        )
         self.PlotOptions = tk.Listbox(
             self,
             relief="groove",
             exportselection=0,
-            font=LARGE_FONT,
+            font=cg.LARGE_FONT,
             height=len(Options),
             selectmode="single",
             bd=3,
@@ -341,18 +347,18 @@ class InputFrame(
 
         # --- Warning label for if the user does not select an analysis method ---#
         self.NoOptionsSelected = tk.Label(
-            self, text="Select a Data Analysis Method", font=MEDIUM_FONT, fg="red"
+            self, text="Select a Data Analysis Method", font=cg.MEDIUM_FONT, fg="red"
         )  # will only be added to the grid (row 16) if they dont select an option
         self.NoSelection = False
 
         # --- Select units of the X-axis ---#
         PlotOptions = ["Experiment Time", "File Number"]
-        PlotLabel = tk.Label(self, text="Select X-axis units", font=LARGE_FONT)
+        PlotLabel = tk.Label(self, text="Select X-axis units", font=cg.LARGE_FONT)
         self.XaxisOptions = tk.Listbox(
             self,
             relief="groove",
             exportselection=0,
-            font=LARGE_FONT,
+            font=cg.LARGE_FONT,
             height=len(PlotOptions),
             selectmode="single",
             bd=3,
@@ -384,13 +390,13 @@ class InputFrame(
 
         # --- Y Limit Adjustment Variables ---#
         self.y_limit_parameter_label = tk.Label(
-            AdjustmentFrame, text="Select Y Limit Parameters", font=LARGE_FONT
+            AdjustmentFrame, text="Select Y Limit Parameters", font=cg.LARGE_FONT
         )
         self.y_limit_parameter_label.grid(row=0, column=0, columnspan=4, pady=5, padx=5)
 
         # --- Raw Data Minimum Parameter Adjustment ---#
         self.raw_data_min_parameter_label = tk.Label(
-            AdjustmentFrame, text="Raw Min. Factor", font=MEDIUM_FONT
+            AdjustmentFrame, text="Raw Min. Factor", font=cg.MEDIUM_FONT
         )
         self.raw_data_min_parameter_label.grid(row=1, column=0)
         self.raw_data_min = tk.Entry(AdjustmentFrame, width=5)
@@ -401,7 +407,7 @@ class InputFrame(
 
         # --- Raw Data Maximum Parameter Adjustment ---#
         self.raw_data_max_parameter_label = tk.Label(
-            AdjustmentFrame, text="Raw Max. Factor", font=MEDIUM_FONT
+            AdjustmentFrame, text="Raw Max. Factor", font=cg.MEDIUM_FONT
         )
         self.raw_data_max_parameter_label.grid(row=3, column=0)
         self.raw_data_max = tk.Entry(AdjustmentFrame, width=5)
@@ -412,7 +418,7 @@ class InputFrame(
 
         # --- Raw Data Minimum Parameter Adjustment ---#
         self.data_min_parameter_label = tk.Label(
-            AdjustmentFrame, text="Data Min. Factor", font=MEDIUM_FONT
+            AdjustmentFrame, text="Data Min. Factor", font=cg.MEDIUM_FONT
         )
         self.data_min_parameter_label.grid(row=1, column=1)
         self.data_min = tk.Entry(AdjustmentFrame, width=5)
@@ -423,7 +429,7 @@ class InputFrame(
 
         # --- Raw Data Maximum Parameter Adjustment ---#
         self.data_max_parameter_label = tk.Label(
-            AdjustmentFrame, text="Data Max. Factor", font=MEDIUM_FONT
+            AdjustmentFrame, text="Data Max. Factor", font=cg.MEDIUM_FONT
         )
         self.data_max_parameter_label.grid(row=3, column=1)
         self.data_max = tk.Entry(AdjustmentFrame, width=5)
@@ -434,7 +440,7 @@ class InputFrame(
 
         # --- Normalized Data Minimum Parameter Adjustment ---#
         self.norm_data_min_parameter_label = tk.Label(
-            AdjustmentFrame, text="Norm. Min.", font=MEDIUM_FONT
+            AdjustmentFrame, text="Norm. Min.", font=cg.MEDIUM_FONT
         )
         self.norm_data_min_parameter_label.grid(row=1, column=2)
         self.norm_data_min = tk.Entry(AdjustmentFrame, width=5)
@@ -443,7 +449,7 @@ class InputFrame(
 
         # --- Normalized Data Maximum Parameter Adjustment ---#
         self.norm_data_max_parameter_label = tk.Label(
-            AdjustmentFrame, text="Norm. Max.", font=MEDIUM_FONT
+            AdjustmentFrame, text="Norm. Max.", font=cg.MEDIUM_FONT
         )
         self.norm_data_max_parameter_label.grid(row=3, column=2)
         self.norm_data_max = tk.Entry(AdjustmentFrame, width=5)
@@ -452,7 +458,7 @@ class InputFrame(
 
         # --- Raw Data Minimum Parameter Adjustment ---#
         self.KDM_min_label = tk.Label(
-            AdjustmentFrame, text="KDM Min.", font=MEDIUM_FONT
+            AdjustmentFrame, text="KDM Min.", font=cg.MEDIUM_FONT
         )
         self.KDM_min_label.grid(row=1, column=3)
         self.KDM_min = tk.Entry(AdjustmentFrame, width=5)
@@ -463,7 +469,7 @@ class InputFrame(
 
         # --- Raw Data Maximum Parameter Adjustment ---#
         self.KDM_Max_label = tk.Label(
-            AdjustmentFrame, text="KDM Max. ", font=MEDIUM_FONT
+            AdjustmentFrame, text="KDM Max. ", font=cg.MEDIUM_FONT
         )
         self.KDM_Max_label.grid(row=3, column=3)
         self.KDM_max = tk.Entry(AdjustmentFrame, width=5)
@@ -616,7 +622,7 @@ class InputFrame(
                 self.NoSelectedPath["text"] = ""
                 self.NoSelectedPath.grid_forget()
 
-        except:
+        except Exception:
             print("\n\nInputPage.FindFile: Could Not Find File Path\n\n")
 
     # --- Analysis Method ---#
@@ -724,7 +730,7 @@ class InputFrame(
             if self.NoSelection:
                 self.NoSelection = False
                 self.NoOptionsSelected.grid_forget()
-        except:
+        except Exception:
             # --- if no selection was made, create a warning label telling the user
             # to select an analysis method ---#
             self.NoSelection = True
@@ -742,7 +748,7 @@ class InputFrame(
                 self.NoSelectedPath.grid_forget()
                 self.PathWarningExists = False
 
-        except:
+        except Exception:
             # -- if the user did not select a file path for data analysis,
             # raise a warning label ---#
             if not cg.FoundFilePath:

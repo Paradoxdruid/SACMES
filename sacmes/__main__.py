@@ -11,7 +11,7 @@ def main():
     # cg.handle_variable = ""  # default handle variable is nothing
     # cg.e_var = "single"  # default input file is 'Multichannel', or a single file
     # # containing all electrodes
-    # PHE_method = "Abs"  # default PHE Extraction is difference between absolute max/min
+    # PHE_method = "Abs"# default PHE Extraction is difference between absolute max/min
 
     # # ------------------------------------------------------------#
 
@@ -22,8 +22,8 @@ def main():
     # ]  # frequencies initially displayed in Frequency Listbox
     # cg.electrodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
-    # # ------------------------------------------------------------------------------------#
-    # # ------------------------------------------------------------------------------------#
+    # # ------------------------------------------------------------------------------#
+    # # ------------------------------------------------------------------------------#
 
     ########################
     # Global Variables ###
@@ -49,7 +49,7 @@ def main():
     # cg.PoisonPill = False  # Stop Animation variable
     # cg.FoundFilePath = False  # If the user-inputted file is found
     # cg.ExistVar = False  # If Checkpoints are not met ExistVar = True
-    # cg.AlreadyInitiated = False  # indicates if the user has already initiated analysis
+    # cg.AlreadyInitiated = False# indicates if the user has already initiated analysis
     # cg.HighAlreadyReset = False  # If data for high frequencies has been reset
     # cg.LowAlreadyReset = False  # If data for low frequencies has been reset
     # cg.analysis_complete = False  # If analysis has completed, begin PostAnalysis
@@ -84,10 +84,10 @@ def main():
     ###############
     # Styling ###
     ###############
-    HUGE_FONT = ("Verdana", 18)
-    LARGE_FONT = ("Verdana", 11)
-    MEDIUM_FONT = ("Verdnana", 10)
-    SMALL_FONT = ("Verdana", 8)
+    # HUGE_FONT = ("Verdana", 18)
+    # LARGE_FONT = ("Verdana", 11)
+    # MEDIUM_FONT = ("Verdnana", 10)
+    # SMALL_FONT = ("Verdana", 8)
 
     cg.root = tk.Tk()
     from main_window import MainWindow
@@ -96,10 +96,14 @@ def main():
 
     style = ttk.Style()
     style.configure(
-        "On.TButton", foreground="blue", font=LARGE_FONT, relief="raised", border=100
+        "On.TButton", foreground="blue", font=cg.LARGE_FONT, relief="raised", border=100
     )
     style.configure(
-        "Off.TButton", foreground="black", font=MEDIUM_FONT, relief="sunken", border=5
+        "Off.TButton",
+        foreground="black",
+        font=cg.MEDIUM_FONT,
+        relief="sunken",
+        border=5,
     )
 
     while True:

@@ -16,10 +16,10 @@ from global_func import _retrieve_file
 ###############
 # Styling ###
 ###############
-HUGE_FONT = ("Verdana", 18)
-LARGE_FONT = ("Verdana", 11)
-MEDIUM_FONT = ("Verdnana", 10)
-SMALL_FONT = ("Verdana", 8)
+# HUGE_FONT = ("Verdana", 18)
+# LARGE_FONT = ("Verdana", 11)
+# MEDIUM_FONT = ("Verdnana", 10)
+# SMALL_FONT = ("Verdana", 8)
 
 
 ####################################
@@ -34,9 +34,9 @@ class CheckPoint:
         self.win = tk.Toplevel()
         self.win.wm_title("CheckPoint")
 
-        title = tk.Label(self.win, text="Searching for files...", font=HUGE_FONT).grid(
-            row=0, column=0, columnspan=2, pady=10, padx=10, sticky="news"
-        )
+        title = tk.Label(
+            self.win, text="Searching for files...", font=cg.HUGE_FONT
+        ).grid(row=0, column=0, columnspan=2, pady=10, padx=10, sticky="news")
 
         self.parent = parent
         self.win.transient(self.parent)
@@ -49,7 +49,7 @@ class CheckPoint:
         self.already_verified = {}
         for electrode in cg.electrode_list:
             electrode_label = tk.Label(
-                self.win, text="E%s" % electrode, font=LARGE_FONT
+                self.win, text="E%s" % electrode, font=cg.LARGE_FONT
             ).grid(row=row_value, column=0, pady=5, padx=5)
             frame = tk.Frame(self.win, relief="groove", bd=5)
             frame.grid(row=row_value, column=1, pady=5, padx=5)
@@ -69,7 +69,7 @@ class CheckPoint:
 
             elif cg.method == "Frequency Map":
                 electrode_label = tk.Label(
-                    frame, text="E%s" % electrode, font=HUGE_FONT
+                    frame, text="E%s" % electrode, font=cg.HUGE_FONT
                 )
                 electrode_label.grid(row=row_value, column=column_value, pady=5, padx=5)
                 self.label_dict[electrode][cg.frequency_list[0]] = electrode_label

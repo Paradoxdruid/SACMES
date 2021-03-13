@@ -10,10 +10,10 @@ import time
 ###############
 # Styling ###
 ###############
-HUGE_FONT = ("Verdana", 18)
-LARGE_FONT = ("Verdana", 11)
-MEDIUM_FONT = ("Verdnana", 10)
-SMALL_FONT = ("Verdana", 8)
+# HUGE_FONT = ("Verdana", 18)
+# LARGE_FONT = ("Verdana", 11)
+# MEDIUM_FONT = ("Verdnana", 10)
+# SMALL_FONT = ("Verdana", 8)
 
 
 ################################################
@@ -309,7 +309,7 @@ class TextFileExport:
             with open(self.TextFileHandle, "w", encoding="utf-8", newline="") as output:
                 output.write(filedata)
 
-        except:
+        except Exception:
             print("\n\n", "ERROR IN FREQUENCY MAP TEXT FILE EXPORT", "\n\n")
             time.sleep(3)
 
@@ -474,7 +474,7 @@ class TextFileExport:
                 ) as output:
                     output.write(filedata)
 
-        except:
+        except Exception:
             print("\n", "ERROR IN TEXT FILE NORMALIZATION", "\n")
             time.sleep(0.1)
 

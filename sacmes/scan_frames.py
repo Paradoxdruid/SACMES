@@ -14,10 +14,10 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 ###############
 # Styling ###
 ###############
-HUGE_FONT = ("Verdana", 18)
-LARGE_FONT = ("Verdana", 11)
-MEDIUM_FONT = ("Verdnana", 10)
-SMALL_FONT = ("Verdana", 8)
+# HUGE_FONT = ("Verdana", 18)
+# cg.LARGE_FONT = ("Verdana", 11)
+# cg.MEDIUM_FONT = ("Verdnana", 10)
+# SMALL_FONT = ("Verdana", 8)
 
 
 ############################################################
@@ -36,21 +36,23 @@ class ContinuousScanManipulationFrame(tk.Frame):
         #######################################
 
         # --- Display the file number ---#
-        FileTitle = tk.Label(self, text="File Number", font=MEDIUM_FONT,)
+        FileTitle = tk.Label(self, text="File Number", font=cg.MEDIUM_FONT,)
         FileTitle.grid(row=0, column=0, padx=5, pady=5)
-        cg.FileLabel = ttk.Label(self, text="1", font=LARGE_FONT, style="Fun.TButton")
+        cg.FileLabel = ttk.Label(
+            self, text="1", font=cg.LARGE_FONT, style="Fun.TButton"
+        )
         cg.FileLabel.grid(row=1, column=0, padx=5, pady=5)
 
         # --- Display the experiment duration as a function of the user-inputted
         # Sample Rate ---#
-        SampleTitle = tk.Label(self, text="Experiment Time (h)", font=MEDIUM_FONT)
+        SampleTitle = tk.Label(self, text="Experiment Time (h)", font=cg.MEDIUM_FONT)
         SampleTitle.grid(row=0, column=1, padx=5, pady=5)
         cg.RealTimeSampleLabel = ttk.Label(self, text="0", style="Fun.TButton")
         cg.RealTimeSampleLabel.grid(row=1, column=1, padx=5, pady=5)
 
         # --- Real-time Normalization Variable ---#
         SetPointNormLabel = tk.Label(
-            self, text="Set Normalization Point", font=MEDIUM_FONT
+            self, text="Set Normalization Point", font=cg.MEDIUM_FONT
         )
         cg.NormalizationVar = tk.StringVar()
         NormString = str(3)
@@ -65,7 +67,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
             command=self.RealTimeNormalization,  # was lambda
             width=10,
         )
-        self.NormWarning = tk.Label(self, text="", fg="red", font=MEDIUM_FONT)
+        self.NormWarning = tk.Label(self, text="", fg="red", font=cg.MEDIUM_FONT)
         cg.NormWarning = self.NormWarning
 
         if cg.InjectionVar:
@@ -81,7 +83,9 @@ class ContinuousScanManipulationFrame(tk.Frame):
             self.NormWarning.grid(row=5, column=0, columnspan=4, pady=0)
 
         # --- Real-time Injection tracking ---#
-        SetInjectionLabel = tk.Label(self, text="Set Injection Range", font=MEDIUM_FONT)
+        SetInjectionLabel = tk.Label(
+            self, text="Set Injection Range", font=cg.MEDIUM_FONT
+        )
         InjectionButton = ttk.Button(
             self,
             text="Apply Injection",
@@ -106,13 +110,13 @@ class ContinuousScanManipulationFrame(tk.Frame):
 
             # --- Drift Correction Title ---#
             self.KDM_title = tk.Label(
-                self.FrequencyFrame, text="Drift Correction", font=LARGE_FONT
+                self.FrequencyFrame, text="Drift Correction", font=cg.LARGE_FONT
             )
             self.KDM_title.grid(row=0, column=0, columnspan=3, pady=1, padx=5)
 
             # --- High Frequency Selection for KDM and Ratiometric Analysis ---#
             self.HighFrequencyLabel = tk.Label(
-                self.FrequencyFrame, text="High Frequency", font=MEDIUM_FONT
+                self.FrequencyFrame, text="High Frequency", font=cg.MEDIUM_FONT
             )
             self.HighFrequencyLabel.grid(row=1, column=1, pady=5, padx=5)
 
@@ -122,7 +126,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
 
             # --- Low Frequency Selection for KDM and Ratiometric Analysis ---#
             self.LowFrequencyLabel = tk.Label(
-                self.FrequencyFrame, text="Low Frequency", font=MEDIUM_FONT
+                self.FrequencyFrame, text="Low Frequency", font=cg.MEDIUM_FONT
             )
             self.LowFrequencyLabel.grid(row=1, column=0, pady=5, padx=5)
 
@@ -131,7 +135,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
             cg.LowFrequencyEntry.grid(row=2, column=0, padx=5)
 
             self.LowFrequencyOffsetLabel = tk.Label(
-                self.FrequencyFrame, text="Low Frequency\n Offset", font=MEDIUM_FONT
+                self.FrequencyFrame, text="Low Frequency\n Offset", font=cg.MEDIUM_FONT
             ).grid(row=3, column=0, pady=2, padx=2)
             self.LowFrequencyOffset = tk.Entry(self.FrequencyFrame, width=7)
             self.LowFrequencyOffset.insert(tk.END, cg.LowFrequencyOffset)
@@ -140,7 +144,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
             self.LowFrequencySlopeLabel = tk.Label(
                 self.FrequencyFrame,
                 text="Low Frequency\n Slope Manipulation",
-                font=MEDIUM_FONT,
+                font=cg.MEDIUM_FONT,
             ).grid(row=3, column=1, pady=2, padx=2)
             self.LowFrequencySlope = tk.Entry(self.FrequencyFrame, width=7)
             self.LowFrequencySlope.insert(tk.END, cg.LowFrequencySlope)
@@ -173,7 +177,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
 
         # --- Title ---#
         self.RegressionLabel = tk.Label(
-            RegressionFrame, text="Real Time Analysis Manipulation", font=LARGE_FONT
+            RegressionFrame, text="Real Time Analysis Manipulation", font=cg.LARGE_FONT
         )
         self.RegressionLabel.grid(row=0, column=0, columnspan=4, pady=5, padx=5)
 
@@ -181,7 +185,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
         # Real Time Manipulation of Savitzky-Golay Smoothing Function ###
         ###################################################################
         self.SmoothingLabel = tk.Label(
-            RegressionFrame, text="Savitzky-Golay Window (mV)", font=LARGE_FONT
+            RegressionFrame, text="Savitzky-Golay Window (mV)", font=cg.LARGE_FONT
         )
         self.SmoothingLabel.grid(row=1, column=0, columnspan=4, pady=1)
         self.SmoothingEntry = tk.Entry(RegressionFrame, width=10)
@@ -215,7 +219,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
 
             # --- points discarded at the beginning of the voltammogram, xstart ---#
             self.low_xstart_label = tk.Label(
-                LowParameterFrame, text="xstart (V)", font=MEDIUM_FONT
+                LowParameterFrame, text="xstart (V)", font=cg.MEDIUM_FONT
             ).grid(row=0, column=0)
             self.low_xstart_entry = tk.Entry(LowParameterFrame, width=7)
             self.low_xstart_entry.insert(tk.END, str(cg.low_xstart))
@@ -224,7 +228,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
 
             # --- points discarded at the beginning of the voltammogram, xend ---#
             self.low_xend_label = tk.Label(
-                LowParameterFrame, text="xend (V)", font=MEDIUM_FONT
+                LowParameterFrame, text="xend (V)", font=cg.MEDIUM_FONT
             ).grid(row=0, column=1)
             self.low_xend_entry = tk.Entry(LowParameterFrame, width=7)
             self.low_xend_entry.insert(tk.END, str(cg.low_xend))
@@ -247,7 +251,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
 
             # --- points discarded at the beginning of the voltammogram, xstart ---#
             self.high_xstart_label = tk.Label(
-                HighParameterFrame, text="xstart (V)", font=MEDIUM_FONT
+                HighParameterFrame, text="xstart (V)", font=cg.MEDIUM_FONT
             ).grid(row=0, column=0)
             self.high_xstart_entry = tk.Entry(HighParameterFrame, width=7)
             self.high_xstart_entry.insert(tk.END, str(cg.high_xstart))
@@ -256,7 +260,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
 
             # --- points discarded at the beginning of the voltammogram, xend ---#
             self.high_xend_label = tk.Label(
-                HighParameterFrame, text="xend (V)", font=MEDIUM_FONT
+                HighParameterFrame, text="xend (V)", font=cg.MEDIUM_FONT
             ).grid(row=0, column=1)
             self.high_xend_entry = tk.Entry(HighParameterFrame, width=7)
             self.high_xend_entry.insert(tk.END, str(cg.high_xend))
@@ -289,7 +293,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
         self.AdjustParameterButton = tk.Button(
             RegressionFrame,
             text="Apply Adjustments",
-            font=LARGE_FONT,
+            font=cg.LARGE_FONT,
             command=self.AdjustParameters,  # lambda
         )
         self.AdjustParameterButton.grid(row=5, column=0, columnspan=4, pady=10, padx=10)
@@ -615,7 +619,7 @@ class FrequencyMapManipulationFrame(tk.Frame):
 
         # --- Title ---#
         self.RegressionLabel = tk.Label(
-            RegressionFrame, text="Real Time Analysis Manipulation", font=LARGE_FONT
+            RegressionFrame, text="Real Time Analysis Manipulation", font=cg.LARGE_FONT
         )
         self.RegressionLabel.grid(row=0, column=0, columnspan=4, pady=5, padx=5)
 
@@ -623,7 +627,7 @@ class FrequencyMapManipulationFrame(tk.Frame):
         # Real Time Manipulation of Savitzky-Golay Smoothing Function ###
         ###################################################################
         self.SmoothingLabel = tk.Label(
-            RegressionFrame, text="Savitzky-Golay Window (mV)", font=LARGE_FONT
+            RegressionFrame, text="Savitzky-Golay Window (mV)", font=cg.LARGE_FONT
         )
         self.SmoothingLabel.grid(row=1, column=0, columnspan=4, pady=1)
         self.SmoothingEntry = tk.Entry(RegressionFrame, width=10)
@@ -655,7 +659,7 @@ class FrequencyMapManipulationFrame(tk.Frame):
 
             # --- points discarded at the beginning of the voltammogram, xstart ---#
             self.low_xstart_label = tk.Label(
-                LowParameterFrame, text="xstart (V)", font=MEDIUM_FONT
+                LowParameterFrame, text="xstart (V)", font=cg.MEDIUM_FONT
             ).grid(row=0, column=0)
             self.low_xstart_entry = tk.Entry(LowParameterFrame, width=7)
             self.low_xstart_entry.insert(tk.END, str(cg.low_xstart))
@@ -664,7 +668,7 @@ class FrequencyMapManipulationFrame(tk.Frame):
 
             # --- points discarded at the beginning of the voltammogram, xend ---#
             self.low_xend_label = tk.Label(
-                LowParameterFrame, text="xend (V)", font=MEDIUM_FONT
+                LowParameterFrame, text="xend (V)", font=cg.MEDIUM_FONT
             ).grid(row=0, column=1)
             self.low_xend_entry = tk.Entry(LowParameterFrame, width=7)
             self.low_xend_entry.insert(tk.END, str(cg.low_xend))
@@ -687,7 +691,7 @@ class FrequencyMapManipulationFrame(tk.Frame):
 
             # --- points discarded at the beginning of the voltammogram, xstart ---#
             self.high_xstart_label = tk.Label(
-                HighParameterFrame, text="xstart (V)", font=MEDIUM_FONT
+                HighParameterFrame, text="xstart (V)", font=cg.MEDIUM_FONT
             ).grid(row=0, column=0)
             self.high_xstart_entry = tk.Entry(HighParameterFrame, width=7)
             self.high_xstart_entry.insert(tk.END, str(cg.high_xstart))
@@ -696,7 +700,7 @@ class FrequencyMapManipulationFrame(tk.Frame):
 
             # --- points discarded at the beginning of the voltammogram, xend ---#
             self.high_xend_label = tk.Label(
-                HighParameterFrame, text="xend (V)", font=MEDIUM_FONT
+                HighParameterFrame, text="xend (V)", font=cg.MEDIUM_FONT
             ).grid(row=0, column=1)
             self.high_xend_entry = tk.Entry(HighParameterFrame, width=7)
             self.high_xend_entry.insert(tk.END, str(cg.high_xend))
@@ -729,7 +733,7 @@ class FrequencyMapManipulationFrame(tk.Frame):
         self.AdjustParameterButton = tk.Button(
             RegressionFrame,
             text="Apply Adjustments",
-            font=LARGE_FONT,
+            font=cg.LARGE_FONT,
             command=self.AdjustParameters,  # was lambda
         )
         self.AdjustParameterButton.grid(row=5, column=0, columnspan=4, pady=10, padx=10)
@@ -928,10 +932,10 @@ class ContinuousScanVisualizationFrame(tk.Frame):
         self.columnconfigure(1, weight=1)
         self.rowconfigure(2, weight=2)
 
-        ElectrodeLabel = tk.Label(self, text="%s" % electrode, font=HUGE_FONT)
+        ElectrodeLabel = tk.Label(self, text="%s" % electrode, font=cg.HUGE_FONT)
         ElectrodeLabel.grid(row=0, column=0, pady=5, sticky="n")
 
-        cg.FrameFileLabel = tk.Label(self, text="", font=MEDIUM_FONT)
+        cg.FrameFileLabel = tk.Label(self, text="", font=cg.MEDIUM_FONT)
         cg.FrameFileLabel.grid(row=0, column=1, pady=3, sticky="ne")
 
         # --- Voltammogram, Raw Peak Height, and Normalized Figure and Artists ---#
@@ -969,10 +973,10 @@ class FrequencyMapVisualizationFrame(tk.Frame):
         self.columnconfigure(1, weight=1)
         self.rowconfigure(2, weight=2)
 
-        ElectrodeLabel = tk.Label(self, text="%s" % electrode, font=HUGE_FONT)
+        ElectrodeLabel = tk.Label(self, text="%s" % electrode, font=cg.HUGE_FONT)
         ElectrodeLabel.grid(row=0, column=0, pady=5, sticky="n")
 
-        cg.FrameFileLabel = tk.Label(self, text="", font=MEDIUM_FONT)
+        cg.FrameFileLabel = tk.Label(self, text="", font=cg.MEDIUM_FONT)
         cg.FrameFileLabel.grid(row=0, column=1, pady=3, sticky="ne")
 
         # --- Voltammogram, Raw Peak Height, and Normalized Figure and Artists ---#

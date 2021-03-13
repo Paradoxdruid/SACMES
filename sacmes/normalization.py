@@ -7,10 +7,10 @@ from config import cg
 ###############
 # Styling ###
 ###############
-HUGE_FONT = ("Verdana", 18)
-LARGE_FONT = ("Verdana", 11)
-MEDIUM_FONT = ("Verdnana", 10)
-SMALL_FONT = ("Verdana", 8)
+# HUGE_FONT = ("Verdana", 18)
+# LARGE_FONT = ("Verdana", 11)
+# MEDIUM_FONT = ("Verdnana", 10)
+# SMALL_FONT = ("Verdana", 8)
 
 
 ##############################

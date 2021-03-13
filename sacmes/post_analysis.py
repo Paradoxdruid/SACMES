@@ -13,10 +13,10 @@ from text_export import TextFileExport
 ###############
 # Styling ###
 ###############
-HUGE_FONT = ("Verdana", 18)
-LARGE_FONT = ("Verdana", 11)
-MEDIUM_FONT = ("Verdnana", 10)
-SMALL_FONT = ("Verdana", 8)
+# cg.HUGE_FONT = ("Verdana", 18)
+# cg.LARGE_FONT = ("Verdana", 11)
+# cg.MEDIUM_FONT = ("Verdnana", 10)
+# SMALL_FONT = ("Verdana", 8)
 
 
 ##################################################
@@ -65,7 +65,7 @@ class PostAnalysis(tk.Frame):
         ###################################################
         tk.Frame.__init__(self, self.parent)  # initialize the frame
 
-        self.Title = tk.Label(self, text="Post Analysis", font=HUGE_FONT).grid(
+        self.Title = tk.Label(self, text="Post Analysis", font=cg.HUGE_FONT).grid(
             row=0, column=0, columnspan=2
         )
 
@@ -79,7 +79,7 @@ class PostAnalysis(tk.Frame):
 
         # --- Real-time Normalization Variable ---#
         cg.SetPointNormLabel = tk.Label(
-            NormalizationFrame, text="Set Normalization Point", font=MEDIUM_FONT
+            NormalizationFrame, text="Set Normalization Point", font=cg.MEDIUM_FONT
         ).grid(row=0, column=0, pady=5)
         cg.NormalizationVar = tk.StringVar()
         NormString = str(cg.NormalizationPoint)
@@ -99,7 +99,7 @@ class PostAnalysis(tk.Frame):
         )
         NormalizeButton.grid(row=2, column=0)
         self.NormWarning = tk.Label(
-            NormalizationFrame, text="", fg="red", font=MEDIUM_FONT
+            NormalizationFrame, text="", fg="red", font=cg.MEDIUM_FONT
         )
         cg.NormWarning = self.NormWarning
 
@@ -110,13 +110,13 @@ class PostAnalysis(tk.Frame):
 
             # --- Drift Correction Title ---#
             self.KDM_title = tk.Label(
-                self.FrequencyFrame, text="Drift Correction", font=LARGE_FONT
+                self.FrequencyFrame, text="Drift Correction", font=cg.LARGE_FONT
             )
             self.KDM_title.grid(row=0, column=0, columnspan=3, pady=1, padx=5)
 
             # --- High Frequency Selection for KDM and Ratiometric Analysis ---#
             self.HighFrequencyLabel = tk.Label(
-                self.FrequencyFrame, text="High Frequency", font=MEDIUM_FONT
+                self.FrequencyFrame, text="High Frequency", font=cg.MEDIUM_FONT
             )
             self.HighFrequencyLabel.grid(row=1, column=1, pady=5, padx=5)
 
@@ -126,7 +126,7 @@ class PostAnalysis(tk.Frame):
 
             # --- Low Frequency Selection for KDM and Ratiometric Analysis ---#
             self.LowFrequencyLabel = tk.Label(
-                self.FrequencyFrame, text="Low Frequency", font=MEDIUM_FONT
+                self.FrequencyFrame, text="Low Frequency", font=cg.MEDIUM_FONT
             )
             self.LowFrequencyLabel.grid(row=1, column=0, pady=5, padx=5)
 
@@ -135,7 +135,7 @@ class PostAnalysis(tk.Frame):
             self.LowFrequencyEntry.grid(row=2, column=0, padx=5)
 
             self.LowFrequencyOffsetLabel = tk.Label(
-                self.FrequencyFrame, text="Low Frequency\n Offset", font=MEDIUM_FONT
+                self.FrequencyFrame, text="Low Frequency\n Offset", font=cg.MEDIUM_FONT
             ).grid(row=3, column=0, pady=2, padx=2)
             self.LowFrequencyOffset = tk.Entry(self.FrequencyFrame, width=7)
             self.LowFrequencyOffset.insert(tk.END, cg.LowFrequencyOffset)
@@ -144,7 +144,7 @@ class PostAnalysis(tk.Frame):
             self.LowFrequencySlopeLabel = tk.Label(
                 self.FrequencyFrame,
                 text="Low Frequency\n Slope Manipulation",
-                font=MEDIUM_FONT,
+                font=cg.MEDIUM_FONT,
             ).grid(row=3, column=1, pady=2, padx=2)
             self.LowFrequencySlope = tk.Entry(self.FrequencyFrame, width=7)
             self.LowFrequencySlope.insert(tk.END, cg.LowFrequencySlope)
@@ -507,19 +507,21 @@ class PostAnalysis(tk.Frame):
         self.SelectFilePath.grid(row=0, column=0, columnspan=2)
 
         self.NoSelectedPath = tk.Label(
-            self.win, text="No File Path Selected", font=MEDIUM_FONT, fg="red"
+            self.win, text="No File Path Selected", font=cg.MEDIUM_FONT, fg="red"
         )
         self.PathWarningExists = False  # tracks the existence of a warning label
 
         # --- File Handle Input ---#
-        HandleLabel = tk.Label(self.win, text="Exported File Handle:", font=LARGE_FONT)
+        HandleLabel = tk.Label(
+            self.win, text="Exported File Handle:", font=cg.LARGE_FONT
+        )
         HandleLabel.grid(row=4, column=0, columnspan=2)
         self.filehandle = ttk.Entry(self.win)
         self.filehandle.insert(tk.END, cg.FileHandle)
         self.filehandle.grid(row=5, column=0, columnspan=2, pady=5)
 
         self.ElectrodeLabel = tk.Label(
-            self.win, text="Select Electrodes:", font=LARGE_FONT
+            self.win, text="Select Electrodes:", font=cg.LARGE_FONT
         )
         self.ElectrodeLabel.grid(row=10, column=0, sticky="nswe")
         self.ElectrodeCount = tk.Listbox(
@@ -527,7 +529,7 @@ class PostAnalysis(tk.Frame):
             relief="groove",
             exportselection=0,
             width=10,
-            font=LARGE_FONT,
+            font=cg.LARGE_FONT,
             height=6,
             selectmode="multiple",
             bd=3,
@@ -540,7 +542,7 @@ class PostAnalysis(tk.Frame):
         # --- ListBox containing the frequencies given on line 46 (InputFrequencies)-#
 
         self.FrequencyLabel = tk.Label(
-            self.win, text="Select Frequencies", font=LARGE_FONT
+            self.win, text="Select Frequencies", font=cg.LARGE_FONT
         )
         self.FrequencyLabel.grid(row=10, column=1, padx=10)
         self.FrequencyList = tk.Listbox(
@@ -548,7 +550,7 @@ class PostAnalysis(tk.Frame):
             relief="groove",
             exportselection=0,
             width=5,
-            font=LARGE_FONT,
+            font=cg.LARGE_FONT,
             height=5,
             selectmode="multiple",
             bd=3,
@@ -635,7 +637,7 @@ class PostAnalysis(tk.Frame):
                 self.NoSelectedPath["text"] = ""
                 self.NoSelectedPath.grid_forget()
 
-        except:
+        except Exception:
             cg.FoundFilePath = False
             self.NoSelectedPath.grid(row=1, column=0, columnspan=4)
             self.PathWarningExists = True

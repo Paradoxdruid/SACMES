@@ -1,7 +1,7 @@
 # globals
 
 # from dataclasses import dataclass
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Tuple
 import tkinter as tk
 from queue import Queue
 import tkinter.ttk as ttk
@@ -22,6 +22,12 @@ class Config:
     PlotValues: List[tk.Frame] = None
     ShowFrames: Dict[str, tk.Frame] = None
     container: tk.Frame = None
+
+    # Styling
+    HUGE_FONT: Tuple[str, int] = ("Verdana", 18)
+    LARGE_FONT: Tuple[str, int] = ("Verdana", 11)
+    MEDIUM_FONT: Tuple[str, int] = ("Verdnana", 10)
+    SMALL_FONT: Tuple[str, int] = ("Verdana", 8)
 
     # Regression Parameters
     sg_window: int = 5
