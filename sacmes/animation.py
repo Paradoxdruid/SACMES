@@ -5,6 +5,7 @@ import os
 import numpy as np
 from scipy.signal import savgol_filter
 import threading
+from global_func import _retrieve_file, ReadData
 
 # from main_window import _retrieve_file, ReadData
 import time

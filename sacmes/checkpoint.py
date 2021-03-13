@@ -7,7 +7,7 @@ from normalization import DataNormalization
 from wait_time import Track, WaitTime
 from initialization import InitializeContinuousCanvas, InitializeFrequencyMapCanvas
 from scan_frames import ContinuousScanManipulationFrame, FrequencyMapManipulationFrame
-from global_func import _retrieve_file, _get_listval, ReadData
+from global_func import _retrieve_file
 
 
 # cg = Config()

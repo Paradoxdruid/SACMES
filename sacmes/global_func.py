@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from config import cg
 
 ########################
 # Global Functions ###
@@ -263,4 +264,3 @@ def _get_listval(electrode):
             return cg.list_val
     except:
         print("\nError in _get_listval\n")
-

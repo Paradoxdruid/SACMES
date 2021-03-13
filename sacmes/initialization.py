@@ -8,6 +8,7 @@ import numpy as np
 from scipy.signal import savgol_filter
 from scan_frames import FrequencyMapVisualizationFrame, ContinuousScanVisualizationFrame
 from text_export import TextFileExport
+from global_func import _retrieve_file, ReadData, _get_listval
 
 # from main_window import ReadData, _get_listval, _retrieve_file
 
