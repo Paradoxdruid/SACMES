@@ -145,7 +145,7 @@ def _retrieve_file(file, electrode, frequency):
                 )
 
             return filename, filename2, filename3, filename4, filename5, filename6
-    except:
+    except Exception:
         print("\nError in retrieve_file\n")
 
 
@@ -176,7 +176,7 @@ def ReadData(myfile, electrode):
 
                 currents = [0] * variables
 
-        except:
+        except Exception:
             # ---Preallocate Potential and Current lists---#
             with open(myfile, "r", encoding="utf-8") as mydata:
                 cg.encoding = "utf-8"
@@ -211,7 +211,7 @@ def ReadData(myfile, electrode):
                 try:
                     check_split = float(check_split)
                     check_split = True
-                except:
+                except Exception:
                     check_split = False
                 if check_split:
                     # ---Currents---#
@@ -246,7 +246,7 @@ def ReadData(myfile, electrode):
         # Return the data ###
         #######################
         return potentials, currents, data_dict
-    except:
+    except Exception:
         print("\nError in ReadData()\n")
 
 
@@ -262,5 +262,5 @@ def _get_listval(electrode):
             cg.list_val = cg.current_column_index
 
             return cg.list_val
-    except:
+    except Exception:
         print("\nError in _get_listval\n")

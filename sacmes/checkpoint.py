@@ -115,19 +115,19 @@ class CheckPoint:
                     try:
                         # retrieves the size of the file in bytes
                         mydata_bytes = os.path.getsize(myfile)
-                    except:
+                    except Exception:
                         try:
                             mydata_bytes = os.path.getsize(myfile2)
                             myfile = myfile2
-                        except:
+                        except Exception:
                             try:
                                 mydata_bytes = os.path.getsize(myfile3)
                                 myfile = myfile3
-                            except:
+                            except Exception:
                                 try:
                                     mydata_bytes = os.path.getsize(myfile4)
                                     myfile = myfile4
-                                except:
+                                except Exception:
                                     mydata_bytes = 1
 
                     if mydata_bytes > cg.byte_limit:
@@ -186,27 +186,27 @@ class CheckPoint:
                 try:
                     # retrieves the size of the file in bytes
                     mydata_bytes = os.path.getsize(myfile)
-                except:
+                except Exception:
                     try:
                         mydata_bytes = os.path.getsize(myfile2)
                         myfile = myfile2
-                    except:
+                    except Exception:
                         try:
                             mydata_bytes = os.path.getsize(myfile3)
                             myfile = myfile3
-                        except:
+                        except Exception:
                             try:
                                 mydata_bytes = os.path.getsize(myfile4)
                                 myfile = myfile4
-                            except:
+                            except Exception:
                                 try:
                                     mydata_bytes = os.path.getsize(myfile5)
                                     myfile = myfile5
-                                except:
+                                except Exception:
                                     try:
                                         mydata_bytes = os.path.getsize(myfile6)
                                         myfile = myfile6
-                                    except:
+                                    except Exception:
                                         mydata_bytes = 1
 
                 if mydata_bytes > cg.byte_limit:
@@ -251,7 +251,7 @@ class CheckPoint:
             with open(myfile, "r", encoding="utf-8") as mydata:
                 encoding = "utf-8"
 
-        except:
+        except Exception:
 
             # ---Preallocate Potential and Current lists---#
             with open(myfile, "r", encoding="utf-16") as mydata:
@@ -280,7 +280,7 @@ class CheckPoint:
                 try:
                     check_split = float(check_split)
                     check_split = True
-                except:
+                except Exception:
                     check_split = False
 
                 if check_split:
@@ -295,9 +295,8 @@ class CheckPoint:
                 return False
             return True
 
-        else:
-            print("\nverify_multi: could not find a line\nthat began with an integer\n")
-            return False
+        print("\nverify_multi: could not find a line\nthat began with an integer\n")
+        return False
 
     def proceed(self):
 

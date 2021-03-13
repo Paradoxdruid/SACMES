@@ -291,7 +291,7 @@ class InitializeContinuousCanvas:
             # -- Return both the figure and the axes to be stored as global variables -#
             return fig, ax
 
-        except:
+        except Exception:
             print("Error in MakeFigure")
 
     #################################################################
@@ -375,7 +375,7 @@ class InitializeContinuousCanvas:
 
             return figure, axes
 
-        except:
+        except Exception:
             print("\n ERROR IN MAKE RATIOMETRIC FIGURES \n")
 
     ##################################################################################
@@ -403,19 +403,19 @@ class InitializeContinuousCanvas:
             try:
                 # retrieves the size of the file in bytes
                 mydata_bytes = os.path.getsize(myfile)
-            except:
+            except Exception:
                 try:
                     mydata_bytes = os.path.getsize(myfile2)
                     myfile = myfile2
-                except:
+                except Exception:
                     try:
                         mydata_bytes = os.path.getsize(myfile3)
                         myfile = myfile3
-                    except:
+                    except Exception:
                         try:
                             mydata_bytes = os.path.getsize(myfile4)
                             myfile = myfile4
-                        except:
+                        except Exception:
                             mydata_bytes = 1
 
             if mydata_bytes > cg.byte_limit:
@@ -425,7 +425,7 @@ class InitializeContinuousCanvas:
             else:
                 return False
 
-        except:
+        except Exception:
             print("could not find file for electrode %d" % electrode)
             # --- If search time has not met the search limit keep searching ---#
             cg.root.after(
@@ -570,7 +570,7 @@ class InitializeContinuousCanvas:
 
             return True
 
-        except:
+        except Exception:
             print("\n\nError in RunInitialization\n\n")
 
 
@@ -759,7 +759,7 @@ class InitializeFrequencyMapCanvas:
             # -- Return both the figure and the axes to be stored as global variables -#
             return fig, ax
 
-        except:
+        except Exception:
             print("Error in MakeFigure")
 
     ##################################################################################
@@ -789,27 +789,27 @@ class InitializeFrequencyMapCanvas:
             try:
                 # retrieves the size of the file in bytes
                 mydata_bytes = os.path.getsize(myfile)
-            except:
+            except Exception:
                 try:
                     mydata_bytes = os.path.getsize(myfile2)
                     myfile = myfile2
-                except:
+                except Exception:
                     try:
                         mydata_bytes = os.path.getsize(myfile3)
                         myfile = myfile3
-                    except:
+                    except Exception:
                         try:
                             mydata_bytes = os.path.getsize(myfile4)
                             myfile = myfile4
-                        except:
+                        except Exception:
                             try:
                                 mydata_bytes = os.path.getsize(myfile5)
                                 myfile = myfile5
-                            except:
+                            except Exception:
                                 try:
                                     mydata_bytes = os.path.getsize(myfile6)
                                     myfile = myfile6
-                                except:
+                                except Exception:
                                     mydata_bytes = 1
 
             if mydata_bytes > cg.byte_limit:
@@ -819,7 +819,7 @@ class InitializeFrequencyMapCanvas:
             else:
                 return False
 
-        except:
+        except Exception:
             print("could not find file for electrode %d" % electrode)
             # --- If search time has not met the search limit keep searching ---#
             cg.root.after(1000, self.InitializeSubplots, ax, electrode)
@@ -945,7 +945,7 @@ class InitializeFrequencyMapCanvas:
 
             return True
 
-        except:
+        except Exception:
             print("\n\nError in RunInitialization\n\n")
 
             #############################################################

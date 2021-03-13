@@ -12,7 +12,6 @@ class Config:
     # File data
     encoding: str = None
     handle_variable: str = ""
-    Plot: str = None  # TODO: Unused
 
     HighLowList: Dict[str, int] = None
 
@@ -85,7 +84,7 @@ class Config:
     HighFrequency: int = None
     HighLowList: Dict[str, int] = None
     mypath: str = None
-    Option: str = None  # TODO: just a reference to SelectedOptions
+    Option: str = None  # just a reference to SelectedOptions
     FileHandle: str = None
     ExportFilePath: str = None
 
@@ -170,6 +169,7 @@ class Config:
     Plot: str = None
     StartNormalizationVar: str = None
     SaveBox: str = None
+    Plot: str = None
 
 
 cg = Config()

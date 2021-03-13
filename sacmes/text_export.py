@@ -118,8 +118,10 @@ class TextFileExport:
                 TxtList.append("Avg.Charge(uC)")
                 TxtList.append("Standard_Deviation(uC)")
 
-            with open(self.TextFileHandle, "w+", encoding="utf-8", newline="") as input:
-                writer = csv.writer(input, delimiter=" ")
+            with open(
+                self.TextFileHandle, "w+", encoding="utf-8", newline=""
+            ) as our_input:
+                writer = csv.writer(our_input, delimiter=" ")
                 writer.writerow(TxtList)
 
     #################################################################

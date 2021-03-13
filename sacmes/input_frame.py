@@ -246,7 +246,7 @@ class InputFrame(
             self.ListboxFrame,
             text="Edit",
             font=cg.MEDIUM_FONT,
-            command=lambda: cg.ManipulateFrequenciesFrame.tkraise(),
+            command=lambda: cg.ManipulateFrequenciesFrame.tkraise(),  # noqa
         ).grid(row=2, column=0, columnspan=4)
 
         ###########################################################
