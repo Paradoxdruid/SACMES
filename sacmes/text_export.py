@@ -1,19 +1,9 @@
 #!/usr/bin/env python3
+
 import csv
 from config import cg
 from numpy import sqrt
 import time
-
-# cg = Config()
-
-
-###############
-# Styling ###
-###############
-# HUGE_FONT = ("Verdana", 18)
-# LARGE_FONT = ("Verdana", 11)
-# MEDIUM_FONT = ("Verdnana", 10)
-# SMALL_FONT = ("Verdana", 8)
 
 
 ################################################

@@ -1,17 +1,7 @@
 #! /usr/bin/env python3
+
 from config import cg
 from text_export import _update_global_lists
-
-# cg = Config()
-
-
-###############
-# Styling ###
-###############
-# HUGE_FONT = ("Verdana", 18)
-# LARGE_FONT = ("Verdana", 11)
-# MEDIUM_FONT = ("Verdnana", 10)
-# SMALL_FONT = ("Verdana", 8)
 
 
 ###############################################################################

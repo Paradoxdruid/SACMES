@@ -1,23 +1,13 @@
 #!/usr/bin/env python3
+
 import tkinter as tk
 import tkinter.ttk as ttk
 from config import cg
-
-# from input_frame import InputFrame
 from animation import ElectrochemicalAnimation
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-# cg = Config()
-
-
-###############
-# Styling ###
-###############
-# HUGE_FONT = ("Verdana", 18)
-# cg.LARGE_FONT = ("Verdana", 11)
-# cg.MEDIUM_FONT = ("Verdnana", 10)
-# SMALL_FONT = ("Verdana", 8)
+# from input_frame import InputFrame  - circular import
 
 
 ############################################################

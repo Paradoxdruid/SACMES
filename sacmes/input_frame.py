@@ -9,18 +9,6 @@ import datetime
 from checkpoint import CheckPoint
 
 
-# cg = Config()
-
-
-###############
-# Styling ###
-###############
-# HUGE_FONT = ("Verdana", 18)
-# cg.LARGE_FONT = ("Verdana", 11)
-# cg.MEDIUM_FONT = ("Verdnana", 10)
-# SMALL_FONT = ("Verdana", 8)
-
-
 class InputFrame(
     tk.Frame
 ):  # first frame that is displayed when the program is initialized

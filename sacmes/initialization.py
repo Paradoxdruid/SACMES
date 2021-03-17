@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import tkinter as tk
 from config import cg
 import matplotlib.pyplot as plt
@@ -11,17 +12,6 @@ from text_export import TextFileExport
 from global_func import _retrieve_file, ReadData, _get_listval
 
 # from main_window import ReadData, _get_listval, _retrieve_file
-
-# cg = Config()
-
-
-###############
-# Styling ###
-###############
-# HUGE_FONT = ("Verdana", 18)
-# LARGE_FONT = ("Verdana", 11)
-# MEDIUM_FONT = ("Verdnana", 10)
-# SMALL_FONT = ("Verdana", 8)
 
 
 class InitializeContinuousCanvas:

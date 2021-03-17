@@ -6,8 +6,6 @@ from config import cg
 import tkinter.ttk as ttk
 from input_frame import InputFrame
 
-# cg = Config()
-
 
 ###############################################
 #   Graphical User Interface     #######

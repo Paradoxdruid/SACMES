@@ -1,16 +1,6 @@
 #!/usr/bin/env python3
+
 from config import cg
-
-# cg = Config()
-
-
-###############
-# Styling ###
-###############
-# HUGE_FONT = ("Verdana", 18)
-# LARGE_FONT = ("Verdana", 11)
-# MEDIUM_FONT = ("Verdnana", 10)
-# SMALL_FONT = ("Verdana", 8)
 
 
 ##############################

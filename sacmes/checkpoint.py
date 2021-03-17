@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import tkinter as tk
 from config import cg
 import os
@@ -8,18 +9,6 @@ from wait_time import Track, WaitTime
 from initialization import InitializeContinuousCanvas, InitializeFrequencyMapCanvas
 from scan_frames import ContinuousScanManipulationFrame, FrequencyMapManipulationFrame
 from global_func import _retrieve_file
-
-
-# cg = Config()
-
-
-###############
-# Styling ###
-###############
-# HUGE_FONT = ("Verdana", 18)
-# LARGE_FONT = ("Verdana", 11)
-# MEDIUM_FONT = ("Verdnana", 10)
-# SMALL_FONT = ("Verdana", 8)
 
 
 ####################################

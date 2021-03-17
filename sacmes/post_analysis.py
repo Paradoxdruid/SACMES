@@ -1,22 +1,12 @@
 #!/usr/bin/env python3
+
 import tkinter as tk
 from config import cg
 import tkinter.ttk as ttk
-
-# from input_frame import InputFrame
 import matplotlib.pyplot as plt
 from text_export import TextFileExport
 
-# cg = Config()
-
-
-###############
-# Styling ###
-###############
-# cg.HUGE_FONT = ("Verdana", 18)
-# cg.LARGE_FONT = ("Verdana", 11)
-# cg.MEDIUM_FONT = ("Verdnana", 10)
-# SMALL_FONT = ("Verdana", 8)
+# from input_frame import InputFrame -- circular import
 
 
 ##################################################
@@ -675,7 +665,7 @@ class PostAnalysis(tk.Frame):
             cg.LowAlreadyReset = True
 
         # Raise the initial user input frame
-        self.show_frame(InputFrame)
+        self.show_frame(self.parent)  # InputFrame)
         self.close_frame(PostAnalysis)
 
         # Take resize weight away from the Visualization Canvas

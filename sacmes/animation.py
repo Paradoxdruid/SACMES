@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import tkinter as tk
 from config import cg
 import os
@@ -6,19 +7,7 @@ import numpy as np
 from scipy.signal import savgol_filter
 import threading
 from global_func import _retrieve_file, ReadData
-
-# from main_window import _retrieve_file, ReadData
 import time
-
-# cg = Config()
-
-###############
-# Styling ###
-# ###############
-# HUGE_FONT = ("Verdana", 18)
-# LARGE_FONT = ("Verdana", 11)
-# MEDIUM_FONT = ("Verdnana", 10)
-# SMALL_FONT = ("Verdana", 8)
 
 
 ##########################################################################

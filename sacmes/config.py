@@ -1,14 +1,14 @@
-# globals
+#!/usr/bin/env python3
 
-# from dataclasses import dataclass
 from typing import List, Dict, Any, Tuple
 import tkinter as tk
 from queue import Queue
 import tkinter.ttk as ttk
 
 
-# @dataclass
 class Config:
+    """Class to store SACMES values and frames."""
+
     # File data
     encoding: str = None
     handle_variable: str = ""
@@ -172,4 +172,5 @@ class Config:
     Plot: str = None
 
 
+# instantiate config object to be imported by all module files
 cg = Config()
