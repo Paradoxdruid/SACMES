@@ -14,6 +14,8 @@ Original repository available at: https://github.com/netzlab/SACMES
 ### sacmes module
 This python module version of SACMES allows analysis of data from Square-Wave Voltammograms and offers real time control of data analysis.  **This is the up to date code of this repository.**
 
+Usage: `python sacmes`
+
 ### Published Versions of SACMES
 If you would like to use the SACMES program as it is described in the ACS Analytical Chemistry article "Open Source Software for the Real-Time Control, Processing, and Visualization of High-Volume Electrochemical Data" by Curtis, et al. use the scripts within the "Published Versions of SACMES" folder.
 
