@@ -291,7 +291,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
         # ---Buttons to switch between electrode frames---#
         frame_value = 0
         column_value = 0
-        for value in cg.PlotValues:
+        for _ in cg.PlotValues:
             Button = ttk.Button(
                 self,
                 text=cg.frame_list[frame_value],
@@ -465,7 +465,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
 
         cg.NormalizationPoint = int(self.SetPointNorm.get())
         file = int(cg.FileLabel["text"])
-        index = file - 1
+        _ = file - 1
 
         if file >= cg.NormalizationPoint:
             cg.wait_time.NormalizationWaitTime()
@@ -495,7 +495,7 @@ class ContinuousScanManipulationFrame(tk.Frame):
             cg.LowAlreadyReset = True
 
         # Raise the initial user input frame
-        self.show_frame(InputFrame)
+        self.show_frame(cg.input_frame)  # InputFrame)
         self.close_frame(cg.method)
 
         cg.post_analysis._reset()
@@ -555,13 +555,15 @@ class ContinuousScanManipulationFrame(tk.Frame):
     ######################################################
     # Function to raise frame for specific electrode ###
     ######################################################
-    def show_plot(self, frame):
+    @staticmethod
+    def show_plot(frame):
         frame.tkraise()
 
     #####################################
     # Destory the frames on Reset() ###
     #####################################
-    def close_frame(self, cont):
+    @staticmethod
+    def close_frame(cont):
         frame = cg.ShowFrames[cont]
         frame.grid_forget()
 
@@ -829,7 +831,7 @@ class FrequencyMapManipulationFrame(tk.Frame):
         cg.AlreadyReset = True
 
         # Raise the initial user input frame
-        self.show_frame(InputFrame)
+        self.show_frame(cg.input_frame)  # InputFrame)
         self.close_frame(cg.method)
 
     ##########################################################
@@ -929,7 +931,7 @@ class ContinuousScanVisualizationFrame(tk.Frame):
         cg.FrameFileLabel.grid(row=0, column=1, pady=3, sticky="ne")
 
         # --- Voltammogram, Raw Peak Height, and Normalized Figure and Artists ---#
-        fig, ax = cg.figures[count]  # Call the figure and artists for the electrode
+        fig, _ = cg.figures[count]  # Call the figure and artists for the electrode
         canvas = FigureCanvasTkAgg(fig, self)  # and place the artists within the frame
         canvas.draw()  # initial draw call to create the artists that will be blitted
         canvas.get_tk_widget().grid(
@@ -938,7 +940,7 @@ class ContinuousScanVisualizationFrame(tk.Frame):
 
         if len(cg.frequency_list) > 1:
             # --- Ratiometric Figure and Artists ---#
-            fig, ax = cg.ratiometric_figures[
+            fig, _ = cg.ratiometric_figures[
                 count
             ]  # Call the figure and artists for the electrode
             canvas = FigureCanvasTkAgg(

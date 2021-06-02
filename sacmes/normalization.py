@@ -10,7 +10,8 @@ class DataNormalization:
     def __init__(self):
         pass
 
-    def Normalize(self, file, data, num, count, index):
+    @staticmethod
+    def Normalize(file, data, num, count, index):
 
         sample = len(cg.file_list) * cg.SampleRate / 3600
         #######################################################
@@ -224,7 +225,8 @@ class DataNormalization:
     #############################################################
     # Readjust the data to the new user-inputted parameters ###
     #############################################################
-    def ResetRatiometricData(self):
+    @staticmethod
+    def ResetRatiometricData():
 
         ############################################
         # Readjust Low Frequencies with Offset ###

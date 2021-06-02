@@ -39,9 +39,9 @@ class MainWindow(tk.Tk):
 
         # --- Raise the frame for initial UI ---#
         cg.ShowFrames = {}  # Key: frame handle / Value: tk.Frame object
-        frame = InputFrame(cg.container, self.master)
-        cg.ShowFrames[InputFrame] = frame
-        frame.grid(row=0, column=0, sticky="nsew")
+        cg.input_frame = InputFrame(cg.container, self.master)  # was frame
+        cg.ShowFrames[InputFrame] = cg.input_frame  # was frame
+        cg.input_frame.grid(row=0, column=0, sticky="nsew")  # was frame
         self.show_frame(InputFrame)
 
         self._create_toolbar()
@@ -221,7 +221,8 @@ class MainWindow(tk.Tk):
         cg.byte_limit = int(the_bytes)
         cg.byte_index = index
 
-    def show_frame(self, cont):
+    @staticmethod
+    def show_frame(cont):
 
         frame = cg.ShowFrames[cont]
         frame.tkraise()

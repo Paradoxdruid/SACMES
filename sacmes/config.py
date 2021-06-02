@@ -170,6 +170,7 @@ class Config:
     StartNormalizationVar: str = None
     SaveBox: str = None
     Plot: str = None
+    input_frame: Any = None  # store input frame
 
 
 # instantiate config object to be imported by all module files

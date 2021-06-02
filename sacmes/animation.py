@@ -142,7 +142,7 @@ class ElectrochemicalAnimation:
                     if not cg.PoisonPill:
                         cg.root.after(10, self.run)
 
-        threaded_animation = _threaded_animation(Queue=cg.q)
+        _ = _threaded_animation(Queue=cg.q)
 
         self._step()
 
@@ -161,7 +161,8 @@ class ElectrochemicalAnimation:
         )
         self._post_draw(True)
 
-    def _blit_clear(self, artists, bg_cache):
+    @staticmethod
+    def _blit_clear(artists, bg_cache):
         # Get a list of the axes that need clearing from the artists that
         # have been drawn. Grab the appropriate saved background from the
         # cache and restore.
@@ -186,7 +187,7 @@ class ElectrochemicalAnimation:
         ############################################
         # Resize raw and normalized data plots ###
         ############################################
-        fig, ax = cg.figures[self.num]
+        _, ax = cg.figures[self.num]
         for count in range(len(cg.frequency_list)):
 
             if cg.XaxisOptions == "Experiment Time":
@@ -309,7 +310,7 @@ class ElectrochemicalAnimation:
             # ratiometric plots
             if cg.method == "Continuous Scan":
                 if len(cg.frequency_list) > 1:
-                    ratio_fig, ratio_ax = cg.ratiometric_figures[self.num]
+                    ratio_fig, _ = cg.ratiometric_figures[self.num]
                     ratio_fig.canvas.draw()
 
         elif self._drawn_artists:
@@ -317,7 +318,8 @@ class ElectrochemicalAnimation:
             self._blit_draw(self._drawn_artists, self._blit_cache)
 
     # The rest of the code in this class is to facilitate easy blitting
-    def _blit_draw(self, artists, bg_cache):
+    @staticmethod
+    def _blit_draw(artists, bg_cache):
         # Handles blitted drawing, which renders only the artists given instead
         # of the entire figure.
         updated_ax = []
@@ -436,7 +438,7 @@ class ElectrochemicalAnimation:
         while True:
             try:
                 print("%sChecking Queue" % self.spacer)
-                task = cg.q.get(block=False)
+                _ = cg.q.get(block=False)
             except Exception:
                 print("%sQueue Empty" % self.spacer)
                 break
@@ -631,7 +633,8 @@ class ElectrochemicalAnimation:
         # Polynomial Regression ###
         #############################
         eval_regress = np.polyval(polynomial_coeffs, adjusted_potentials).tolist()
-        regression_dict = dict(
+        # TODO: Implement better baseline subtraction here.
+        _ = dict(
             zip(eval_regress, adjusted_potentials)
         )  # dictionary with current: potential
 
@@ -696,7 +699,7 @@ class ElectrochemicalAnimation:
             frequency = cg.frequency_list[self.count]
             self.frequency_axis.append(int(frequency))
 
-            charge = (Peak_Height / frequency) * 100000
+            _ = (Peak_Height / frequency) * 100000
             self.charge_axis.append(Peak_Height / frequency)
 
         #####################################################
@@ -738,7 +741,7 @@ class ElectrochemicalAnimation:
                 # Acquire the current frequency and get the xstart/xend ###
                 # parameters that will manipulate the visualized data   ###
                 #############################################################
-                frequency = cg.frequency_list[self.count]
+                _ = cg.frequency_list[self.count]
 
                 ###################################
                 # Set the units of the X-axis ###
@@ -841,7 +844,7 @@ class ElectrochemicalAnimation:
                 return plots
 
         else:
-            file = 1
+            _ = 1
             EmptyPlots = framedata
             time.sleep(0.1)
             print("\n Yielding Empty Plots in Animation \n")
@@ -856,7 +859,7 @@ class ElectrochemicalAnimation:
                     potentials,
                     adjusted_potentials,
                     smooth_currents,
-                    adjusted_currents,
+                    _,
                     regression,
                 ) = framedata
 
@@ -882,7 +885,7 @@ class ElectrochemicalAnimation:
 
                 # --- Peak Height ---#
 
-                data = cg.data_list[self.num][self.count][
+                _ = cg.data_list[self.num][self.count][
                     : len(self.file_list)
                 ]  # 'num' is the electrode index value
 
@@ -901,7 +904,7 @@ class ElectrochemicalAnimation:
                 return plots
 
         else:
-            file = 1
+            _ = 1
             EmptyPlots = framedata
             time.sleep(0.1)
             print("\n Yielding Empty Plots in Animation \n")
@@ -912,13 +915,13 @@ class ElectrochemicalAnimation:
     ############################
     def _ratiometric_generator(self):
 
-        index = self.file - 1
+        _ = self.file - 1
 
         HighFrequency = cg.HighLowList["High"]
         LowFrequency = cg.HighLowList["Low"]
 
         HighCount = cg.frequency_dict[HighFrequency]
-        LowCount = cg.frequency_dict[LowFrequency]
+        _ = cg.frequency_dict[LowFrequency]
 
         HighPoint = cg.normalized_data_list[self.num][HighCount][self.index]
         LowPoint = cg.offset_normalized_data_list[self.num][self.index]
@@ -934,7 +937,7 @@ class ElectrochemicalAnimation:
 
     def _ratiometric_animation(self, framedata, *args):
 
-        NormalizedRatio, KDM = framedata
+        _, KDM = framedata
 
         plots = cg.ratiometric_plots[self.num]
 

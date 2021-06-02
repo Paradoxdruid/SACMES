@@ -121,7 +121,7 @@ class TextFileExport:
 
         index = _file_ - 1
         our_list = []
-        AvgList = []
+        _ = []
         our_list.append(str(_file_))
         our_list.append(str((_file_ * cg.SampleRate) / 3600))
         # --- Peak Height ---#
@@ -309,7 +309,7 @@ class TextFileExport:
     # Normalize the data within the Text File ###
     ###############################################
     def TxtFileNormalization(self, electrodes=None, frequencies=None):
-        TxtList = []
+        _ = []
 
         try:
             # --- reinitialize the .txt file ---#
@@ -327,7 +327,7 @@ class TextFileExport:
             for index in range(analysis_range):
                 _file_ = index + 1
                 our_list = []
-                AvgList = []
+                _ = []
                 our_list.append(str(_file_))
                 our_list.append(str((_file_ * cg.SampleRate) / 3600))
 

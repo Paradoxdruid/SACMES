@@ -23,9 +23,9 @@ class CheckPoint:
         self.win = tk.Toplevel()
         self.win.wm_title("CheckPoint")
 
-        title = tk.Label(
-            self.win, text="Searching for files...", font=cg.HUGE_FONT
-        ).grid(row=0, column=0, columnspan=2, pady=10, padx=10, sticky="news")
+        _ = tk.Label(self.win, text="Searching for files...", font=cg.HUGE_FONT).grid(
+            row=0, column=0, columnspan=2, pady=10, padx=10, sticky="news"
+        )
 
         self.parent = parent
         self.win.transient(self.parent)
@@ -70,8 +70,8 @@ class CheckPoint:
                 else:
                     column_value = 1
 
-        self.stop = tk.Button(self.win, text="Stop", command=self.stop)
-        self.stop.grid(row=row_value, column=0, columnspan=2, pady=5)
+        self.stop_button = tk.Button(self.win, text="Stop", command=self.stop)
+        self.stop_button.grid(row=row_value, column=0, columnspan=2, pady=5)
         self.StopSearch = False
 
         self.num = 0
@@ -342,10 +342,12 @@ class CheckPoint:
         self.win.destroy()
 
     # --- Function to switch between visualization frames ---#
-    def show_plot(self, frame):
+    @staticmethod
+    def show_plot(frame):
         frame.tkraise()
 
-    def show_frame(self, cont):
+    @staticmethod
+    def show_frame(cont):
 
         frame = cg.ShowFrames[cont]
         frame.tkraise()

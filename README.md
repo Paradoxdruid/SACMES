@@ -6,20 +6,24 @@
 
 <hr />
 
-### Status & Goals
+## Status & Goals
+
 This cloned repository was created to allow refactoring of SACMES into a module format, as well as to enable SACMES to read WaveNano potentiostat files.   Work in progress.
 
-Original repository available at: https://github.com/netzlab/SACMES
+Original repository available at: <https://github.com/netzlab/SACMES>
 
-### sacmes module
+## sacmes module
+
 This python module version of SACMES allows analysis of data from Square-Wave Voltammograms and offers real time control of data analysis.  **This is the up to date code of this repository.**
 
 Usage: `python sacmes`
 
-### Published Versions of SACMES
+## Published Versions of SACMES
+
 If you would like to use the SACMES program as it is described in the ACS Analytical Chemistry article "Open Source Software for the Real-Time Control, Processing, and Visualization of High-Volume Electrochemical Data" by Curtis, et al. use the scripts within the "Published Versions of SACMES" folder.
 
-All updates for the Standard Operating Procedure (SOP) can be viewed here: https://www.dropbox.com/sh/5s7qxgzpmx6pnq4/AACC3I0DrIL22cUM8fk1RC01a?dl=0
+All updates for the Standard Operating Procedure (SOP) can be viewed here: <https://www.dropbox.com/sh/5s7qxgzpmx6pnq4/AACC3I0DrIL22cUM8fk1RC01a?dl=0>
 
-### Old Versions of SACMES
+## Old Versions of SACMES
+
 This folder has cleaned up but largely unchanged SACMES scripts.

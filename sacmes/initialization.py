@@ -36,10 +36,8 @@ class InitializeContinuousCanvas:
         ############################################
         cg.data_list = [0] * cg.electrode_count  # Peak Height/AUC data (after smoothing
         # and polynomial regression)
-        avg_data_list = (
-            []
-        )  # Average Peak Height/AUC across all electrodes for each frequency
-        std_data_list = []  # standard deviation between electrodes for each frequency
+        _ = []  # Average Peak Height/AUC across all electrodes for each frequency
+        _ = []  # standard deviation between electrodes for each frequency
         cg.normalized_data_list = [0] * cg.electrode_count  # normalized data
         cg.offset_normalized_data_list = [
             0
@@ -101,7 +99,7 @@ class InitializeContinuousCanvas:
         cg.PlotContainer.columnconfigure(0, weight=1)
 
         frame_count = 0
-        FileLabelList = []
+        _ = []
         for (
             electrode_frame
         ) in cg.frame_list:  # Iterate through the frame of each electrode
@@ -119,7 +117,7 @@ class InitializeContinuousCanvas:
             frame_count += 1
 
         # --- Create a list containing the Frame objects for each electrode ---#
-        for reference, frame in cg.PlotFrames.items():
+        for _, frame in cg.PlotFrames.items():
             cg.PlotValues.append(frame)
 
         #################################
@@ -288,7 +286,8 @@ class InitializeContinuousCanvas:
     # Make Figures for Ratiometric Data                         ###
     # (e.g. Kinetic Differential Measurement, Normalized Ratio) ###
     #################################################################
-    def MakeRatiometricFigure(self, electrode):
+    @staticmethod
+    def MakeRatiometricFigure(electrode):
 
         try:
             figure, axes = plt.subplots(
@@ -354,8 +353,8 @@ class InitializeContinuousCanvas:
             ratio_plots = [norm_ratiometric_plot, norm_injection, KDM, KDM_injection]
             cg.ratiometric_plots.append(ratio_plots)
 
-            (empty_norm_ratiometric,) = axes[0, 0].plot([], [], "ro", markersize=1)
-            (empty_KDM,) = axes[0, 1].plot([], [], "ro", markersize=1)
+            (_,) = axes[0, 0].plot([], [], "ro", markersize=1)
+            (_,) = axes[0, 1].plot([], [], "ro", markersize=1)
             cg.EmptyRatioPlots = [
                 norm_ratiometric_plot,
                 norm_injection,
@@ -422,7 +421,8 @@ class InitializeContinuousCanvas:
                 1000, self.InitializeSubplots, ax, frequency, electrode, subplot_count
             )
 
-    def RunInitialization(self, myfile, ax, subplot_count, electrode, frequency):
+    @staticmethod
+    def RunInitialization(myfile, ax, subplot_count, electrode, frequency):
 
         try:
             #########################
@@ -510,7 +510,7 @@ class InitializeContinuousCanvas:
             linear_fit = np.polyfit(
                 [regression_dict[min1], regression_dict[min2]], [min1, min2], 1
             )
-            linear_regression = np.polyval(
+            _ = np.polyval(
                 linear_fit, [regression_dict[min1], regression_dict[min2]]
             ).tolist()
 
@@ -697,7 +697,7 @@ class InitializeFrequencyMapCanvas:
             ##########################################
             electrode_plot = []
 
-            max_frequency = cg.frequency_list[-1]
+            _ = cg.frequency_list[-1]
             ax[1, 0].set_xscale("log")
             ##########################################################################
             ##########################################################################
@@ -814,7 +814,8 @@ class InitializeFrequencyMapCanvas:
             # --- If search time has not met the search limit keep searching ---#
             cg.root.after(1000, self.InitializeSubplots, ax, electrode)
 
-    def RunInitialization(self, myfile, ax, electrode):
+    @staticmethod
+    def RunInitialization(myfile, ax, electrode):
 
         try:
             #########################
@@ -890,11 +891,11 @@ class InitializeFrequencyMapCanvas:
             linear_fit = np.polyfit(
                 [regression_dict[min1], regression_dict[min2]], [min1, min2], 1
             )
-            linear_regression = np.polyval(
+            _ = np.polyval(
                 linear_fit, [regression_dict[min1], regression_dict[min2]]
             ).tolist()
 
-            Peak_Height = max(max1, max2) - min(min1, min2)
+            _ = max(max1, max2) - min(min1, min2)
 
             if cg.SelectedOptions == "Area Under the Curve":
                 AUC_index = 1

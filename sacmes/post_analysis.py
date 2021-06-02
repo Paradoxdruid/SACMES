@@ -170,7 +170,7 @@ class PostAnalysis(tk.Frame):
         # ---Buttons to switch between electrode frames---#
         frame_value = 0
         column_value = 0
-        for value in cg.PlotValues:
+        for _ in cg.PlotValues:
             Button = ttk.Button(
                 self,
                 text=cg.frame_list[frame_value],
@@ -288,7 +288,8 @@ class PostAnalysis(tk.Frame):
         # Draw the readjusted data
         self._draw()
 
-    def _draw(self):
+    @staticmethod
+    def _draw():
 
         for num in range(cg.electrode_count):
 
@@ -298,7 +299,7 @@ class PostAnalysis(tk.Frame):
             subplot_count = 0
             for count in range(len(cg.frequency_list)):
 
-                frequency = cg.frequency_list[count]
+                _ = cg.frequency_list[count]
 
                 ###################################
                 # Set the units of the X-axis ###
@@ -312,7 +313,7 @@ class PostAnalysis(tk.Frame):
                 # Acquire the artists for this electrode at this frequency ###
                 # and get the data that will be visualized                 ###
                 ################################################################
-                plots = cg.plot_list[num][count]  # 'count' is the frequency index value
+                _ = cg.plot_list[num][count]  # 'count' is the frequency index value
 
                 ##########################
                 # Visualize the data ###
@@ -458,7 +459,7 @@ class PostAnalysis(tk.Frame):
 
         cg.NormalizationPoint = int(self.SetPointNorm.get())
         file = int(cg.FileLabel["text"])
-        index = file - 1
+        _ = file - 1
 
         if file >= cg.NormalizationPoint:
             cg.wait_time.NormalizationWaitTime()
@@ -672,10 +673,12 @@ class PostAnalysis(tk.Frame):
         cg.container.columnconfigure(1, weight=0)
 
     # --- Function to switch between visualization frames ---#
-    def show_plot(self, frame):
+    @staticmethod
+    def show_plot(frame):
         frame.tkraise()
 
-    def show_frame(self, cont):
+    @staticmethod
+    def show_frame(cont):
 
         frame = cg.ShowFrames[cont]
         frame.tkraise()
@@ -683,7 +686,8 @@ class PostAnalysis(tk.Frame):
     #####################################
     # Destory the frames on Reset() ###
     #####################################
-    def close_frame(self, cont):
+    @staticmethod
+    def close_frame(cont):
         frame = cg.ShowFrames[cont]
         frame.grid_forget()
 

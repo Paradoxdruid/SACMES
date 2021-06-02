@@ -41,9 +41,9 @@ class InputFrame(
         )
         self.PathWarningExists = False  # tracks the existence of a warning label
 
-        ImportFileLabel = tk.Label(
-            self, text="Import File Label", font=cg.LARGE_FONT
-        ).grid(row=row_value, column=0, columnspan=2)
+        _ = tk.Label(self, text="Import File Label", font=cg.LARGE_FONT).grid(
+            row=row_value, column=0, columnspan=2
+        )
         self.ImportFileEntry = tk.Entry(self)
         self.ImportFileEntry.grid(row=row_value + 1, column=0, columnspan=2, pady=5)
         self.ImportFileEntry.insert(tk.END, cg.handle_variable)
@@ -61,7 +61,7 @@ class InputFrame(
 
         row_value += 2
 
-        EmptyLabel = tk.Label(self, text="", font=cg.LARGE_FONT).grid(
+        _ = tk.Label(self, text="", font=cg.LARGE_FONT).grid(
             row=row_value, rowspan=2, column=0, columnspan=10
         )
         row_value += 1
@@ -230,7 +230,7 @@ class InputFrame(
             self.scrollbar.grid(row=1, sticky="nse")
             self.FrequencyList.config(yscrollcommand=self.scrollbar.set)
 
-        ManipulateFrequencies = tk.Button(
+        _ = tk.Button(
             self.ListboxFrame,
             text="Edit",
             font=cg.MEDIUM_FONT,
@@ -256,26 +256,26 @@ class InputFrame(
         self.FrequencyEntry = tk.Entry(cg.ManipulateFrequenciesFrame, width=8)
         self.FrequencyEntry.grid(row=1, column=0, columnspan=4)
 
-        AddFrequencyButton = tk.Button(
+        _ = tk.Button(
             cg.ManipulateFrequenciesFrame,
             text="Add",
             font=cg.MEDIUM_FONT,
             command=self.AddFrequency,  # was lambda
         ).grid(row=2, column=0)
-        DeleteFrequencyButton = tk.Button(
+        _ = tk.Button(
             cg.ManipulateFrequenciesFrame,
             text="Delete",
             font=cg.MEDIUM_FONT,
             command=self.DeleteFrequency,  # was lambda
         ).grid(row=2, column=1)
-        ClearFrequencyButton = tk.Button(
+        _ = tk.Button(
             cg.ManipulateFrequenciesFrame,
             text="Clear",
             font=cg.MEDIUM_FONT,
             command=self.Clear,  # was lambda
         ).grid(row=3, column=0, columnspan=2)
 
-        ReturnButton = tk.Button(
+        _ = tk.Button(
             cg.ManipulateFrequenciesFrame,
             text="Return",
             font=cg.MEDIUM_FONT,
@@ -692,13 +692,15 @@ class InputFrame(
             self.FrequencyLabel["fg"] = "red"
 
     # --- Functions to switch frames and plots ---#
-    def show_frame(self, cont):
+    @staticmethod
+    def show_frame(cont):
 
         frame = cg.ShowFrames[cont]
         frame.tkraise()
 
     # --- Function to switch between visualization frames ---#
-    def show_plot(self, frame):
+    @staticmethod
+    def show_plot(frame):
         frame.tkraise()
 
     #####################################################################
@@ -858,7 +860,7 @@ class InputFrame(
         if not self.NoSelection:
             if cg.FoundFilePath:
 
-                checkpoint = CheckPoint(self.parent, self.controller)
+                _ = CheckPoint(self.parent, self.controller)
 
 
 # ------------------------------------------------------------------------------------#

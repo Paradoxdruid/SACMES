@@ -16,11 +16,13 @@ class WaitTime:
 
         cg.NormalizationWaiting = False
 
-    def NormalizationWaitTime(self):
+    @staticmethod
+    def NormalizationWaitTime():
 
         cg.NormalizationWaiting = True
 
-    def NormalizationProceed(self):
+    @staticmethod
+    def NormalizationProceed():
 
         cg.NormalizationWaiting = False
 
@@ -41,8 +43,8 @@ class Track:
                 # Global File List
                 _update_global_lists(file)
 
-                HighFrequency = cg.HighLowList["High"]
-                LowFrequency = cg.HighLowList["Low"]
+                _ = cg.HighLowList["High"]
+                _ = cg.HighLowList["Low"]
 
                 cg.data_normalization.RenormalizeData(file)
 
