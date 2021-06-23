@@ -1,0 +1,4 @@
+scipy
+lmfit
+matplotlib
+numpy

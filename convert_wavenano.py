@@ -86,7 +86,6 @@ def convert_file(file_path: Path) -> None:
     for line in HEADER:  # Append boilerplate
         output_list.append(line)
 
-    # values = [x for y in zip(voltage_list, current_list) for x in y]  # FIXME
     for pot, cur in zip(voltage_list, current_list):
         my_line: str = f"{pot}, {cur}, {cur}, {cur}, {cur}, {cur}, {cur}\n"
         output_list.append(my_line)

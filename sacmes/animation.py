@@ -3,11 +3,11 @@
 import tkinter as tk
 from config import cg
 import os
-import numpy as np
 from scipy.signal import savgol_filter
 import threading
 from global_func import _retrieve_file, ReadData
 import time
+from lmfit.models import LorentzianModel, QuadraticModel
 
 
 ##########################################################################
@@ -548,6 +548,30 @@ class ElectrochemicalAnimation:
 
             cg.root.after(1, self._step)
 
+    @staticmethod
+    def fit_lz_peaks(potentials, currents):
+        min_y = float(min(currents))
+        model = QuadraticModel(prefix="Background")
+        params = model.make_params()  # a=0, b=0, c=0
+        params.add("a", 0, min=0)
+        params.add("b", 0)
+        params.add("c", 0, min=min_y)
+
+        peak = LorentzianModel(prefix="peak")
+        pars = peak.make_params()
+        pars.add("center", -0.3)
+        pars.add("amplitude", 0.005, min=0)
+        pars.add("sigma", 0.05, min=0)
+
+        model = model + peak
+        params.update(pars)
+
+        # _ = model.eval(params, x=potentials)  # not needed
+        result = model.fit(currents, params, x=potentials)
+        comps = result.eval_components()
+
+        return result.best_fit, float(max(comps["peak"]))
+
     def _raw_generator(self, myfile, frequency):
 
         ########################################
@@ -625,18 +649,24 @@ class ElectrochemicalAnimation:
         ######################
         # Polynomial fit ###
         ######################
-        polynomial_coeffs = np.polyfit(
-            adjusted_potentials, adjusted_currents, cg.polyfit_deg
+        # polynomial_coeffs = np.polyfit(
+        #     adjusted_potentials, adjusted_currents, cg.polyfit_deg
+        # )
+
+        eval_regress, baseline = self.fit_lz_peaks(
+            adjusted_potentials, adjusted_currents
         )
+
+        # print(baseline)
+        # TODO: use baseline for peak height calculation
 
         #############################
         # Polynomial Regression ###
         #############################
-        eval_regress = np.polyval(polynomial_coeffs, adjusted_potentials).tolist()
-        # TODO: Implement better baseline subtraction here.
-        _ = dict(
-            zip(eval_regress, adjusted_potentials)
-        )  # dictionary with current: potential
+        # eval_regress = np.polyval(polynomial_coeffs, adjusted_potentials).tolist()
+        # Implement better baseline subtraction here.
+        # _ = dict(zip(eval_regress, adjusted_potentials))
+        # dictionary with current: potential
 
         ###############################################
         # Absolute Max/Min Peak Height Extraction ###
