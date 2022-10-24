@@ -1,6 +1,6 @@
 # SACMES
 
-[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/Paradoxdruid/SACMES.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Paradoxdruid/SACMES/context:python) [![CodeFactor](https://www.codefactor.io/repository/github/paradoxdruid/SACMES/badge)](https://www.codefactor.io/repository/github/paradoxdruid/SACMES)  [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black) ![License: MIT](https://img.shields.io/badge/license-MIT-green)
+[![CodeFactor](https://www.codefactor.io/repository/github/paradoxdruid/SACMES/badge)](https://www.codefactor.io/repository/github/paradoxdruid/SACMES) [![CodeQL](https://github.com/Paradoxdruid/SACMES/actions/workflows/codeql.yml/badge.svg)](https://github.com/Paradoxdruid/SACMES/actions/workflows/codeql.yml) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black) ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
 **SACMES** stands for **S**oftware for the **A**nalysis and **C**ontinuous **M**onitoring of **E**lectrochemical **S**ystems. These scripts analyzes data from specific electrochemical techniques in real time and export the data into space delimited txt files. Each script runs off of an multithreaded animation module known as ElectrochemicalAnimation and can analyze any number of electrodes simultaneously.
 
